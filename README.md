@@ -2,6 +2,8 @@
 
 Play a three-lane driving game while inspecting every model input, typed question, answer, JSON response, and measured round trip. Includes classroom slides and recorded model comparisons.
 
+[Play Pocket Pilot](https://nipunbatra.github.io/pocket-pilot/) · [Classroom slides](https://nipunbatra.github.io/pocket-pilot/slides.html)
+
 ## Run and host
 
 Serve this folder with any static host. GitHub Pages can publish `main` at `/`.
