@@ -33,7 +33,10 @@ function syncModelControls(){
   $('api-status').textContent=modelAvailable()?`${info.label} ready`:PUBLIC_SITE?'Connect your key · or explore recordings':'OpenRouter key missing';
   $('model-note').textContent=!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':inputKind==='structured'?'Structured input exposes obstacle lanes and coordinates. No image is sent. Use the same input for both models to compare latency fairly.':'Vision input: the model receives only the road PNG and questions. No obstacle coordinates are sent.';
 }
-function draw(){RoadView.draw(canvas,game);}
+function draw(){
+  const f=replay?frames[selected]:null;
+  RoadView.draw(canvas,f?{...game,lane:f.scene.lane,row:f.scene.row,distance:f.distance_at_capture||0,crashed:false,holding:false}:game);
+}
 function updateHud(){
   const held=(running&&game.holding)||comparing;
   $('canvas-caption').textContent=`${inputKind==='image'?'One image':'Structured scene'}. ${questionCount} question${questionCount===1?'':'s'}. One lane choice.`;
@@ -44,15 +47,16 @@ function updateHud(){
   $('overlay-kicker').textContent=crashed?'RUN STOPPED':'LIVE API · ROAD HELD';
   $('overlay-title').textContent=crashed?'Let’s inspect that collision.':'Waiting for the next decision';
   $('overlay-detail').textContent=crashed?'The cause and exact frame are in the inspector.':'Game time is paused. Only the API wait timer is running.';
-  $('sim-clock').textContent=(elapsed/1000).toFixed(1)+' s';
-  $('hud-speed').textContent=`${speed}×`;
-  $('hud-mode').textContent=driveMode==='paced'?'Classroom':'Real time';
+  const recorded=replay?frames[selected]:null;
+  $('sim-clock').textContent=((recorded?.elapsed_at_capture_ms??elapsed)/1000).toFixed(1)+' s';
+  $('hud-speed').textContent=`${recorded?.speed??speed}×`;
+  $('hud-mode').textContent=recorded?'Recorded':driveMode==='paced'?'Classroom':'Real time';
   const checkpoint=RoadEngine.nextCaptureY(game,sampling),contact=Math.max(0,(340-row.y)/(RoadEngine.BASE_SPEED*speed));
   $('sampling-status').textContent=`${checkpoint===null?'Next image: next barrier':`Next image in ${Math.max(0,(checkpoint-row.y)/(RoadEngine.BASE_SPEED*speed)).toFixed(1)} driving s`} · barrier reaches car in ${contact.toFixed(1)} driving s`;
   const budget=RoadEngine.timingBudget(game,speed,recentLatency());
   $('latency-budget').classList.toggle('tight',budget.required_ms!==null&&budget.required_ms>budget.initial_ms);
   $('latency-budget').textContent=`${speed}× gives ${ms(budget.initial_ms)} from first sight to contact. `+(budget.required_ms===null?'Make a call to measure the decision budget.':`Recent API wait ${ms(budget.latency_ms)} + turn / margin ${ms(budget.steering_ms+budget.margin_ms)}. ${budget.suggested_speed?`Measured budget fits up to ${budget.suggested_speed}×`:'Use Classroom for this measured delay'}; delays vary.`);
-  $('request-status').textContent=inFlight?(held?'Road held · waiting for API':'Sending image · awaiting answer'):running?'Driving on the latest lane choice':'Ready when you are';
+  $('request-status').textContent=recorded?'Recorded snapshot · no API calls':inFlight?(held?'Road held · waiting for API':'Sending image · awaiting answer'):running?'Driving on the latest lane choice':'Ready when you are';
   $('request-clock').textContent=inFlight?ms(performance.now()-requestStarted):'';
   $('run-state').textContent=crashed?'COLLISION':held?'WAITING FOR AI':running?'LIVE':replay?'REPLAY':'PAUSED';
   $('run-state').className='run-state'+(running?' running':'')+(held?' held':'');
@@ -60,18 +64,18 @@ function updateHud(){
 }
 function event(type,details={}){events.push({type,at:new Date().toISOString(),elapsed_ms:Math.round(elapsed),...details});}
 function updateControls(){
-  $('start').textContent=running?'Pause run':crashed||frames.length>=MAX_CALLS&&!replay?'Play again':'Start live';$('start').disabled=comparing||!modelAvailable()||(!running&&inFlight);
+  $('start').textContent=running?'Pause run':crashed||frames.length>=MAX_CALLS&&!replay?'Play again':'Start live';$('start').disabled=comparing||loadingRecording||!modelAvailable()||(!running&&inFlight);
   $('previous-run').disabled=!previousRun||running||inFlight||comparing;
-  $('step').disabled=comparing||!modelAvailable()||running||inFlight||crashed||frames.length>=MAX_CALLS||replay;
-  $('new-run').disabled=inFlight||comparing;
+  $('step').disabled=comparing||loadingRecording||!modelAvailable()||running||inFlight||crashed||frames.length>=MAX_CALLS||replay;
+  $('new-run').disabled=inFlight||comparing||loadingRecording;
   $('compare-questions').disabled=!modelAvailable()||inFlight||comparing||replay||frames.length>MAX_CALLS-3;
-  $('load-comparison').disabled=inFlight||comparing;$('load-model-benchmark').disabled=inFlight||comparing;
+  $('load-comparison').disabled=inFlight||comparing||loadingRecording;$('load-model-benchmark').disabled=inFlight||comparing||loadingRecording;
   for(const id of ['question-count','sampling','drive-mode'])$(id).disabled=comparing;
   $('model-select').disabled=inFlight||comparing||running;syncModelControls();
   $('run-state').textContent=crashed?'COLLISION':running?'● LIVE':replay?'REPLAY':'PAUSED';$('run-state').className='run-state'+(running?' running':'');
   $('passed').textContent=passed;$('call-count').textContent=`${frames.length} / ${MAX_CALLS}`;
   $('export-session').disabled=!frames.length;
-  $('follow-live').setAttribute('aria-pressed',String(following));$('follow-live').textContent=following?'● Following live':'↗ Return to latest';
+  $('follow-live').setAttribute('aria-pressed',String(following));$('follow-live').textContent=replay?'Latest recorded':following?'● Following live':'↗ Return to latest';
   $('timeline').disabled=!frames.length;$('timeline').max=Math.max(0,frames.length-1);$('timeline').value=Math.max(0,selected);
   $('timeline-label').textContent=frames[selected]?`Decision ${selected+1} of ${frames.length}`:'Waiting for the first frame';
   $('previous').disabled=selected<=0;$('next').disabled=selected>=frames.length-1;
@@ -233,6 +237,7 @@ function renderSelection(){
   setJSON('road-native',f?.openai_preview||nativePreview(request),true);
   $('export-call').disabled=!f;
   renderMetadata(f);updateControls();
+  window.ClassroomUI?.refreshSelection({frame:f,request,frames,selected,following,replay});
 }
 function renderMetadata(f){
   if(!f){$('race-metadata').innerHTML='<p class="metadata-explanation">Make a live call to inspect its timing, usage and provenance.</p>';return;}
@@ -243,6 +248,7 @@ function renderMetadata(f){
 }
 function renderLog(){
   renderComparison();
+  window.ClassroomUI?.refreshHistory(frames,selected,following,replay);
   $('log-count').textContent=`${frames.length} decisions`;
   if(!frames.length){$('log-rows').innerHTML='<tr><td colspan="8" class="empty-log">Your first decision starts the story. Try “One decision” or start a live run.</td></tr>';return;}
   $('log-rows').innerHTML=frames.map((f,i)=>{const a=f.response?.answers;return `<tr data-log="${i}" aria-selected="${i===selected}"><td><button aria-label="Inspect decision ${f.frame_id}">#${String(f.frame_id).padStart(3,'0')}<span class="time">${time(f.captured_at)}${f.checkpoint?' · '+esc(f.checkpoint):''}</span></button></td><td>${RoadQuestions.count(f)}Q</td><td>${f.speed}×</td><td>${esc(a?.lane?.choice??'…')}</td><td>${f.request.questions.middle_blocked?pct(a?.middle_blocked?.noul):'not asked'}</td><td>${!f.request.questions.proximity?'not asked':Number.isFinite(a?.proximity?.score)?a.proximity.score.toFixed(2):'—'}</td><td>${ms(f.metadata?.upstream_round_trip_ms)}</td><td class="${['error','stale','blocked','skipped'].includes(f.application.status)?'outcome-bad':f.application.status==='applied'?'outcome-good':''}">${esc(f.application.status)}${f.application.steering?' · '+esc(f.application.steering):''}${f.application.collision_observed?' · collision':f.application.barrier_passed?' · passed':''}</td></tr>`;}).join('');
@@ -275,7 +281,7 @@ function openRun(data){
     for(const f of data.frames){if(!f.scene||!Number.isFinite(f.scene.lane)||f.scene.lane<0||f.scene.lane>2||!Number.isFinite(f.scene.row?.y)||!Array.isArray(f.scene.row?.blocked)||f.scene.row.blocked.length!==2||new Set(f.scene.row.blocked).size!==2||!f.scene.row.blocked.every(l=>[0,1,2].includes(l)))throw new Error('Missing replay scene.');
       if(!f.request?.questions?.lane||(typeof f.request.state!=='object'&&typeof f.request.state!=='string')||!RoadQuestions.validSavedAnswers(f))throw new Error('Unsupported question schema.');
       if(!f.image?.startsWith('data:image/png;base64,')||f.image.length>2000000||!f.request?.questions||!f.application||!Number.isFinite(Date.parse(f.captured_at))||!Number.isInteger(f.frame_id)||!f.metadata)throw new Error('Invalid frame record.');}
-    pause();frames=data.frames;game=RoadEngine.create();game.lane=frames[0].scene.lane;game.target=game.lane;game.row={...structuredClone(frames[0].scene.row),decision:null};syncGame();draw();events=Array.isArray(data.events)?data.events:[];runId=String(data.run_id);selected=0;following=false;replay=true;renderLog();renderSelection();$('road-message').textContent='Saved run opened for inspection. Start live begins a fresh road.';
+    pause();if(frames.length&&frames!==data.frames)previousRun=runData();frames=data.frames;game=RoadEngine.create();game.lane=frames[0].scene.lane;game.target=game.lane;game.row={...structuredClone(frames[0].scene.row),decision:null};syncGame();draw();events=Array.isArray(data.events)?data.events:[];runId=String(data.run_id);selected=0;following=false;replay=true;renderLog();renderSelection();$('road-message').textContent='Saved run opened for inspection. Start live begins a fresh road.';
 }
 document.addEventListener('click',async e=>{
   const s=e.target.closest('[data-speed]');if(s){speed=Number(s.dataset.speed);document.querySelectorAll('[data-speed]').forEach(b=>b.setAttribute('aria-pressed',b===s));event('speed',{speed});}
@@ -291,8 +297,18 @@ $('compare-questions').addEventListener('click',compareQuestions);
 $('model-select').addEventListener('change',()=>{selectedModel=$('model-select').value;syncModelControls();event('model',{model:selectedModel,input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('input-kind').addEventListener('change',()=>{inputKind=$('input-kind').value;syncModelControls();event('input_kind',{input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('question-count').addEventListener('change',()=>{questionCount=Number($('question-count').value);event('question_count',{count:questionCount});if(!frames.length)renderSelection();updateHud();});
-$('load-comparison').addEventListener('click',async()=>{if(inFlight||comparing)return;try{const res=await fetch('./comparison-run.json');if(!res.ok)throw new Error('Recorded comparison is not available.');openRun(await res.json());}catch(e){toast(e.message);}});
-$('load-model-benchmark').addEventListener('click',async()=>{if(inFlight||comparing)return;try{const r=await fetch('./model-benchmark-run.json');if(!r.ok)throw new Error('Measurements are not available yet.');openRun(await r.json());}catch(e){toast(e.message);}});
+let loadingRecording=false;
+async function loadRecording(url){
+  if(inFlight||comparing||loadingRecording)return;
+  loadingRecording=true;pause('Loading the recorded run…');
+  const demo=$('lab-recorded-demo');if(demo){demo.disabled=true;demo.textContent='Loading recording…';}
+  $('load-comparison').disabled=true;$('load-model-benchmark').disabled=true;
+  try{const r=await fetch(url);if(!r.ok)throw new Error('The recorded run could not be loaded. Try again.');openRun(await r.json());}
+  catch(e){toast(e.message);$('road-message').textContent='Could not load the recording. Your current run is still available.';}
+  finally{loadingRecording=false;if(demo){demo.disabled=false;demo.textContent='Recorded demo';}updateControls();}
+}
+$('load-comparison').addEventListener('click',()=>loadRecording('./comparison-run.json'));
+$('load-model-benchmark').addEventListener('click',()=>loadRecording('./model-benchmark-run.json'));
 $('volume').addEventListener('input',()=>{RoadSound.setVolume(Number($('volume').value)/100);});
 $('sampling').addEventListener('change',()=>{sampling=$('sampling').value;event('sampling',{sampling});updateHud();});
 $('image-size').addEventListener('change',()=>{inputCanvas.width=Number($('image-size').value);inputCanvas.height=inputCanvas.width*8/7;event('image_size',{width:inputCanvas.width,height:inputCanvas.height});if(!frames.length)renderSelection();});
@@ -315,7 +331,7 @@ async function init(){
     else{const r=await fetch('/api/config');if(!r.ok)throw new Error();config=await r.json();}
     $('model-select').innerHTML=config.road_models.map(m=>`<option value="${esc(m.id)}">${esc(m.label)}${m.available?'':' · needs setup'}</option>`).join('');
     syncModelControls();renderSelection();renderComparison();updateControls();
-    if(PUBLIC_SITE)$('road-message').textContent='Explore recorded calls without a key, or connect your own key above for live play.';
+    if(PUBLIC_SITE)$('road-message').textContent='Open Recorded demo, or Connect key for live play.';
     else if(!config.live_available)$('road-message').textContent='Set OPENROUTER_API_KEY on the local server to run live.';
   }catch{
     $('api-status').textContent=PUBLIC_SITE?'Could not load the game':'Local server unavailable';

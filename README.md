@@ -11,6 +11,19 @@ No build step, backend, npm dependencies, or hosting secrets are required.
 For a local preview only: `python3 -m http.server 8780 --bind 127.0.0.1`.
 Open the served URL; use `slides.html` for the presentation.
 
+## Classroom controls and JSON
+
+The road, selected decision, and rewindable history share one workspace. Connection
+and advanced settings are under Connect key / Settings; model comparisons and the
+complete log open separately. Recorded demo works without a key. On smaller laptops,
+history becomes a horizontal strip; phones stack the panels.
+
+Full JSON offers Request, Response, Metadata + action, and Full frame. Use the searchable tree,
+expand/collapse, or syntax-highlighted Raw view with line numbers. Click a tree field
+name to copy its path. Copy JSON and Download keep every original field and image byte,
+even when search or shortened strings simplify the display. Enlarge focuses the
+inspector; Escape restores the layout. Present requests browser full screen.
+
 ## Visitors supply their own OpenRouter key
 
 Connect a dedicated key with a small credit limit. Live calls go directly from
