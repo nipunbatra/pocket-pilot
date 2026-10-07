@@ -1,7 +1,7 @@
 /* Browser-only transport. The key lives in this closure, never in a saved trace. */
 (function(root){
   'use strict';
-  const endpoint='https://openrouter.ai/api/alpha/decisions';
+  const decisionsEndpoint='https://openrouter.ai/api/alpha/decisions';
   let key='',active=null;
   function connect(value){
     if(typeof value!=='string'||value.trim().length<20||value.length>512||/\s/.test(value.trim()))throw new Error('Enter a valid OpenRouter API key.');
@@ -13,21 +13,26 @@
     if(!key)throw new Error('Connect your OpenRouter key to make live calls.');
     if(active)throw new Error('A decision is already in progress.');
     if(!root.POCKET_PILOT_PUBLIC.road_models.some(m=>m.id===request.model))throw new Error('Unsupported model.');
+    const chat=root.RoadChat?.isChat(request),endpoint=chat?root.RoadChat.endpoint:decisionsEndpoint;
+    const wire_request=chat?root.RoadChat.build(request):request;
     const controller=new AbortController();active=controller;
     const timer=setTimeout(()=>controller.abort(),30000),started=performance.now();
     const metadata={source:'live',endpoint,provider:'OpenRouter',timing_origin:'browser',transport:'browser directly to OpenRouter',
       started_at:new Date().toISOString(),http_status:null,upstream_round_trip_ms:null,provider_processing_ms:null,local_handler_ms:null,
       timing_note:'Measured in this browser, from the outgoing OpenRouter request through its complete response. Network and routing are included. There is no app server hop. Provider-only processing time was not supplied.'};
-    let response=null,error=null;
+    metadata.api_kind=chat?'chat completions':'decisions';
+    let response=null,raw_response=null,error=null;
     try{
       const res=await fetch(endpoint,{method:'POST',headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
-        body:JSON.stringify(request),signal:controller.signal,credentials:'omit',redirect:'error',referrerPolicy:'no-referrer',cache:'no-store'});
+        body:JSON.stringify(wire_request),signal:controller.signal,credentials:'omit',redirect:'error',referrerPolicy:'no-referrer',cache:'no-store'});
       metadata.http_status=res.status;
       if(!res.ok){
         error=`OpenRouter returned HTTP ${res.status}. `+({401:'The key was not accepted.',402:'This key has no available credits.',403:'This key cannot access the selected model.',429:'Rate limited; wait before trying again.'}[res.status]||'No move was applied.');
       }else{
-        response=await res.json();
-        if(!response||typeof response!=='object'||Array.isArray(response)||!root.RoadQuestions.validSavedAnswers({request,response}))
+        raw_response=await res.json();
+        if(chat){try{response=root.RoadChat.normalize(raw_response,request);}catch(exc){error=exc.message;}}
+        else response=raw_response;
+        if(!chat&&(!response||typeof response!=='object'||Array.isArray(response)||!root.RoadQuestions.validSavedAnswers({request,response})))
           error='The response did not match the requested answer schema. No move was applied.';
       }
     }catch(exc){
@@ -36,7 +41,7 @@
     }finally{
       clearTimeout(timer);active=null;metadata.upstream_round_trip_ms=Number((performance.now()-started).toFixed(2));
     }
-    return {request,response,raw_response:response,metadata,error,openai_preview:null};
+    return {request,wire_request,response,raw_response,metadata,error,openai_preview:null};
   }
   const api={config:root.POCKET_PILOT_PUBLIC,get connected(){return !!key;},connect,disconnect,submit};
   root.PublicDecisions=api;

@@ -21,7 +21,7 @@
   const modelField=$('model-select').parentElement,questionField=$('question-count').parentElement,modeField=one('.pace-control');
   const inputField=$('input-kind').parentElement,samplingField=$('sampling').parentElement,imageField=$('image-size').parentElement;
   const audio=one('.audio-controls');
-  compare.append(one('.model-comparison'),one('.question-comparison'));
+  compare.append(one('.chat-comparison'),one('.model-comparison'),one('.question-comparison'));
   const historySection=one('.race-log-section');historySection.id='full-run-history';historyDialog.append(historySection);
   const nav=one('.header-links'),apiStatus=$('api-status');nav.replaceChildren();
   const slides=document.createElement('a');slides.href=connection?'./slides.html':'/slides';slides.textContent='Slides';slides.className='lab-link';
@@ -78,7 +78,7 @@
   for(const [id,label] of [['request','Request'],['response','Response'],['metadata','Metadata + action'],['frame','Full frame']]){const b=button(label,()=>{source=id;renderJSON();},'json-source-button');b.dataset.jsonSource=id;b.setAttribute('aria-pressed',String(id===source));jsonSource.append(b);}
   function renderJSON(){
     if(!current)return;const f=current.frame;
-    const data=source==='request'?current.request:source==='response'?(f?.raw_response||f?.response||(f?.error?{error:f.error}:undefined)):source==='frame'?f:f?{metadata:f.metadata,application:f.application}:undefined;
+    const data=source==='request'?(f?.wire_request||(RoadChat.isChat(current.request)?RoadChat.build(current.request):current.request)):source==='response'?(f?.raw_response||f?.response||(f?.error?{error:f.error}:undefined)):source==='frame'?f:f?{metadata:f.metadata,application:f.application}:undefined;
     const token=selectionToken+source;explorer.set(data,`frame-${f?.frame_id||'preview'}-${source}.json`,{reset:jsonToken!==token});jsonToken=token;
     jsonSource.querySelectorAll('button').forEach(b=>b.setAttribute('aria-pressed',String(b.dataset.jsonSource===source)));
   }
@@ -87,7 +87,7 @@
     host.replaceChildren();$('compact-history-count').textContent=`${frames.length} call${frames.length===1?'':'s'}`;
     $('history-caption').textContent=replay?'Recorded run · controls configure your next live run':following?'Following incoming decisions':'Pinned to history · live road is separate';
     if(!frames.length){const empty=el('div','history-empty');empty.append(el('strong','','Your first decision starts here.'),el('p','','Take one decision, or explore a recorded run without an API key.'),button('Open recorded run',()=>$('load-comparison').click()));host.append(empty);}
-    frames.forEach((f,i)=>{const b=button('',()=>{},'history-frame');b.dataset.log=i;b.setAttribute('aria-label',`Inspect decision ${f.frame_id}`);b.setAttribute('aria-pressed',String(i===selected));const top=el('span','history-frame-top'),answer=f.error?'Error':f.response?.answers?.lane?.choice||'Waiting…';top.append(el('b','',`#${String(f.frame_id).padStart(2,'0')}`),el('strong','',answer));const bottom=el('span','history-frame-bottom');bottom.append(el('span','',`${Object.keys(f.request.questions).length}Q · ${f.speed}×`),el('span','',Number.isFinite(f.metadata.upstream_round_trip_ms)?`${Math.round(f.metadata.upstream_round_trip_ms)} ms`:'pending'));b.append(top,bottom,el('span','history-outcome',f.application.status));if(f.error||f.application.collision_observed)b.classList.add('has-error');host.append(b);});
+    frames.forEach((f,i)=>{const b=button('',()=>{},'history-frame');b.dataset.log=i;b.setAttribute('aria-label',`Inspect decision ${f.frame_id}`);b.setAttribute('aria-pressed',String(i===selected));const top=el('span','history-frame-top'),answer=f.error?'Error':f.response?.answers?.lane?.choice||'Waiting…';top.append(el('b','',`#${String(f.frame_id).padStart(2,'0')}`),el('strong','',answer));const bottom=el('span','history-frame-bottom');bottom.append(el('span','',`${Object.keys(f.request.questions).length}Q · ${f.speed}×`),el('span','',Number.isFinite(f.metadata.upstream_round_trip_ms)?`${Math.round(f.metadata.upstream_round_trip_ms)} ms`:'pending'));b.append(top,bottom,el('span','history-outcome',`${f.request.model.split('/').at(-1)} · ${f.application.status}`));if(f.error||f.application.collision_observed)b.classList.add('has-error');host.append(b);});
     host.scrollTop=following?host.scrollHeight:prior;
     if(active!==undefined)host.querySelector(`[data-log="${active}"]`)?.focus({preventScroll:true});
     history.querySelectorAll('.history-tools button')[1].disabled=!frames.length;
@@ -100,6 +100,7 @@
     for(const [label,value] of [['Lane choice',f?.error?'Error':a?.choice||'—'],['Round trip',Number.isFinite(f?.metadata.upstream_round_trip_ms)?`${Math.round(f.metadata.upstream_round_trip_ms)} ms`:'—'],['Questions',String(Object.keys(data.request.questions).length)]]){const item=el('div');item.append(el('span','',label),el('strong','',value));facts.append(item);}
     renderJSON();refreshHistory(data.frames,data.selected,data.following,data.replay);
   }
+  $('inspect-chat-history').addEventListener('click',()=>compare.close());
   // Load actions also work from the compact toolbar, then return to the workspace.
   for(const id of ['load-comparison','load-model-benchmark'])$(id).addEventListener('click',()=>compare.close());
   document.addEventListener('fullscreenchange',()=>present.textContent=document.fullscreenElement?'Exit full screen':'Present');

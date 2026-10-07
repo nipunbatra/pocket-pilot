@@ -96,3 +96,8 @@
   .lab-controls .key-entry{flex-wrap:nowrap}.lab-controls .key-entry button{width:auto}
   .lab-controls .audio-controls{max-width:280px}.lab-controls .control-row select{font-size:11px;max-width:none}
 }
+
+/* Keep comparisons readable without changing the two-row settings area. */
+.comparison-group{font-size:14px;margin:20px 0 8px;font-weight:600}.comparison-empty{padding:16px;background:var(--soft);font-size:13px;line-height:1.6}.chat-comparison .section-heading{gap:16px;flex-wrap:wrap}.chat-comparison .log-table th,.chat-comparison .log-table td{white-space:nowrap}
+.comparison-method{font-size:12px;margin:10px 0}.comparison-method summary{cursor:pointer;color:var(--muted)}
+.chat-comparison .log-table th,.chat-comparison .log-table td{padding:7px 12px}.chat-comparison tbody th{position:static;text-align:left;background:transparent}.chat-comparison .comparison-group{margin-top:14px}.chat-comparison .log-table .time{margin-top:3px}

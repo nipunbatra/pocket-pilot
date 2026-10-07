@@ -31,7 +31,7 @@ function syncModelControls(){
   $('input-kind').value=inputKind;$('input-kind').disabled=!info?.vision||inFlight||comparing||running;
   $('image-size').disabled=inputKind==='structured'||comparing||inFlight;
   $('api-status').textContent=modelAvailable()?`${info.label} ready`:PUBLIC_SITE?'Connect your key · or explore recordings':'OpenRouter key missing';
-  $('model-note').textContent=!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':inputKind==='structured'?'Structured input exposes obstacle lanes and coordinates. No image is sent. Use the same input for both models to compare latency fairly.':'Vision input: the model receives only the road PNG and questions. No obstacle coordinates are sent.';
+  $('model-note').textContent=!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':(RoadChat.isChat({model:selectedModel})?'Chat '+(inputKind==='image'?'VLM':'LLM')+' · short JSON answers, no class probabilities. ':'Decisions API · typed answers and probabilities. ')+(inputKind==='structured'?'Obstacle coordinates sent; no image.':'Road PNG sent; no obstacle coordinates.');
 }
 function draw(){
   const f=replay?frames[selected]:null;
@@ -56,7 +56,7 @@ function updateHud(){
   const budget=RoadEngine.timingBudget(game,speed,recentLatency());
   $('latency-budget').classList.toggle('tight',budget.required_ms!==null&&budget.required_ms>budget.initial_ms);
   $('latency-budget').textContent=`${speed}× gives ${ms(budget.initial_ms)} from first sight to contact. `+(budget.required_ms===null?'Make a call to measure the decision budget.':`Recent API wait ${ms(budget.latency_ms)} + turn / margin ${ms(budget.steering_ms+budget.margin_ms)}. ${budget.suggested_speed?`Measured budget fits up to ${budget.suggested_speed}×`:'Use Classroom for this measured delay'}; delays vary.`);
-  $('request-status').textContent=recorded?'Recorded snapshot · no API calls':inFlight?(held?'Road held · waiting for API':'Sending image · awaiting answer'):running?'Driving on the latest lane choice':'Ready when you are';
+  $('request-status').textContent=recorded?'Recorded snapshot · no API calls':inFlight?(held?'Road held · waiting for API':'Sending input · awaiting answer'):running?'Driving on the latest lane choice':'Ready when you are';
   $('request-clock').textContent=inFlight?ms(performance.now()-requestStarted):'';
   $('run-state').textContent=crashed?'COLLISION':held?'WAITING FOR AI':running?'LIVE':replay?'REPLAY':'PAUSED';
   $('run-state').className='run-state'+(running?' running':'')+(held?' held':'');
@@ -69,6 +69,8 @@ function updateControls(){
   $('step').disabled=comparing||loadingRecording||!modelAvailable()||running||inFlight||crashed||frames.length>=MAX_CALLS||replay;
   $('new-run').disabled=inFlight||comparing||loadingRecording;
   $('compare-questions').disabled=!modelAvailable()||inFlight||comparing||replay||frames.length>MAX_CALLS-3;
+  $('compare-chat').disabled=!modelAvailable()||inFlight||comparing||loadingRecording||replay||frames.length>MAX_CALLS-3;
+  $('load-chat-comparison').disabled=inFlight||comparing||loadingRecording;
   $('load-comparison').disabled=inFlight||comparing||loadingRecording;$('load-model-benchmark').disabled=inFlight||comparing||loadingRecording;
   for(const id of ['question-count','sampling','drive-mode'])$(id).disabled=comparing;
   $('model-select').disabled=inFlight||comparing||running;syncModelControls();
@@ -126,11 +128,11 @@ function tick(now){
   requestAnimationFrame(tick);
 }
 function structuredState(scene){return {input_kind:'structured scene, no image',lane_order:RoadEngine.lanes,canvas_height:480,car_lane_index:Number(scene.lane.toFixed(3)),obstacles:scene.row.blocked.map(i=>({lane:RoadEngine.lanes[i],y:Number(scene.row.y.toFixed(2)),height:49}))};}
-function requestBody(image,count=questionCount,scene={lane,row}){
+function requestBody(image,count=questionCount,scene={lane,row},model=selectedModel){
   const state=inputKind==='structured'?structuredState(scene):[{type:'text',text:config.road_context},{type:'image_url',image_url:{url:image}}];
   const questions=RoadQuestions.select(inputKind==='structured'?config.road_text_questions:config.road_questions,count);
   
-  return {model:selectedModel,state,questions};
+  return {model,state,questions};
 }
 function nativePreview(request){
   if(request.model!=='openai/gpt-6-luna-decisions')return {note:'This OpenAI example applies only to Luna. Inspect Full JSON for the selected provider’s exact request.'};
@@ -140,24 +142,24 @@ async function requestDecision(single,comparison=null){
   if(inFlight||!config||!modelAvailable()||frames.length>=MAX_CALLS)return;
   inFlight=true;requestStarted=performance.now();const capturedEpoch=epoch;draw();
   const image=comparison?.image||captureImage(),count=comparison?.count||questionCount;
-  const f={frame_id:frames.length+1,run_id:runId,captured_at:comparison?.captured_at||new Date().toISOString(),question_count:count,input_kind:inputKind,comparison_id:comparison?.id||null,speed,driving_mode:driveMode,sampling,checkpoint:row.y<135?'far':row.y<295?'middle':'near',mode:comparison?'same-image comparison, road paused':single?'single decision, road paused':`live continuous · ${driveMode}`,image,image_width:comparison?.width||inputCanvas.width,image_height:comparison?.height||inputCanvas.height,held_at_capture_ms:game.heldMs,scene:comparison?.scene||{lane,row:structuredClone(row)},request:requestBody(image,count,comparison?.scene||{lane,row}),response:null,metadata:{},error:null,application:{status:'pending',reason:null,timing_budget:RoadEngine.timingBudget(game,speed,recentLatency())},distance_at_capture:distance,elapsed_at_capture_ms:Math.round(elapsed)};
+  const f={frame_id:frames.length+1,run_id:runId,captured_at:comparison?.captured_at||new Date().toISOString(),question_count:count,input_kind:inputKind,comparison_id:comparison?.model?null:comparison?.id||null,model_comparison_id:comparison?.model?comparison.id:null,speed,driving_mode:driveMode,sampling,checkpoint:row.y<135?'far':row.y<295?'middle':'near',mode:comparison?'same-input comparison, road paused':single?'single decision, road paused':`live continuous · ${driveMode}`,image,image_width:comparison?.width||inputCanvas.width,image_height:comparison?.height||inputCanvas.height,held_at_capture_ms:game.heldMs,scene:comparison?.scene||{lane,row:structuredClone(row)},request:requestBody(image,count,comparison?.scene||{lane,row},comparison?.model||selectedModel),response:null,metadata:{},error:null,application:{status:'pending',reason:null,timing_budget:RoadEngine.timingBudget(game,speed,recentLatency())},distance_at_capture:distance,elapsed_at_capture_ms:Math.round(elapsed)};
   frames.push(f);activeRequest=f;if(following)selected=frames.length-1;renderLog();if(following)renderSelection();updateControls();
   try{
     let result;
     if(PUBLIC_SITE){result=await PublicDecisions.submit(f.request);}
     else{
-      const res=await fetch('/api/road',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({run_id:runId,frame_id:f.frame_id,image,question_count:count,model:selectedModel,input_kind:f.input_kind,...(f.input_kind==='structured'?{scene:f.scene}:{})}),signal:AbortSignal.timeout(30000)});
+      const res=await fetch('/api/road',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({run_id:runId,frame_id:f.frame_id,image,question_count:count,model:f.request.model,input_kind:f.input_kind,...(f.input_kind==='structured'?{scene:f.scene}:{})}),signal:AbortSignal.timeout(30000)});
       result=await res.json();
       if(!result.request)throw new Error(result.error||`Local server returned HTTP ${res.status}.`);
     }
-    Object.assign(f,{request:result.request,response:result.response,metadata:result.metadata,error:result.error,openai_preview:result.openai_preview,raw_response:result.raw_response});
+    Object.assign(f,{request:result.request,wire_request:result.wire_request,response:result.response,metadata:result.metadata,error:result.error,openai_preview:result.openai_preview,raw_response:result.raw_response});
   }catch(e){f.error=e.name==='TimeoutError'?'The API request timed out.':e.message;}
   f.received_at=new Date().toISOString();f.metadata.browser_round_trip_ms=Number((performance.now()-requestStarted).toFixed(2));
   f.application.received_scene={lane,row:structuredClone(row)};
   const a=f.response?.answers;
   if(f.error){f.application.status='error';f.application.reason=f.error;pause('API call failed. Its error and timing are in the log.');}
   else if(comparison){
-    f.application.status='compared';f.application.reason='Same-image comparison only; no steering applied.';
+    f.application.status='compared';f.application.reason='Same-input comparison only; no steering applied.';
     f.application.local_scene_check={actual_open_lane:RoadEngine.lanes[[0,1,2].find(l=>!f.scene.row.blocked.includes(l))],model_matches_scene:!f.scene.row.blocked.includes(RoadEngine.lanes.indexOf(a.lane.choice)),note:'Local evaluation only; no answer label supplied and no comparison steering.'};
   }
   else if(capturedEpoch!==epoch||crashed){f.application.status='skipped';f.application.reason=crashed?'Arrived after collision.':'Run paused or changed while the request was in flight.';}
@@ -195,7 +197,27 @@ async function compareQuestions(){
   try{for(let i=0;i<3;i++)await requestDecision(true,{...snapshot,count:(i+offset)%3+1});}
   finally{comparing=false;$('road-message').textContent=frames.length>=MAX_CALLS?'30-call run complete. Compare the results below, export, or reset.':'Comparison complete. Review the measured results below; Start live resumes driving.';updateControls();}
 }
+async function compareChat(){
+  if(inFlight||comparing||loadingRecording||replay||!modelAvailable()||frames.length>MAX_CALLS-3)return;
+  comparing=true;pause('Comparing Luna and two chat models on one frozen input. Three real API calls; no steering.');
+  const snapshot={id:runId+'-models-'+(frames.length+1),image:captureImage(),scene:{lane,row:structuredClone(row)},captured_at:new Date().toISOString(),width:inputCanvas.width,height:inputCanvas.height,count:questionCount};
+  const offset=new Set(frames.map(f=>f.model_comparison_id).filter(Boolean)).size%3;
+  try{
+    for(let i=0;i<3;i++){
+      if(PUBLIC_SITE&&!PublicDecisions.connected)break;
+      const model=RoadChat.comparisonModels[(i+offset)%3];
+      $('chat-comparison-note').textContent=`Call ${i+1} of 3 · ${model} · road paused. Each model receives the same ${inputKind==='image'?'image':'JSON scene'}.`;
+      await requestDecision(true,{...snapshot,model});
+    }
+  }finally{comparing=false;renderChatComparison();$('road-message').textContent='Comparison finished. Inspect each request and response in History, or compare another scene.';updateControls();}
+}
+function renderChatComparison(){
+  const groups=RoadChat.summarize(frames);
+  $('chat-comparison-results').innerHTML=groups.length?groups.map(group=>`<h3 class="comparison-group">${esc(group.label)} · ${group.pairs} matched scene${group.pairs===1?'':'s'}</h3><div class="log-scroll"><table class="log-table"><thead><tr><th>Model / API</th><th>Correct / attempts</th><th>Errors</th><th>Median complete answer</th><th>Median output tokens</th></tr></thead><tbody>${group.rows.map(v=>`<tr><th>${esc(v.model.split('/').at(-1))}<span class="time">${RoadChat.isChat(v)?'Chat completions':'Decisions API'}</span></th><td>${v.correct} / ${v.attempts}</td><td>${v.errors}</td><td>${ms(v.median_ms)}</td><td>${v.output_tokens??'not supplied'}</td></tr>`).join('')}</tbody></table></div>`).join(''):'<p class="comparison-empty">No complete matched set in this run yet. Compare the current scene, or open the recording below.</p>';
+  if(!comparing)$('chat-comparison-note').textContent=`${replay?'Recorded calls':'Current run'}. Median timing uses successful complete responses, including network and routing. Errors remain in the counts and full log. Compare within each input group; JSON and vision are different tasks. Small samples cannot establish a universal speed or accuracy ranking.`;
+}
 function renderComparison(){
+  renderChatComparison();
   const comparisonModel=replay?frames[0]?.request.model:selectedModel,comparisonKind=replay?(frames[0]?.input_kind||'image'):inputKind;
   const stats=RoadQuestions.summarize(frames.filter(f=>f.request.model===comparisonModel&&(f.input_kind||'image')===comparisonKind));
   $('comparison-note').textContent=`${replay?'Recorded run':'This run'} · ${comparisonModel} · ${comparisonKind} · ${stats.pairs} complete matched comparisons. Lane correctness is checked locally; no answer label is sent to the model. These small samples do not establish equal accuracy or faster inference.`;
@@ -210,27 +232,27 @@ function renderSelection(){
   const structured=(f?(f.input_kind||'image'):inputKind)==='structured';
   $('input-heading').textContent=structured?'SCENE PREVIEW · NOT SENT':'THE INPUT IMAGE';
   $('structured-input-panel').hidden=!structured;if(structured)setJSON('structured-input',request.state);
-  $('input-frame').alt=structured?'Local scene preview, not sent to the model':'Exact PNG frame sent to the Decisions API';
+  $('input-frame').alt=structured?'Local scene preview, not sent to the model':'Exact PNG frame sent to the selected model';
   $('input-frame').onload=()=>{$('image-caption').textContent=`${$('input-frame').naturalWidth} × ${$('input-frame').naturalHeight} PNG · ${(image.length*.75/1024).toFixed(1)} KB${structured?' · local preview, not sent':f?' · exact sent image':' · preview'}`;};
   $('input-frame').src=image;$('download-image').href=image;$('download-image').download=`road-frame-${f?.frame_id||'preview'}.png`;
   $('image-caption').textContent=`${f?.image_width||$('input-frame').naturalWidth||canvas.width} × ${f?.image_height||$('input-frame').naturalHeight||canvas.height} PNG · ${(image.length*.75/1024).toFixed(1)} KB${structured?' · local preview, not sent':f?' · exact sent image':' · preview'}`;
   $('selected-label').textContent=f?`FRAME ${String(f.frame_id).padStart(3,'0')} · ${f.speed}× · ${RoadQuestions.count(f)}Q · ${f.request.model} · ${f.input_kind||'image'} · ${replay?'SAVED RUN':following?'LIVE LOG':'HISTORY'}`:'NEXT FRAME · PREVIEW';
   $('selected-time').textContent=f?`${time(f.captured_at)} captured`:'Not sent yet';
   $('timeline-label').textContent=f?`Decision ${selected+1} of ${frames.length}`:'Waiting for the first frame';
-  const a=f&&!f.error?f.response?.answers:null;
+  const a=f&&!f.error?f.response?.answers:null,chat=RoadChat.isChat(request);
   $('action-title').textContent=f?.error?'Request failed':a?`Open lane: ${a.lane.choice}.`:f?'Reading the road…':'Find the open lane.';
-  $('action-detail').textContent=f?(f.application.reason||'This exact image is being evaluated. Classroom mode pauses the game clock until the answer arrives.'):`${inputKind==='image'?'One image':'Structured road JSON'} goes in with ${questionCount} question${questionCount===1?'':'s'}. Only the lane choice steers. Extra questions describe the scene and are optional.`;
+  $('action-detail').textContent=f?(f.application.reason||'This exact input is being evaluated. Classroom mode pauses the game clock until the answer arrives.'):`${inputKind==='image'?'One image':'Structured road JSON'} goes in with ${questionCount} question${questionCount===1?'':'s'}. Only the lane choice steers. Extra questions describe the scene and are optional.`;
   const diagnostic=f?.application.diagnosis,check=f?.application.local_scene_check;
   $('decision-diagnosis').hidden=!diagnostic&&check?.model_matches_scene!==false;
   $('decision-diagnosis').textContent=diagnostic?`Collision diagnosis: ${diagnostic.cause.replaceAll('_',' ')}. Opening: ${diagnostic.actual_open_lane}. Target: ${diagnostic.model_target??'no current answer'}.`:check?.model_matches_scene===false?`Scene mismatch: the model chose ${a?.lane.choice}; the actual gap is ${check.actual_open_lane}. This is a local check, not a corrected answer.`:'';
   const titles={lane:'Which lane is the gap in the barrier?',middle_blocked:'Is the middle lane blocked?',proximity:'Where is the barrier: top, middle or bottom?'};
   $('race-questions').innerHTML=Object.entries(request.questions).map(([name,q])=>{
-    const answer=a?.[name],value=!answer?'—':q.type==='choice'?answer.choice:q.type==='noul'?pct(answer.noul):`${answer.score.toFixed(2)} / 2`;
-    const probs=!answer?'':q.type==='noul'?bars([['no',1-answer.noul],['yes',answer.noul]]):bars(Object.entries(answer.probabilities).map(([k,v])=>[q.type==='score'?['0 top','1 middle','2 bottom'][Number(k)]:k,v]),answer.choice);
+    const answer=a?.[name],value=!answer?'—':chat?(name==='lane'?answer.choice:name==='middle_blocked'?String(answer.value):['0 · top','1 · middle','2 · bottom'][answer.level]):q.type==='choice'?answer.choice:q.type==='noul'?pct(answer.noul):`${answer.score.toFixed(2)} / 2`;
+    const probs=!answer||chat?'':q.type==='noul'?bars([['no',1-answer.noul],['yes',answer.noul]]):bars(Object.entries(answer.probabilities).map(([k,v])=>[q.type==='score'?['0 top','1 middle','2 bottom'][Number(k)]:k,v]),answer.choice);
     const criteria=q.type==='choice'?Object.entries(q.criteria):q.type==='score'?q.criteria.map((v,i)=>[i,v]):[];
-    return `<article class="race-question"><div class="race-question-head"><div><span class="question-type">${q.type} / ${name}</span><h3>${titles[name]}</h3></div><strong>${esc(value)}</strong></div><p>${esc(q.instructions)}</p>${probs}${answer?`<div class="confidence-line">${q.type==='noul'?'Probability of yes · no separate confidence field':`confidence ${answer.confidence.toFixed(2)}${q.type==='score'?' · score = '+Object.entries(answer.probabilities).map(([k,v])=>`${k}×${v}`).join(' + '):''}`}</div>`:''}${criteria.length?`<details><summary>Allowed ${q.type==='choice'?'choices':'score levels'} (${criteria.length})</summary><ul class="criteria-list">${criteria.map(([k,v])=>`<li><code>${esc(k)}</code> — ${esc(v)}</li>`).join('')}</ul></details>`:''}</article>`;
+    return `<article class="race-question"><div class="race-question-head"><div><span class="question-type">${chat?(name==='lane'?'enum':name==='middle_blocked'?'boolean':'level index'):q.type} / ${name}</span><h3>${titles[name]}</h3></div><strong>${esc(value)}</strong></div><p>${esc(q.instructions)}</p>${probs}${answer?`<div class="confidence-line">${chat?'Parsed chat JSON · probabilities and confidence not supplied':q.type==='noul'?'Probability of yes · no separate confidence field':`confidence ${answer.confidence.toFixed(2)}${q.type==='score'?' · score = '+Object.entries(answer.probabilities).map(([k,v])=>`${k}×${v}`).join(' + '):''}`}</div>`:''}${criteria.length?`<details><summary>Allowed ${q.type==='choice'?'choices':'score levels'} (${criteria.length})</summary><ul class="criteria-list">${criteria.map(([k,v])=>`<li><code>${esc(k)}</code> — ${esc(v)}</li>`).join('')}</ul></details>`:''}</article>`;
   }).join('');
-  setJSON('road-request',request,!$('expand-image').checked);
+  setJSON('road-request',f?.wire_request||(RoadChat.isChat(request)?RoadChat.build(request):request),!$('expand-image').checked);
   $('road-request-title').textContent=f?`ACTUAL REQUEST · ${f.metadata.provider||'OpenRouter'} · ${f.request.model}`:'REQUEST PREVIEW · NOT SENT';
   $('road-response-title').textContent=f?.response?`ACTUAL RESPONSE · ${f.metadata.provider||'OpenRouter'}`:f?.error?'REQUEST ERROR':'RESPONSE · WAITING';
   if(f?.response)setJSON('road-response',f.raw_response||f.response);else if(f?.error)setJSON('road-response',{error:f.error});else{$('road-response').textContent=f?'Request in flight…':'Start a run to receive an actual response.';delete $('road-response').dataset.raw;}
@@ -243,7 +265,7 @@ function renderMetadata(f){
   if(!f){$('race-metadata').innerHTML='<p class="metadata-explanation">Make a live call to inspect its timing, usage and provenance.</p>';return;}
   const m=f.metadata||{},r=f.response||{},u=r.usage||{};
   const item=(label,value)=>`<dt>${esc(label)}</dt><dd>${esc(value===undefined?'not supplied':value===null?'null':value)}</dd>`;
-  $('race-metadata').innerHTML=`<div class="selected-outcome">${esc(f.application.status)} · ${esc(f.application.reason||'Waiting for the API')}</div><span class="question-type">API ROUND TRIP · NETWORK INCLUDED</span><strong class="latency-value">${ms(m.upstream_round_trip_ms)}</strong><p class="metadata-explanation">${RoadQuestions.count(f)} question${RoadQuestions.count(f)===1?'':'s'} in this request; one shared duration. Speed ${f.speed}× changes the simulation, not the reported API time. Provider-only processing time is <code>null</code> because no such timing was returned. ${m.timing_origin==='browser'?'This live call went directly from your browser to OpenRouter; no app server was used.':'This recorded/local measurement includes the server-to-provider round trip.'}</p><div class="race-metadata-grid"><dl>${item('Model returned',r.model)}${item('Provider',r.provider||m.provider)}${item('Input mode',f.input_kind||'image')}${item('Connection reused',m.connection_reused)}${item('Connection setup (ms)',m.connection_setup_ms)}${item('Request ID',r.id)}${item('Captured at',f.captured_at)}${item('Response received at',f.received_at)}${item('HTTP status',m.http_status)}${item('Question count',RoadQuestions.count(f))}${item('Decision mode',f.mode)}${item('Capture point',f.checkpoint)}${item('Sampling policy',f.sampling)}${item('Image size',f.image_width+' × '+f.image_height)}</dl><dl>${item('Input tokens',u.input_tokens)}${item('Output tokens',u.output_tokens)}${item('Cost (USD)',u.cost)}${item('Browser round trip (ms)',m.browser_round_trip_ms)}${item('Provider processing (ms)',m.provider_processing_ms)}${item('Road pixels moved during call',f.application.road_pixels_moved)}${item('Simulation held during call (ms)',f.application.simulation_held_ms)}${item('Driving mode',f.driving_mode)}${item('Game time at capture (ms)',f.elapsed_at_capture_ms)}${item('Application / schema error',f.error)}</dl></div><details><summary>Local metadata + action JSON</summary><div class="code-panel"><pre id="race-local-meta" tabindex="0"></pre></div></details>`;
+  $('race-metadata').innerHTML=`<div class="selected-outcome">${esc(f.application.status)} · ${esc(f.application.reason||'Waiting for the API')}</div><span class="question-type">API ROUND TRIP · NETWORK INCLUDED</span><strong class="latency-value">${ms(m.upstream_round_trip_ms)}</strong><p class="metadata-explanation">${RoadQuestions.count(f)} question${RoadQuestions.count(f)===1?'':'s'} in this request; one shared duration. Speed ${f.speed}× changes the simulation, not the reported API time. Provider-only processing time is <code>null</code> because no such timing was returned. ${m.timing_origin==='browser'?'This live call went directly from your browser to OpenRouter; no app server was used.':'This recorded/local measurement includes the server-to-provider round trip.'}</p><div class="race-metadata-grid"><dl>${item('API',m.api_kind||'decisions')}${item('Endpoint',m.endpoint)}${item('Model returned',r.model)}${item('Provider',r.provider||m.provider)}${item('Input mode',f.input_kind||'image')}${item('Connection reused',m.connection_reused)}${item('Connection setup (ms)',m.connection_setup_ms)}${item('Request ID',r.id)}${item('Captured at',f.captured_at)}${item('Response received at',f.received_at)}${item('HTTP status',m.http_status)}${item('Question count',RoadQuestions.count(f))}${item('Decision mode',f.mode)}${item('Capture point',f.checkpoint)}${item('Sampling policy',f.sampling)}${item('Image size',f.image_width+' × '+f.image_height)}</dl><dl>${item('Input tokens',u.input_tokens)}${item('Output tokens',u.output_tokens)}${item('Cost (USD)',u.cost)}${item('Browser round trip (ms)',m.browser_round_trip_ms)}${item('Provider processing (ms)',m.provider_processing_ms)}${item('Road pixels moved during call',f.application.road_pixels_moved)}${item('Simulation held during call (ms)',f.application.simulation_held_ms)}${item('Driving mode',f.driving_mode)}${item('Game time at capture (ms)',f.elapsed_at_capture_ms)}${item('Application / schema error',f.error)}</dl></div><details><summary>Local metadata + action JSON</summary><div class="code-panel"><pre id="race-local-meta" tabindex="0"></pre></div></details>`;
   setJSON('race-local-meta',{metadata:m,application:f.application});
 }
 function renderLog(){
@@ -251,7 +273,7 @@ function renderLog(){
   window.ClassroomUI?.refreshHistory(frames,selected,following,replay);
   $('log-count').textContent=`${frames.length} decisions`;
   if(!frames.length){$('log-rows').innerHTML='<tr><td colspan="8" class="empty-log">Your first decision starts the story. Try “One decision” or start a live run.</td></tr>';return;}
-  $('log-rows').innerHTML=frames.map((f,i)=>{const a=f.response?.answers;return `<tr data-log="${i}" aria-selected="${i===selected}"><td><button aria-label="Inspect decision ${f.frame_id}">#${String(f.frame_id).padStart(3,'0')}<span class="time">${time(f.captured_at)}${f.checkpoint?' · '+esc(f.checkpoint):''}</span></button></td><td>${RoadQuestions.count(f)}Q</td><td>${f.speed}×</td><td>${esc(a?.lane?.choice??'…')}</td><td>${f.request.questions.middle_blocked?pct(a?.middle_blocked?.noul):'not asked'}</td><td>${!f.request.questions.proximity?'not asked':Number.isFinite(a?.proximity?.score)?a.proximity.score.toFixed(2):'—'}</td><td>${ms(f.metadata?.upstream_round_trip_ms)}</td><td class="${['error','stale','blocked','skipped'].includes(f.application.status)?'outcome-bad':f.application.status==='applied'?'outcome-good':''}">${esc(f.application.status)}${f.application.steering?' · '+esc(f.application.steering):''}${f.application.collision_observed?' · collision':f.application.barrier_passed?' · passed':''}</td></tr>`;}).join('');
+  $('log-rows').innerHTML=frames.map((f,i)=>{const a=f.response?.answers;return `<tr data-log="${i}" aria-selected="${i===selected}"><td><button aria-label="Inspect decision ${f.frame_id}">#${String(f.frame_id).padStart(3,'0')}<span class="time">${time(f.captured_at)}${f.checkpoint?' · '+esc(f.checkpoint):''}</span></button></td><td>${RoadQuestions.count(f)}Q</td><td>${f.speed}×</td><td>${esc(a?.lane?.choice??'…')}</td><td>${f.request.questions.middle_blocked?(a?.middle_blocked?.type==='boolean'?String(a.middle_blocked.value):pct(a?.middle_blocked?.noul)):'not asked'}</td><td>${!f.request.questions.proximity?'not asked':Number.isFinite(a?.proximity?.level)?String(a.proximity.level):Number.isFinite(a?.proximity?.score)?a.proximity.score.toFixed(2):'—'}</td><td>${ms(f.metadata?.upstream_round_trip_ms)}</td><td class="${['error','stale','blocked','skipped'].includes(f.application.status)?'outcome-bad':f.application.status==='applied'?'outcome-good':''}">${esc(f.application.status)}${f.application.steering?' · '+esc(f.application.steering):''}${f.application.collision_observed?' · collision':f.application.barrier_passed?' · passed':''}</td></tr>`;}).join('');
   const cost=frames.reduce((n,f)=>n+(f.response?.usage?.cost||0),0);
   $('run-summary').textContent=`Run ${runId} · reported API cost $${cost.toFixed(6)} · ${PUBLIC_SITE?'history stays in this tab; export before refreshing. Your key is never exported.':'raw image requests saved locally; Export run also includes action outcomes and speed-change events.'}`;
   if(following)document.querySelector('.log-scroll').scrollTop=100000;
@@ -294,6 +316,8 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden&&running)pa
 $('drive-mode').addEventListener('change',()=>{driveMode=$('drive-mode').value;event('driving_mode',{mode:driveMode});$('pace-note').textContent=driveMode==='paced'?'Game time pauses during each API request. The API wait timer shows real elapsed time.':'Real-time mode never holds the road for the API. Higher speeds can outrun a response.';updateHud();});
 $('sound-toggle').addEventListener('click',()=>{RoadSound.unlock();RoadSound.setEnabled(!RoadSound.enabled);$('sound-toggle').textContent=RoadSound.enabled?'Sound on':'Sound off';$('sound-toggle').setAttribute('aria-pressed',RoadSound.enabled);if(RoadSound.enabled)RoadSound.steer('right');});
 $('compare-questions').addEventListener('click',compareQuestions);
+$('compare-chat').addEventListener('click',compareChat);
+$('load-chat-comparison').addEventListener('click',()=>loadRecording('./chat-comparison-run.json'));
 $('model-select').addEventListener('change',()=>{selectedModel=$('model-select').value;syncModelControls();event('model',{model:selectedModel,input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('input-kind').addEventListener('change',()=>{inputKind=$('input-kind').value;syncModelControls();event('input_kind',{input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('question-count').addEventListener('change',()=>{questionCount=Number($('question-count').value);event('question_count',{count:questionCount});if(!frames.length)renderSelection();updateHud();});
@@ -329,7 +353,7 @@ async function init(){
   try{
     if(PUBLIC_SITE)config=PublicDecisions.config;
     else{const r=await fetch('/api/config');if(!r.ok)throw new Error();config=await r.json();}
-    $('model-select').innerHTML=config.road_models.map(m=>`<option value="${esc(m.id)}">${esc(m.label)}${m.available?'':' · needs setup'}</option>`).join('');
+    $('model-select').innerHTML=['decisions','chat completions'].map(kind=>`<optgroup label="${kind==='decisions'?'Decisions API':'Standard chat · LLM / VLM'}">${config.road_models.filter(m=>(m.api_kind||'decisions')===kind).map(m=>`<option value="${esc(m.id)}">${esc(m.label)}${m.available?'':' · needs setup'}</option>`).join('')}</optgroup>`).join('');
     syncModelControls();renderSelection();renderComparison();updateControls();
     if(PUBLIC_SITE)$('road-message').textContent='Open Recorded demo, or Connect key for live play.';
     else if(!config.live_available)$('road-message').textContent='Set OPENROUTER_API_KEY on the local server to run live.';

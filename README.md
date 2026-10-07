@@ -29,7 +29,7 @@ inspector; Escape restores the layout. Present requests browser full screen.
 ## Visitors supply their own OpenRouter key
 
 Connect a dedicated key with a small credit limit. Live calls go directly from
-the visitor's browser to `https://openrouter.ai/api/alpha/decisions`. The key is
+the visitor's browser to OpenRouter’s Decisions or chat-completions endpoint. The key is
 held only in a JavaScript closure, never saved to localStorage, sessionStorage,
 cookies, logs, URLs, or exports. Refresh, navigation, and Disconnect clear it.
 Disconnect stops new calls and aborts the browser request; an already accepted
@@ -65,3 +65,39 @@ only public questions and model IDs. Never commit keys or credential files.
 The included recorded JSON contains artificial game scenes and real responses,
 not authentication headers. Keeping this repository and hosted page trustworthy
 is part of keeping visitors' in-memory keys safe.
+
+## Decisions vs standard chat LLM / VLM
+
+Choose GPT-4.1 or GPT-4.1 Mini in the same model dropdown. Road image sends the
+exact PNG to a vision-capable chat model; Structured scene sends JSON as text.
+Both use OpenRouter `/api/v1/chat/completions`, strict JSON schema, temperature 0,
+a 120-token cap, and no requested explanation. They can drive the same game.
+Decisions models continue to use `/api/alpha/decisions`.
+
+Compare → Compare this input makes three billed calls on one frozen scene:
+Luna Decisions, GPT-4.1, and Mini, with order rotated. It uses the current input,
+image size and question count, and never steers. Tables separate JSON/image,
+question count and timing origin, report correct/attempts and errors, and use
+successful complete responses for median latency. Failure timings remain in the
+full trace. Each run retains the 30-call limit. Refresh/disconnect clears the key.
+
+Chat returns a lane enum, optional boolean, and optional 0/1/2 level. The app
+validates these before steering; no probabilities or confidence are invented.
+The regular chat API can enforce structured output too. This experiment compares
+complete model/API paths; it does not isolate API overhead or prove a universal
+latency/accuracy ranking.
+
+Full JSON → Request shows the actual sent body (`wire_request` in exported
+frames); Response shows the untouched provider response (`raw_response`). Full
+frame also contains the canonical scene/questions (`request`) and app-parsed
+answers (`response`). These normalized answers are explicitly labelled.
+
+Open recorded LLM / VLM comparison requires no key. Its 18 calls cover three
+identical 420 × 480 scenes and the corresponding three JSON scenes, one lane
+question per call and three models. All attempts are retained. Measured medians:
+Luna 701 ms image / 535 ms JSON; GPT-4.1 1807 ms image / 759 ms JSON; Mini 2084 ms image /
+1031 ms JSON. These are small local-server samples; live browser timings vary.
+
+References: [OpenRouter structured outputs](https://openrouter.ai/docs/guides/features/structured-outputs),
+[GPT-4.1](https://openrouter.ai/openai/gpt-4.1),
+[GPT-4.1 Mini](https://openrouter.ai/openai/gpt-4.1-mini).

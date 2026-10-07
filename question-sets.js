@@ -10,6 +10,8 @@
   function validSavedAnswers(frame){
     const q=frame.request?.questions,n=Object.keys(q||{}).length;
     if(![1,2,3].includes(n)||!names.slice(0,n).every((name,i)=>q[name]?.type===['choice','noul','score'][i])||Object.keys(q).some(name=>!names.slice(0,n).includes(name)))return false;
+    const chat=typeof module!=='undefined'?require('./chat-baseline.js'):root.RoadChat;
+    if(chat?.isChat(frame.request))return chat.validFrame(frame);
     if(!frame.response||frame.error)return true;
     const a=frame.response.answers;
     if(!a||Object.keys(a).length!==n)return false;
