@@ -13,31 +13,49 @@
     d.addEventListener('click',e=>{if(e.target===d){const r=d.getBoundingClientRect();if(e.clientX<r.left||e.clientX>r.right||e.clientY<r.top||e.clientY>r.bottom)d.close();}});
     return d;
   }
-  const settings=dialog('Connection & settings'),compare=dialog('Compare recorded and live decisions',true),historyDialog=dialog('Complete run history',true),help=dialog('How to teach with Pocket Pilot',true);
-  settings.id='lab-settings';compare.id='lab-comparisons';historyDialog.id='lab-history-dialog';help.id='lab-help';
+  const compare=dialog('Compare recorded and live decisions',true),historyDialog=dialog('Complete run history',true),help=dialog('How to teach with Pocket Pilot',true);
+  compare.id='lab-comparisons';historyDialog.id='lab-history-dialog';help.id='lab-help';
   historyDialog.addEventListener('click',e=>{if(e.target.closest('[data-log]'))historyDialog.close();});
   const intro=one('.race-intro');help.append(intro,one('.how-to'),one('footer'));
-  const connection=one('.visitor-connection');if(connection)settings.append(connection);
-  const advanced=el('div','advanced-settings');
+  const connection=one('.visitor-connection');
   const modelField=$('model-select').parentElement,questionField=$('question-count').parentElement,modeField=one('.pace-control');
-  for(const id of ['input-kind','sampling','image-size'])advanced.append($(id).parentElement);
-  advanced.append($('model-note'),el('p','settings-note','The display stays sharp at every API image size. Changing the input changes what the model receives.'));
-  settings.append(advanced);
-  const audio=one('.audio-controls');settings.append(audio);
+  const inputField=$('input-kind').parentElement,samplingField=$('sampling').parentElement,imageField=$('image-size').parentElement;
+  const audio=one('.audio-controls');
   compare.append(one('.model-comparison'),one('.question-comparison'));
   const historySection=one('.race-log-section');historySection.id='full-run-history';historyDialog.append(historySection);
   const nav=one('.header-links'),apiStatus=$('api-status');nav.replaceChildren();
   const slides=document.createElement('a');slides.href=connection?'./slides.html':'/slides';slides.textContent='Slides';slides.className='lab-link';
-  const connect=button(connection?'Connect key':'Settings',()=>settings.showModal());connect.id='lab-connect';
   const present=button('Present',async()=>{try{if(document.fullscreenElement)await document.exitFullscreen();else await document.documentElement.requestFullscreen();}catch{notify('Full screen is unavailable. The workspace still fits the browser window.');}});present.id='lab-present';
   const demo=button('Recorded demo',()=>$('load-comparison').click());demo.id='lab-recorded-demo';
-  nav.append(demo,button('Compare',()=>compare.showModal()),slides,button('Help',()=>help.showModal()),present,connect);
-  apiStatus.className='lab-connection-status';settings.prepend(apiStatus);
-  const controls=el('div','lab-controls');controls.setAttribute('aria-label','Game controls');
-  controls.append(modelField,questionField,modeField,one('.speed-control'),button('More settings',()=>settings.showModal()));
+  nav.append(demo,button('Compare',()=>compare.showModal()),slides,button('Help',()=>help.showModal()),present);
+  const controls=el('section','lab-controls');controls.setAttribute('aria-label','All game settings');
+  const primary=el('div','control-row primary-settings'),secondary=el('div','control-row secondary-settings');
+  primary.append(modelField,inputField,questionField,modeField,one('.speed-control'));
+  const connectionField=el('div','connection-field');let privacyNote=null;
+  if(connection){
+    // Keep the existing credential handlers and IDs; only their placement changes.
+    help.append(connection.firstElementChild,connection.querySelector('details'),connection.querySelector('.visitor-key-panel>a'));
+    const form=$('key-form'),connected=$('key-connected'),privacy=$('key-privacy');
+    help.append(el('p','connection-help',privacy.textContent));
+    privacy.textContent='Tab only · sent to OpenRouter · billed to your account.';
+    form.querySelector('label').textContent='OpenRouter API key';$('visitor-key').placeholder='Paste your key for live play';
+    $('connect-key').textContent='Connect';
+    connected.querySelector('strong').textContent='Key connected for this tab';connected.querySelector('p').hidden=true;
+    privacyNote=privacy;connectionField.append(form,connected);connection.remove();
+    apiStatus.className='sr-only';connectionField.append(apiStatus);
+  }else{
+    connectionField.append(el('span','control-label','Connection'));apiStatus.className='local-connection-state';connectionField.append(apiStatus);
+  }
+  const soundField=el('div','sound-field'),soundLabel=el('label','','Sound & volume');soundLabel.htmlFor='volume';soundField.append(soundLabel,audio);
+  secondary.append(connectionField,samplingField,imageField,soundField);
+  const note=el('div','controls-note');note.append($('model-note'));if(privacyNote)note.append(privacyNote);
+  controls.append(primary,secondary,note);
   header.after(controls);
   one('.race-toolbar').remove();document.querySelectorAll('.sampling-controls').forEach(n=>n.remove());
-  const getStarted=el('div','lab-start-hint');getStarted.id='lab-start-hint';getStarted.append(el('span','',connection?'Start with a recorded run, or connect your key for live play.':'Take one decision to inspect a live response, or open a recorded run.'),button('Open recorded run',()=>$('load-comparison').click()));controls.after(getStarted);
+  // Fit below the measured controls, including inline key errors and wrapped labels.
+  function fitWorkspace(){main.style.setProperty('--workspace-offset',Math.ceil(main.getBoundingClientRect().top+window.scrollY)+'px');}
+  const sizeObserver=new ResizeObserver(fitWorkspace);sizeObserver.observe(header);sizeObserver.observe(controls);
+  window.addEventListener('resize',fitWorkspace);requestAnimationFrame(fitWorkspace);
   const roadDetails=el('details','road-details');roadDetails.append(el('summary','','Timing & sampling'),$('sampling-status'),$('latency-budget'),$('pace-note'));road.append(roadDetails);
   const roadMessage=$('road-message');roadMessage.setAttribute('role','status');
   const roadHeader=road.querySelector('.section-heading');roadHeader.querySelector('h2').textContent='Live road';
@@ -72,7 +90,6 @@
     frames.forEach((f,i)=>{const b=button('',()=>{},'history-frame');b.dataset.log=i;b.setAttribute('aria-label',`Inspect decision ${f.frame_id}`);b.setAttribute('aria-pressed',String(i===selected));const top=el('span','history-frame-top'),answer=f.error?'Error':f.response?.answers?.lane?.choice||'Waiting…';top.append(el('b','',`#${String(f.frame_id).padStart(2,'0')}`),el('strong','',answer));const bottom=el('span','history-frame-bottom');bottom.append(el('span','',`${Object.keys(f.request.questions).length}Q · ${f.speed}×`),el('span','',Number.isFinite(f.metadata.upstream_round_trip_ms)?`${Math.round(f.metadata.upstream_round_trip_ms)} ms`:'pending'));b.append(top,bottom,el('span','history-outcome',f.application.status));if(f.error||f.application.collision_observed)b.classList.add('has-error');host.append(b);});
     host.scrollTop=following?host.scrollHeight:prior;
     if(active!==undefined)host.querySelector(`[data-log="${active}"]`)?.focus({preventScroll:true});
-    $('lab-start-hint').hidden=frames.length>0||!!window.PublicDecisions?.connected;
     history.querySelectorAll('.history-tools button')[1].disabled=!frames.length;
   }
   function refreshSelection(data){
@@ -85,7 +102,6 @@
   }
   // Load actions also work from the compact toolbar, then return to the workspace.
   for(const id of ['load-comparison','load-model-benchmark'])$(id).addEventListener('click',()=>compare.close());
-  window.addEventListener('public-connection-changed',()=>{const connected=!!window.PublicDecisions?.connected;connect.textContent=connected?'Key connected · Settings':'Connect key';connect.classList.toggle('connected',connected);if(connected&&settings.open)settings.close();if(current)$('lab-start-hint').hidden=current.frames.length>0||connected;});
   document.addEventListener('fullscreenchange',()=>present.textContent=document.fullscreenElement?'Exit full screen':'Present');
   window.ClassroomUI={refreshSelection,refreshHistory};
 })();

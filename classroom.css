@@ -7,12 +7,18 @@
 .lab-button,.classroom-layout .header-links>a{border:1px solid transparent;background:transparent;padding:7px 10px;border-radius:5px;color:var(--ink);font:500 12px var(--sans);text-decoration:none;white-space:nowrap;transition:background .15s,border-color .15s}
 .lab-button:hover,.classroom-layout .header-links>a:hover{background:#e0e7db;border-color:#cbd6c4}.lab-button:disabled{opacity:.45}
 #lab-connect{background:var(--accent);color:#fffefa;border-color:var(--accent)}#lab-connect.connected{background:#dde8d4;color:var(--accent);border-color:#bacbb0}
-.lab-controls{display:flex;align-items:end;gap:14px;padding:12px 0;flex-wrap:wrap}
-.lab-controls>div{display:flex;flex-direction:column;align-items:stretch;gap:4px}
-.lab-controls label,.lab-controls .speed-control>span{font-size:10px;font-weight:600;color:var(--muted);margin:0;line-height:1.2}
-.lab-controls select{font-size:12px;color:var(--ink);background:var(--paper);padding:7px 26px 7px 9px;max-width:250px;border:1px solid #cbd5c5;border-radius:5px;height:33px}
-.lab-controls .pace-control select{max-width:210px}.lab-controls .speed-buttons{border:1px solid #cbd5c5;background:#e5eadf;height:33px;padding:2px;border-radius:5px}.lab-controls .speed-buttons button{height:27px;width:32px;border-radius:3px;font-size:11px}
-.lab-controls>.lab-button{margin-left:auto;border-color:#cbd5c5;height:33px}
+.lab-controls{display:block;padding:12px 14px 9px;margin:12px 0;background:#e5ebe0;border:1px solid #d0dcc8;border-radius:7px}
+.lab-controls .control-row{display:grid;align-items:start;gap:10px 16px}
+.lab-controls .primary-settings{grid-template-columns:1.1fr 1fr 1.2fr 1.2fr 138px}
+.lab-controls .secondary-settings{grid-template-columns:1.65fr 1.1fr .9fr 1fr;margin-top:10px}
+.control-row>div{min-width:0}.lab-controls label,.lab-controls .control-label,.lab-controls .speed-control>span{display:block;font-size:10px;font-weight:600;color:var(--muted);margin:0 0 5px;line-height:1.2}
+.lab-controls select{display:block;width:100%;font-size:11px;color:var(--ink);background:var(--paper);padding:6px 23px 6px 8px;max-width:none;border:1px solid #c3cfba;border-radius:4px;height:31px}
+.lab-controls .pace-control,.lab-controls .speed-control{display:block}.lab-controls .pace-control select{max-width:none}.lab-controls .speed-buttons{border:1px solid #c3cfba;background:#dce5d5;height:31px;padding:2px;border-radius:4px;width:138px}.lab-controls .speed-buttons button{height:25px;width:31px;border-radius:3px;font-size:11px}
+.lab-controls .key-entry{display:flex;gap:6px}.lab-controls .key-entry input{height:31px;min-width:0;width:100%;border:1px solid #c3cfba;border-radius:4px;padding:6px 8px;font-size:11px;background:var(--paper)}.lab-controls .key-entry button{flex:0 0 auto;white-space:nowrap;width:auto;height:31px;padding:6px 12px;font-size:11px;justify-content:center;background:var(--accent)}
+.lab-controls #key-privacy{margin:4px 0 0;font-size:9px;line-height:1.4;color:#63775a}.lab-controls #key-error{margin:5px 0 0;font-size:11px;color:#914b30}.lab-controls #key-error:empty{display:none}
+.lab-controls #key-connected{height:48px;display:flex;align-items:center;justify-content:space-between;gap:10px}.lab-controls #key-connected strong{font-size:11px;color:var(--accent);font-weight:600}.lab-controls #disconnect-key{margin:0;padding:6px 8px;font-size:10px;height:31px;white-space:nowrap;width:auto}
+.lab-controls .audio-controls{display:flex;align-items:center;gap:8px;margin:0;height:31px}.lab-controls .audio-controls button{height:31px;min-width:72px;padding:5px 8px;font-size:11px;background:var(--paper);border-radius:4px}.lab-controls .audio-controls input{display:block;flex:1;min-width:30px;width:70px;margin:0}.lab-controls .audio-controls .sr-only{display:none}
+.controls-note{font-size:10px;line-height:1.5;color:#5b7052;margin-top:7px}.local-connection-state{display:block;font-size:11px;line-height:31px;color:var(--accent)}.connection-help{font-size:12px;color:var(--muted);line-height:1.6}
 .lab-start-hint{padding:8px 12px;margin-bottom:10px;border-left:3px solid #7f9a6e;background:#e5eddb;display:flex;align-items:center;justify-content:space-between;gap:12px;color:#4a6342;font-size:12px}.lab-start-hint button{padding:3px 8px;text-decoration:underline}
 .classroom-layout .race-layout{display:grid;grid-template-columns:minmax(260px,.83fr) minmax(400px,1.4fr) minmax(175px,.48fr);gap:16px;padding:0 0 16px;height:calc(100dvh - 139px);min-height:510px;align-items:stretch}
 .classroom-layout:has(.lab-start-hint:not([hidden])) .race-layout{height:calc(100dvh - 184px)}
@@ -61,3 +67,32 @@
 .inspector-expanded .decision-facts{display:flex;gap:26px;padding:7px 0}
 .inspector-expanded .decision-facts>div{flex-direction:row;align-items:center;gap:9px}
 .inspector-expanded .decision-facts strong{font-size:18px}
+@media(min-width:801px){
+  .classroom-layout .race-shell>header{height:56px;padding:8px 0}
+  .classroom-layout .lab-controls{margin:9px 0;padding:10px 12px 8px}
+  .controls-note{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+  .lab-controls #key-privacy{margin:0;white-space:nowrap}
+  .classroom-layout .race-layout{height:calc(100dvh - var(--workspace-offset,233px));min-height:450px}
+  .lab-controls .control-row select{max-width:none}
+  .classroom-layout .decision-facts{display:flex;justify-content:space-between;gap:12px;padding:7px 0}
+  .classroom-layout .decision-facts>div{flex-direction:row;align-items:center;gap:8px}
+  .classroom-layout .decision-facts strong{font-size:19px;line-height:1.2}
+  .classroom-layout .frame-strip{grid-template-columns:80px minmax(0,1fr);gap:7px 14px;padding:10px}
+  .classroom-layout .frame-strip figure{display:contents}
+  .classroom-layout .frame-strip img{grid-column:1;grid-row:1;width:80px}
+  .classroom-layout .frame-strip figcaption{grid-column:1/-1;grid-row:2;margin:0;font-size:9px;line-height:1.4}
+  .classroom-layout .frame-explanation{grid-column:2;grid-row:1}
+  .classroom-layout .frame-explanation .eyebrow{display:none}
+}
+@media(min-width:801px) and (max-width:1199px){
+  .classroom-layout .race-layout{grid-template-rows:minmax(0,1fr) 92px;min-height:450px;gap:10px}
+  .lab-controls .control-row{gap:10px}.lab-controls .primary-settings{grid-template-columns:1fr 1fr 1.1fr 1.15fr 138px}
+  .lab-controls .secondary-settings{grid-template-columns:1.65fr 1.1fr .9fr 1fr}.lab-controls select{font-size:10px;padding-left:6px}
+}
+@media(max-width:800px){
+  .classroom-layout .lab-controls{display:block;padding:12px;margin:10px 0}
+  .lab-controls .primary-settings,.lab-controls .secondary-settings{grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}
+  .lab-controls .connection-field,.lab-controls .sound-field{grid-column:1/-1}
+  .lab-controls .key-entry{flex-wrap:nowrap}.lab-controls .key-entry button{width:auto}
+  .lab-controls .audio-controls{max-width:280px}.lab-controls .control-row select{font-size:11px;max-width:none}
+}

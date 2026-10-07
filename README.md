@@ -13,10 +13,12 @@ Open the served URL; use `slides.html` for the presentation.
 
 ## Classroom controls and JSON
 
-The road, selected decision, and rewindable history share one workspace. Connection
-and advanced settings are under Connect key / Settings; model comparisons and the
-complete log open separately. Recorded demo works without a key. On smaller laptops,
-history becomes a horizontal strip; phones stack the panels.
+The road, selected decision, and rewindable history share one workspace. All settings
+are visible together in two desktop rows: connection, model, input, questions, driving
+mode, speed, sampling, image size, sound, and volume. Keep this layout without a
+separate settings dialog. Model comparisons and the complete log open separately.
+Recorded demo works without a key. On smaller laptops, history becomes a horizontal
+strip; phones stack the panels and controls.
 
 Full JSON offers Request, Response, Metadata + action, and Full frame. Use the searchable tree,
 expand/collapse, or syntax-highlighted Raw view with line numbers. Click a tree field
