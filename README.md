@@ -26,11 +26,17 @@ name to copy its path. Copy JSON and Download keep every original field and imag
 even when search or shortened strings simplify the display. Enlarge focuses the
 inspector; Escape restores the layout. Present requests browser full screen.
 
-The 13-slide lesson includes recorded medians for all six models, separate image
-and JSON columns, sample counts, and a matched image comparison. Its summaries
-come from 48 recorded calls. The overview uses the latest available run per
-model/input; ratios compare models within the same run. Speaker notes explain
-the small samples and timing method. Missing measurements are labelled.
+The 23-slide lesson explains LM/VLM, the Decisions API, Jev, typed answers,
+request/response JSON, and proposed sustainability-lab applications. The comparison
+covers all six models, all supported image/JSON paths, 210/420/840px images and
+1/2/3 questions. Run D contains 189 attempts across 63 settings, three scenes each.
+Earlier A/B/C recordings remain separate; exports contain all 264 attempts.
+Tables show correct/attempts, errors, median/mean/min/max latency, mean reported
+input/output tokens and scaled recorded cost per 1,000 calls. Missing is not zero.
+CSV/JSON downloads retain full precision. The evidence ZIP stores each PNG once
+and includes a script to restore exact requests/responses. Speaker notes explain
+sample limits, scoring and timings. The four-minute recorded walkthrough at
+`walkthrough.html` includes synthetic narration, captions, chapters and a transcript.
 
 ## Visitors supply their own OpenRouter key
 

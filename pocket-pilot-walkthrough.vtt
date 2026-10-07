@@ -1,0 +1,180 @@
+WEBVTT
+
+NOTE Synthetic narration, macOS Samantha. Caption timing is approximate.
+
+00:00:00.000 --> 00:00:03.779
+Look at this road. The gap is on the left. Our program sends
+
+00:00:03.779 --> 00:00:07.558
+the picture to a model, gets a lane choice back, and uses that
+
+00:00:07.558 --> 00:00:10.755
+answer to steer. This is a recorded walkthrough of Pocket Pilot.
+
+00:00:11.167 --> 00:00:15.215
+A language model works with text. A vision language model can also read
+
+00:00:15.215 --> 00:00:19.264
+images. An API is the interface our program uses to call a model.
+
+00:00:19.264 --> 00:00:23.312
+Those are separate ideas. The model supplies an answer, while our own code
+
+00:00:23.312 --> 00:00:25.803
+decides how and when to act on it.
+
+00:00:26.208 --> 00:00:30.607
+A Decisions request starts with the current state and a small question. Here,
+
+00:00:30.607 --> 00:00:35.005
+the state is a road image, and the question is: which lane is
+
+00:00:35.005 --> 00:00:39.404
+open? We supply the allowed answers, left, middle, and right. The response contains
+
+00:00:39.404 --> 00:00:42.111
+a typed answer that our program can inspect.
+
+00:00:42.510 --> 00:00:47.409
+Jev is a model made by TypeSafe. It reads text or structured JSON
+
+00:00:47.409 --> 00:00:52.308
+in this demo. Luna and Clef can also receive images. The Decisions API
+
+00:00:52.308 --> 00:00:57.206
+defines the interface, while OpenRouter sends our request to the selected provider. Changing
+
+00:00:57.206 --> 00:01:00.221
+the model can change accuracy, speed, and cost.
+
+00:01:00.635 --> 00:01:05.185
+A conventional model can explain the road, or generate a small JSON object
+
+00:01:05.185 --> 00:01:09.735
+using a schema. Decisions is useful when the answer types and options are
+
+00:01:09.735 --> 00:01:14.285
+already known. Specialized models can score those options directly. But the API name
+
+00:01:14.285 --> 00:01:18.835
+alone does not guarantee faster or more accurate answers. We need to measure
+
+00:01:18.835 --> 00:01:19.185
+that.
+
+00:01:19.594 --> 00:01:24.098
+The three types answer different questions. Choice selects a label and returns probabilities
+
+00:01:24.098 --> 00:01:28.603
+over the labels. The yes probability type returns a number between zero and
+
+00:01:28.603 --> 00:01:33.108
+one. Score uses ordered levels and can return a fractional value. These are
+
+00:01:33.108 --> 00:01:37.613
+model estimates. A probability of one does not prove the answer is correct.
+
+00:01:38.013 --> 00:01:42.127
+Here is a real request from an earlier recorded call. It contains the
+
+00:01:42.127 --> 00:01:46.241
+model, the state, and the questions. The image is sent as a data
+
+00:01:46.241 --> 00:01:50.355
+URL. We shorten its bytes on screen, but students can download the exact
+
+00:01:50.355 --> 00:01:52.254
+request and inspect the full input.
+
+00:01:52.655 --> 00:01:57.057
+The response chose left. The other answers describe whether the middle lane is
+
+00:01:57.057 --> 00:02:01.459
+blocked and where the barrier appears. Only the lane answer controls this game.
+
+00:02:01.459 --> 00:02:05.861
+The timing shown here belongs to this one example. The benchmark slides summarize
+
+00:02:05.861 --> 00:02:06.877
+many separate calls.
+
+00:02:07.280 --> 00:02:12.323
+The new benchmark covers sixty three settings with three scenes per setting: a
+
+00:02:12.323 --> 00:02:17.366
+hundred and eighty nine attempts. We test all supported models, three image sizes,
+
+00:02:17.366 --> 00:02:22.409
+and one, two, or three questions. The table shows accuracy, errors, median and
+
+00:02:22.409 --> 00:02:27.453
+mean time, the observed range, reported tokens, and cost. Use the controls to
+
+00:02:27.453 --> 00:02:29.780
+compare the same setting across models.
+
+00:02:30.196 --> 00:02:34.554
+For the one question, four hundred and twenty pixel image, Luna's median was
+
+00:02:34.554 --> 00:02:38.911
+about point six seconds. The two chat models were about one point six
+
+00:02:38.911 --> 00:02:43.269
+seconds. With JSON, Jev and Luna were both around half a second. Across
+
+00:02:43.269 --> 00:02:47.626
+the complete experiment, there were three wrong lane choices and eighteen request size
+
+00:02:47.626 --> 00:02:50.643
+errors. Speed is only one part of the result.
+
+00:02:51.043 --> 00:02:56.705
+For the Sustainability Lab, I would start with field photo quality: is an
+
+00:02:56.705 --> 00:03:02.367
+image usable, blurred, or obstructed? Students can check those labels themselves. Other possibilities
+
+00:03:02.367 --> 00:03:08.028
+include visible smoke triage, solar panel inspection, and waste audits. These are proposed
+
+00:03:08.028 --> 00:03:13.255
+applications. A smoke image cannot, by itself, tell us the particulate concentration.
+
+00:03:13.668 --> 00:03:18.205
+Some useful decisions need no image. We could combine sensor readings with technician
+
+00:03:18.205 --> 00:03:22.742
+notes, review building energy events, or route a research question to the right
+
+00:03:22.742 --> 00:03:27.279
+data tool. Simple rules should remain a baseline. A model is most interesting
+
+00:03:27.279 --> 00:03:31.816
+when context matters, and its suggested action should leave evidence for a person
+
+00:03:31.816 --> 00:03:32.514
+to review.
+
+00:03:32.918 --> 00:03:36.848
+This sensor example is invented for teaching. A reading has stayed at zero
+
+00:03:36.848 --> 00:03:40.778
+while nearby measurements are higher. The question is what to check next. A
+
+00:03:40.778 --> 00:03:44.707
+typed answer could put the case in a review queue. It should not
+
+00:03:44.707 --> 00:03:48.335
+silently delete the measurement or claim that it has diagnosed the cause.
+
+00:03:48.752 --> 00:03:53.690
+Choose a task with labels we can check. Hold out examples before tuning,
+
+00:03:53.690 --> 00:03:58.629
+compare simple rules with conventional models and Decisions, and report mistakes as well
+
+00:03:58.629 --> 00:04:03.568
+as speed and cost. Keep a review option for ambiguous cases. Then use
+
+00:04:03.568 --> 00:04:08.127
+Pocket Pilot to inspect every request, response, image, and timing for yourself.
