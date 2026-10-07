@@ -26,6 +26,12 @@ name to copy its path. Copy JSON and Download keep every original field and imag
 even when search or shortened strings simplify the display. Enlarge focuses the
 inspector; Escape restores the layout. Present requests browser full screen.
 
+The 13-slide lesson includes recorded medians for all six models, separate image
+and JSON columns, sample counts, and a matched image comparison. Its summaries
+come from 48 recorded calls. The overview uses the latest available run per
+model/input; ratios compare models within the same run. Speaker notes explain
+the small samples and timing method. Missing measurements are labelled.
+
 ## Visitors supply their own OpenRouter key
 
 Connect a dedicated key with a small credit limit. Live calls go directly from

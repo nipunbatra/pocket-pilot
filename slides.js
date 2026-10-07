@@ -18,7 +18,7 @@ function requestTab(name){
   requestView=name;document.querySelectorAll('[data-request]').forEach(b=>{b.setAttribute('aria-selected',String(b.dataset.request===name));b.tabIndex=b.dataset.request===name?0:-1;});
   const data=name==='envelope'?{model:sample.request.model,state:sample.request.state}:name==='questions'?{questions:sample.request.questions}:sample.request;
   byId('request-json').textContent=pretty(shortImages(data));
-  byId('request-view-note').textContent=name==='envelope'?'Input excerpt; the Questions tab shows the other top-level field.':name==='questions'?'Exact question definitions, including the full instructions and criteria.':'Complete request structure; only the image bytes are abbreviated.';
+  byId('request-view-note').textContent=name==='envelope'?'This tab shows the input. Open Questions to see exactly what we asked.':name==='questions'?'These are the instructions and answer choices we sent.':'This is the whole request. Only the image bytes are shortened.';
 }
 function responseTab(name){
   responseView=name;document.querySelectorAll('[data-response]').forEach(b=>{b.setAttribute('aria-selected',String(b.dataset.response===name));b.tabIndex=b.dataset.response===name?0:-1;});
@@ -45,4 +45,32 @@ byId('answer-score').textContent=sample.response.answers.proximity.score;
 byId('recorded-latency').textContent=(sample.metadata.upstream_round_trip_ms/1000).toFixed(3)+' s';
 byId('recorded-tokens').textContent=sample.response.usage.input_tokens.toLocaleString();
 byId('recorded-cost').textContent='$'+sample.response.usage.cost.toFixed(7);
+// The builder derives these values from recorded calls. Slides make no API calls.
+const timings=LESSON_TIMINGS;
+const seconds=value=>Number.isFinite(value)?(value/1000).toFixed(2)+' s':'Not available';
+function node(tag,text,cls){const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;}
+for(const row of timings.latest){
+  const tr=node('tr'),name=node('th',row.label);name.scope='row';name.append(node('span',row.api,'timing-api'));tr.append(name);
+  for(const kind of ['image','structured']){
+    const cell=node('td'),result=row[kind];
+    if(result){cell.append(node('strong',seconds(result.median_ms)),node('span',`${result.attempts} calls · ${result.batch}`,'timing-sample'));}
+    else cell.append(node('span',kind==='image'&&row.model==='typesafe/jev-1.13'?'JSON only':'Not measured','timing-missing'));
+    tr.append(cell);
+  }
+  byId('timing-model-rows').append(tr);
+}
+byId('timing-correct').textContent=`${timings.correct} / ${timings.attempts}`;
+const earlier=timings.groups.filter(g=>g.batch==='A'&&g.model==='openai/gpt-6-luna-decisions');
+byId('timing-earlier-note').textContent='Earlier Luna medians: '+earlier.map(g=>`${g.input_kind==='structured'?'JSON':g.width+'px image'} ${seconds(g.median_ms)} (${g.attempts} calls)`).join('; ')+'. The smaller-image follow-up ran later, so it does not isolate the effect of resolution.';
+const maxLatency=Math.max(...timings.matched_image.map(g=>g.median_ms));
+for(const result of timings.matched_image){
+  const label=timings.latest.find(row=>row.model===result.model).label;
+  const row=node('div',undefined,'latency-row'),heading=node('div',undefined,'latency-row-heading');
+  heading.append(node('span',label),node('strong',seconds(result.median_ms)));
+  const track=node('div',undefined,'latency-track'),bar=node('div',undefined,'latency-bar'+(result.model==='openai/gpt-6-luna-decisions'?' luna':''));
+  bar.style.width=`${result.median_ms/maxLatency*100}%`;track.append(bar);track.setAttribute('aria-hidden','true');row.append(heading,track);byId('timing-bars').append(row);
+}
+const mini=timings.matched_image.find(g=>g.model==='openai/gpt-4.1-mini'),full=timings.matched_image.find(g=>g.model==='openai/gpt-4.1');
+byId('timing-speedup').textContent=mini.relative_to_luna.toFixed(1)+'×';
+byId('timing-ratios').textContent=`GPT-4.1 took ${full.relative_to_luna.toFixed(1)}× as long. Both ratios use the medians from this same test.`;
 requestTab(requestView);responseTab(responseView);showSlide((parseInt(location.hash.slice(1),10)||1)-1,false);
