@@ -35,8 +35,8 @@ Tables show correct/attempts, errors, median/mean/min/max latency, mean reported
 input/output tokens and scaled recorded cost per 1,000 calls. Missing is not zero.
 CSV/JSON downloads retain full precision. The evidence ZIP stores each PNG once
 and includes a script to restore exact requests/responses. Speaker notes explain
-sample limits, scoring and timings. The four-minute recorded walkthrough at
-`walkthrough.html` includes synthetic narration, captions, chapters and a transcript.
+sample limits, scoring and timings. The animated walkthrough at
+`walkthrough.html` includes Gemini narration, an original Lyria instrumental score, 1080p motion graphics, captions, chapters and a transcript. Animations explain the system; benchmark numbers come from saved calls.
 
 ## Visitors supply their own OpenRouter key
 

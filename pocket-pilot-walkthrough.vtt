@@ -1,180 +1,219 @@
 WEBVTT
 
-NOTE Synthetic narration, macOS Samantha. Caption timing is approximate.
+NOTE Caption timing is approximate. Synthetic narration: Gemini Kore.
 
-00:00:00.000 --> 00:00:03.779
-Look at this road. The gap is on the left. Our program sends
+00:00:01.250 --> 00:00:04.265
+Where would you steer? The opening is on
 
-00:00:03.779 --> 00:00:07.558
-the picture to a model, gets a lane choice back, and uses that
+00:00:04.265 --> 00:00:07.279
+the left. For us, that's easy. For this
 
-00:00:07.558 --> 00:00:10.755
-answer to steer. This is a recorded walkthrough of Pocket Pilot.
+00:00:07.279 --> 00:00:10.294
+little car, it means sending a picture, asking
 
-00:00:11.167 --> 00:00:15.215
-A language model works with text. A vision language model can also read
+00:00:10.294 --> 00:00:13.309
+a question, and waiting for an answer. Let's
 
-00:00:15.215 --> 00:00:19.264
-images. An API is the interface our program uses to call a model.
+00:00:13.309 --> 00:00:15.570
+follow that journey in Pocket Pilot.
 
-00:00:19.264 --> 00:00:23.312
-Those are separate ideas. The model supplies an answer, while our own code
+00:00:16.900 --> 00:00:20.373
+First, capture the road. Ask: which lane is
 
-00:00:23.312 --> 00:00:25.803
-decides how and when to act on it.
+00:00:20.373 --> 00:00:23.846
+open? Give the model three allowed answers: left,
 
-00:00:26.208 --> 00:00:30.607
-A Decisions request starts with the current state and a small question. Here,
+00:00:23.846 --> 00:00:27.320
+middle, or right. It returns a choice. Our
 
-00:00:30.607 --> 00:00:35.005
-the state is a road image, and the question is: which lane is
+00:00:27.320 --> 00:00:30.793
+code checks that answer, then moves the car.
 
-00:00:35.005 --> 00:00:39.404
-open? We supply the allowed answers, left, middle, and right. The response contains
+00:00:30.793 --> 00:00:34.266
+The model suggests; the application controls what happens
 
-00:00:39.404 --> 00:00:42.111
-a typed answer that our program can inspect.
+00:00:34.266 --> 00:00:34.700
+next.
 
-00:00:42.510 --> 00:00:47.409
-Jev is a model made by TypeSafe. It reads text or structured JSON
+00:00:36.025 --> 00:00:38.869
+A language model works with text. A vision
 
-00:00:47.409 --> 00:00:52.308
-in this demo. Luna and Clef can also receive images. The Decisions API
+00:00:38.869 --> 00:00:41.714
+language model can also read images. An API
 
-00:00:52.308 --> 00:00:57.206
-defines the interface, while OpenRouter sends our request to the selected provider. Changing
+00:00:41.714 --> 00:00:44.558
+is the interface our code uses to ask
 
-00:00:57.206 --> 00:01:00.221
-the model can change accuracy, speed, and cost.
+00:00:44.558 --> 00:00:47.403
+either one a question. Jev is a model
 
-00:01:00.635 --> 00:01:05.185
-A conventional model can explain the road, or generate a small JSON object
+00:00:47.403 --> 00:00:50.247
+from TypeSafe, using text and JSON here. It
 
-00:01:05.185 --> 00:01:09.735
-using a schema. Decisions is useful when the answer types and options are
+00:00:50.247 --> 00:00:52.025
+isn't the Java programming language.
 
-00:01:09.735 --> 00:01:14.285
-already known. Specialized models can score those options directly. But the API name
+00:00:53.358 --> 00:00:56.238
+With a Decisions API, we define the question
 
-00:01:14.285 --> 00:01:18.835
-alone does not guarantee faster or more accurate answers. We need to measure
+00:00:56.238 --> 00:00:59.118
+and the shape of its answer before making
 
-00:01:18.835 --> 00:01:19.185
-that.
+00:00:59.118 --> 00:01:01.998
+the call. Here is a shortened example: a
 
-00:01:19.594 --> 00:01:24.098
-The three types answer different questions. Choice selects a label and returns probabilities
+00:01:01.998 --> 00:01:04.878
+road image goes in, and a lane choice
 
-00:01:24.098 --> 00:01:28.603
-over the labels. The yes probability type returns a number between zero and
+00:01:04.878 --> 00:01:07.758
+comes back. Only that lane answer is needed
 
-00:01:28.603 --> 00:01:33.108
-one. Score uses ordered levels and can return a fractional value. These are
+00:01:07.758 --> 00:01:08.478
+to steer.
 
-00:01:33.108 --> 00:01:37.613
-model estimates. A probability of one does not prove the answer is correct.
+00:01:09.817 --> 00:01:13.116
+Choice picks a label, with probabilities and a
 
-00:01:38.013 --> 00:01:42.127
-Here is a real request from an earlier recorded call. It contains the
+00:01:13.116 --> 00:01:16.416
+separate confidence value. Noul answers a yes-or-no question
 
-00:01:42.127 --> 00:01:46.241
-model, the state, and the questions. The image is sent as a data
+00:01:16.416 --> 00:01:19.715
+with a number between zero and one. Score
 
-00:01:46.241 --> 00:01:50.355
-URL. We shorten its bytes on screen, but students can download the exact
+00:01:19.715 --> 00:01:23.015
+places an answer on ordered levels, so fractions
 
-00:01:50.355 --> 00:01:52.254
-request and inspect the full input.
+00:01:23.015 --> 00:01:26.314
+are possible. These are estimates. Even a confidence
 
-00:01:52.655 --> 00:01:57.057
-The response chose left. The other answers describe whether the middle lane is
+00:01:26.314 --> 00:01:28.377
+of one can be wrong.
 
-00:01:57.057 --> 00:02:01.459
-blocked and where the barrier appears. Only the lane answer controls this game.
+00:01:29.692 --> 00:01:32.681
+A conventional model can explain the road. It
 
-00:02:01.459 --> 00:02:05.861
-The timing shown here belongs to this one example. The benchmark slides summarize
+00:01:32.681 --> 00:01:35.670
+can also return JSON that follows a schema.
 
-00:02:05.861 --> 00:02:06.877
-many separate calls.
+00:01:35.670 --> 00:01:38.659
+Decisions is useful when we already know the
 
-00:02:07.280 --> 00:02:12.323
-The new benchmark covers sixty three settings with three scenes per setting: a
+00:01:38.659 --> 00:01:41.648
+possible answers and want typed results. Whether a
 
-00:02:12.323 --> 00:02:17.366
-hundred and eighty nine attempts. We test all supported models, three image sizes,
+00:01:41.648 --> 00:01:44.637
+particular model is faster or better is something
 
-00:02:17.366 --> 00:02:22.409
-and one, two, or three questions. The table shows accuracy, errors, median and
+00:01:44.637 --> 00:01:46.132
+to measure, not assume.
 
-00:02:22.409 --> 00:02:27.453
-mean time, the observed range, reported tokens, and cost. Use the controls to
+00:01:47.442 --> 00:01:50.266
+Watch what happens while an answer is on
 
-00:02:27.453 --> 00:02:29.780
-compare the same setting across models.
+00:01:50.266 --> 00:01:53.090
+its way. If the road keeps moving, that
 
-00:02:30.196 --> 00:02:34.554
-For the one question, four hundred and twenty pixel image, Luna's median was
+00:01:53.090 --> 00:01:55.915
+answer can arrive too late. Classroom mode pauses
 
-00:02:34.554 --> 00:02:38.911
-about point six seconds. The two chat models were about one point six
+00:01:55.915 --> 00:01:58.739
+the game clock until a fresh decision returns.
 
-00:02:38.911 --> 00:02:43.269
-seconds. With JSON, Jev and Luna were both around half a second. Across
+00:01:58.739 --> 00:02:01.563
+Real time mode exposes that delay. A correct
 
-00:02:43.269 --> 00:02:47.626
-the complete experiment, there were three wrong lane choices and eighteen request size
+00:02:01.563 --> 00:02:03.682
+answer can still miss its deadline.
 
-00:02:47.626 --> 00:02:50.643
-errors. Speed is only one part of the result.
+00:02:04.983 --> 00:02:07.838
+Here are all six models in the same
 
-00:02:51.043 --> 00:02:56.705
-For the Sustainability Lab, I would start with field photo quality: is an
+00:02:07.838 --> 00:02:10.692
+one-question comparison. For images, Luna took about six
 
-00:02:56.705 --> 00:03:02.367
-image usable, blurred, or obstructed? Students can check those labels themselves. Other possibilities
+00:02:10.692 --> 00:02:13.547
+tenths of a second; the chat models, about
 
-00:03:02.367 --> 00:03:08.028
-include visible smoke triage, solar panel inspection, and waste audits. These are proposed
+00:02:13.547 --> 00:02:16.401
+one and a half seconds. With structured JSON,
 
-00:03:08.028 --> 00:03:13.255
-applications. A smoke image cannot, by itself, tell us the particulate concentration.
+00:02:16.401 --> 00:02:19.255
+Jev and Luna were both near half a
 
-00:03:13.668 --> 00:03:18.205
-Some useful decisions need no image. We could combine sensor readings with technician
+00:02:19.255 --> 00:02:22.110
+second. Each number is a median of just
 
-00:03:18.205 --> 00:03:22.742
-notes, review building energy events, or route a research question to the right
+00:02:22.110 --> 00:02:22.823
+three scenes.
 
-00:03:22.742 --> 00:03:27.279
-data tool. Simple rules should remain a baseline. A model is most interesting
+00:02:24.150 --> 00:02:27.563
+The full run used sixty-three settings and a
 
-00:03:27.279 --> 00:03:31.816
-when context matters, and its suggested action should leave evidence for a person
+00:02:27.563 --> 00:02:30.977
+hundred and eighty-nine attempts. We saw a hundred
 
-00:03:31.816 --> 00:03:32.514
-to review.
+00:02:30.977 --> 00:02:34.390
+and sixty-eight correct lane choices, three wrong choices,
 
-00:03:32.918 --> 00:03:36.848
-This sensor example is invented for teaching. A reading has stayed at zero
+00:02:34.390 --> 00:02:37.803
+and eighteen request-size errors. These timings include the
 
-00:03:36.848 --> 00:03:40.778
-while nearby measurements are higher. The question is what to check next. A
+00:02:37.803 --> 00:02:41.217
+network and the complete response. This small experiment
 
-00:03:40.778 --> 00:03:44.707
-typed answer could put the case in a review queue. It should not
+00:02:41.217 --> 00:02:44.630
+is a starting point, not a universal ranking.
 
-00:03:44.707 --> 00:03:48.335
-silently delete the measurement or claim that it has diagnosed the cause.
+00:02:45.942 --> 00:02:49.949
+For the Sustainability Lab, start with a photo-quality
 
-00:03:48.752 --> 00:03:53.690
-Choose a task with labels we can check. Hold out examples before tuning,
+00:02:49.949 --> 00:02:53.956
+check. Is this image usable, blurred, or obstructed?
 
-00:03:53.690 --> 00:03:58.629
-compare simple rules with conventional models and Decisions, and report mistakes as well
+00:02:53.956 --> 00:02:57.963
+We can label examples ourselves and check the
 
-00:03:58.629 --> 00:04:03.568
-as speed and cost. Keep a review option for ambiguous cases. Then use
+00:02:57.963 --> 00:03:01.971
+model's mistakes. Later, try smoke or solar-panel review.
 
-00:04:03.568 --> 00:04:08.127
-Pocket Pilot to inspect every request, response, image, and timing for yourself.
+00:03:01.971 --> 00:03:05.978
+Those are proposed applications; a smoke photograph alone
+
+00:03:05.978 --> 00:03:07.982
+cannot measure particulate concentration.
+
+00:03:09.317 --> 00:03:12.776
+Another idea: a sensor reading stays at zero,
+
+00:03:12.776 --> 00:03:16.235
+while a field note mentions a power interruption.
+
+00:03:16.235 --> 00:03:19.694
+Combine the readings and context, then suggest what
+
+00:03:19.694 --> 00:03:23.153
+a researcher should check. Compare with simple rules.
+
+00:03:23.153 --> 00:03:26.612
+Keep the original data, and send uncertain cases
+
+00:03:26.612 --> 00:03:27.477
+for review.
+
+00:03:28.817 --> 00:03:31.871
+Open the game and choose a model, an
+
+00:03:31.871 --> 00:03:34.924
+input, and a question count. Start in classroom
+
+00:03:34.924 --> 00:03:37.978
+mode. Follow one decision through its image, question,
+
+00:03:37.978 --> 00:03:41.032
+answer, and timing. Pause, go back in the
+
+00:03:41.032 --> 00:03:44.086
+log, and open the JSON. That's where this
+
+00:03:44.086 --> 00:03:46.377
+small game becomes a useful experiment.

@@ -1,59 +1,51 @@
-# Pocket Pilot walkthrough
+# Pocket Pilot: one picture, one decision
 
-Recorded slides and saved API results. Synthetic narration: macOS Samantha.
+Explanatory animation and recorded measurements, not live inference. Synthetic narration: Gemini 3.8 Flash TTS (Kore). AI-generated instrumental: Lyria 3.5, mixed quietly with speech ducking. Script and creative outline reviewed with Gemini; technical claims edited and checked against the saved benchmark.
 
-## 00:00:00.000 · The game
+## 00:00:00.000 · One picture. One decision.
 
-Look at this road. The gap is on the left. Our program sends the picture to a model, gets a lane choice back, and uses that answer to steer. This is a recorded walkthrough of Pocket Pilot.
+Where would you steer? The opening is on the left. For us, that's easy. For this little car, it means sending a picture, asking a question, and waiting for an answer. Let's follow that journey in Pocket Pilot.
 
-## 00:00:11.167 · Model and API
+## 00:00:16.250 · Follow one decision
 
-A language model works with text. A vision language model can also read images. An API is the interface our program uses to call a model. Those are separate ideas. The model supplies an answer, while our own code decides how and when to act on it.
+First, capture the road. Ask: which lane is open? Give the model three allowed answers: left, middle, or right. It returns a choice. Our code checks that answer, then moves the car. The model suggests; the application controls what happens next.
 
-## 00:00:26.208 · A Decisions request
+## 00:00:35.375 · Model, image, API
 
-A Decisions request starts with the current state and a small question. Here, the state is a road image, and the question is: which lane is open? We supply the allowed answers, left, middle, and right. The response contains a typed answer that our program can inspect.
+A language model works with text. A vision language model can also read images. An API is the interface our code uses to ask either one a question. Jev is a model from TypeSafe, using text and JSON here. It isn't the Java programming language.
 
-## 00:00:42.510 · Where Jev fits
+## 00:00:52.708 · Decide the answer shape first
 
-Jev is a model made by TypeSafe. It reads text or structured JSON in this demo. Luna and Clef can also receive images. The Decisions API defines the interface, while OpenRouter sends our request to the selected provider. Changing the model can change accuracy, speed, and cost.
+With a Decisions API, we define the question and the shape of its answer before making the call. Here is a shortened example: a road image goes in, and a lane choice comes back. Only that lane answer is needed to steer.
 
-## 00:01:00.635 · Compared with a conventional model
+## 00:01:09.167 · Three useful answer types
 
-A conventional model can explain the road, or generate a small JSON object using a schema. Decisions is useful when the answer types and options are already known. Specialized models can score those options directly. But the API name alone does not guarantee faster or more accurate answers. We need to measure that.
+Choice picks a label, with probabilities and a separate confidence value. Noul answers a yes-or-no question with a number between zero and one. Score places an answer on ordered levels, so fractions are possible. These are estimates. Even a confidence of one can be wrong.
 
-## 00:01:19.594 · Three answer shapes
+## 00:01:29.042 · How is this different from chat?
 
-The three types answer different questions. Choice selects a label and returns probabilities over the labels. The yes probability type returns a number between zero and one. Score uses ordered levels and can return a fractional value. These are model estimates. A probability of one does not prove the answer is correct.
+A conventional model can explain the road. It can also return JSON that follows a schema. Decisions is useful when we already know the possible answers and want typed results. Whether a particular model is faster or better is something to measure, not assume.
 
-## 00:01:38.013 · The actual request
+## 00:01:46.792 · While the model thinks…
 
-Here is a real request from an earlier recorded call. It contains the model, the state, and the questions. The image is sent as a data URL. We shorten its bytes on screen, but students can download the exact request and inspect the full input.
+Watch what happens while an answer is on its way. If the road keeps moving, that answer can arrive too late. Classroom mode pauses the game clock until a fresh decision returns. Real time mode exposes that delay. A correct answer can still miss its deadline.
 
-## 00:01:52.655 · The actual response
+## 00:02:04.333 · How long did we wait?
 
-The response chose left. The other answers describe whether the middle lane is blocked and where the barrier appears. Only the lane answer controls this game. The timing shown here belongs to this one example. The benchmark slides summarize many separate calls.
+Here are all six models in the same one-question comparison. For images, Luna took about six tenths of a second; the chat models, about one and a half seconds. With structured JSON, Jev and Luna were both near half a second. Each number is a median of just three scenes.
 
-## 00:02:07.280 · A complete comparison
+## 00:02:23.500 · Keep the mistakes in the picture
 
-The new benchmark covers sixty three settings with three scenes per setting: a hundred and eighty nine attempts. We test all supported models, three image sizes, and one, two, or three questions. The table shows accuracy, errors, median and mean time, the observed range, reported tokens, and cost. Use the controls to compare the same setting across models.
+The full run used sixty-three settings and a hundred and eighty-nine attempts. We saw a hundred and sixty-eight correct lane choices, three wrong choices, and eighteen request-size errors. These timings include the network and the complete response. This small experiment is a starting point, not a universal ranking.
 
-## 00:02:30.196 · What the numbers say
+## 00:02:45.292 · Next: field-photo triage
 
-For the one question, four hundred and twenty pixel image, Luna's median was about point six seconds. The two chat models were about one point six seconds. With JSON, Jev and Luna were both around half a second. Across the complete experiment, there were three wrong lane choices and eighteen request size errors. Speed is only one part of the result.
+For the Sustainability Lab, start with a photo-quality check. Is this image usable, blurred, or obstructed? We can label examples ourselves and check the model's mistakes. Later, try smoke or solar-panel review. Those are proposed applications; a smoke photograph alone cannot measure particulate concentration.
 
-## 00:02:51.043 · Visual sustainability demos
+## 00:03:08.667 · Or: help review sensor data
 
-For the Sustainability Lab, I would start with field photo quality: is an image usable, blurred, or obstructed? Students can check those labels themselves. Other possibilities include visible smoke triage, solar panel inspection, and waste audits. These are proposed applications. A smoke image cannot, by itself, tell us the particulate concentration.
+Another idea: a sensor reading stays at zero, while a field note mentions a power interruption. Combine the readings and context, then suggest what a researcher should check. Compare with simple rules. Keep the original data, and send uncertain cases for review.
 
-## 00:03:13.668 · Data-based sustainability demos
+## 00:03:28.167 · Now try it yourself
 
-Some useful decisions need no image. We could combine sensor readings with technician notes, review building energy events, or route a research question to the right data tool. Simple rules should remain a baseline. A model is most interesting when context matters, and its suggested action should leave evidence for a person to review.
-
-## 00:03:32.918 · A sensor review example
-
-This sensor example is invented for teaching. A reading has stayed at zero while nearby measurements are higher. The question is what to check next. A typed answer could put the case in a review queue. It should not silently delete the measurement or claim that it has diagnosed the cause.
-
-## 00:03:48.752 · The next experiment
-
-Choose a task with labels we can check. Hold out examples before tuning, compare simple rules with conventional models and Decisions, and report mistakes as well as speed and cost. Keep a review option for ambiguous cases. Then use Pocket Pilot to inspect every request, response, image, and timing for yourself.
+Open the game and choose a model, an input, and a question count. Start in classroom mode. Follow one decision through its image, question, answer, and timing. Pause, go back in the log, and open the JSON. That's where this small game becomes a useful experiment.
