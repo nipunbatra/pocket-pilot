@@ -4,6 +4,28 @@ Play a three-lane driving game while inspecting every model input, typed questio
 
 [Play Pocket Pilot](https://nipunbatra.github.io/pocket-pilot/) · [Classroom slides](https://nipunbatra.github.io/pocket-pilot/slides.html)
 
+## Platformer experiment
+
+Open [the platformer](https://nipunbatra.github.io/pocket-pilot/platformer.html) for
+an original Mario-style browser level. Play manually, inspect a labelled scripted
+reference, or try original Liquid 600M locally and Clef/Clef-flash/Jev/Luna via
+OpenRouter. No Nintendo artwork, ROM, music or level data is included.
+
+The simulation freezes during inference, then applies the returned action for
+4 or 8 frames at 60 Hz. Speed changes playback, not the action horizon. Pausing,
+restarting or hiding the tab discards an in-flight action. Runs stop at 200
+decisions. Model outputs are never corrected by the scripted reference.
+
+Use JSON or image inputs and 1–3 typed questions. Only action controls the player.
+Export includes exact request/response, captured image, input mode, timing,
+before/after state and frames actually applied. Human and scripted records do not
+invent probabilities or model timings. The API key is never included. Our road
+fine-tunes predict lanes and are not offered as platformer-trained models.
+
+The physics and original canvas renderer are in platformer-engine.js and
+platformer-view.js; contract and controller are in platformer-contract.js and
+platformer.js. Everything runs from this static folder; no additional dependencies.
+
 ## Run and host
 
 Serve this folder with any static host. GitHub Pages can publish `main` at `/`.

@@ -36,7 +36,7 @@
         else response=raw_response;
         metadata.actual_provider=raw_response?.provider??null;
         if(pinnedProvider&&metadata.actual_provider!==pinnedProvider)error='The requested Cloudflare provider was not confirmed. No move was applied.';
-        if(!chat&&(!response||typeof response!=='object'||Array.isArray(response)||!root.RoadQuestions.validSavedAnswers({request,response})))
+        if(!chat&&(!response||typeof response!=='object'||Array.isArray(response)||!(root.DecisionContract||root.RoadQuestions).validSavedAnswers({request,response})))
           error='The response did not match the requested answer schema. No move was applied.';
       }
     }catch(exc){
