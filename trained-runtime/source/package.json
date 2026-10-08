@@ -1,0 +1,12 @@
+{
+  "name": "pocket-pilot-local-decisions",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "scripts": {"build": "node build.mjs"},
+  "dependencies": {
+    "@huggingface/transformers": "4.3.1",
+    "onnxruntime-web": "1.31.0-dev.20260914-8d85527a0"
+  },
+  "devDependencies": {"esbuild": "0.25.12"}
+}

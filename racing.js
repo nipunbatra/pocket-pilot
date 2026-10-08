@@ -21,26 +21,27 @@ const MAX_CALLS=30;
 function newRunId(){return 'road-'+new Date().toISOString().replace(/[:.]/g,'-')+'-'+Math.random().toString(36).slice(2,7);}
 function modelInfo(){return config?.road_models?.find(m=>m.id===selectedModel);}
 function localModel(){return LocalDecisions.isLocal(selectedModel);}
-function modelAvailable(){return localModel()?LocalDecisions.ready(inputKind==='image')&&!LocalDecisions.loading:!!modelInfo()?.available&&(!PUBLIC_SITE||PublicDecisions.connected);}
+function modelAvailable(){return localModel()?LocalDecisions.ready(inputKind==='image',selectedModel)&&!LocalDecisions.loading:!!modelInfo()?.available&&(!PUBLIC_SITE||PublicDecisions.connected);}
 function recentLatency(){
   const samples=frames.filter(f=>f.request.model===selectedModel&&(f.input_kind||'image')===inputKind&&RoadQuestions.count(f)===questionCount&&(inputKind==='structured'||f.image_width===inputCanvas.width)&&Number.isFinite(f.metadata?.browser_round_trip_ms)).slice(-5);
   return samples.length?Math.max(...samples.map(f=>f.metadata.browser_round_trip_ms)):null;
 }
 function syncModelControls(){
   const info=modelInfo(),local=localModel();
+  if(info&&!info.vision)inputKind='structured';
   if($('local-model-controls')){
-    $('local-model-controls').hidden=!local;if($('local-results-link'))$('local-results-link').hidden=!local;
+    $('local-model-controls').hidden=!local;if($('local-results-link')){$('local-results-link').hidden=!local;$('local-results-link').href=info?.results||'./liquid-local.html';}
     if($('remote-key-controls'))$('remote-key-controls').hidden=local;
-    $('load-local-model').disabled=inFlight||running||comparing||LocalDecisions.loading||LocalDecisions.ready(inputKind==='image');
-    $('load-local-model').textContent=LocalDecisions.loading?'Loading…':LocalDecisions.ready(inputKind==='image')?'Loaded':`Load ~${inputKind==='image'?'595':'406'} MB`;
-    $('unload-local-model').disabled=inFlight||running||comparing||LocalDecisions.loading||!LocalDecisions.ready(false);
+    $('load-local-model').disabled=inFlight||running||comparing||LocalDecisions.loading||LocalDecisions.ready(inputKind==='image',selectedModel);
+    $('load-local-model').textContent=LocalDecisions.loading?'Loading…':LocalDecisions.ready(inputKind==='image',selectedModel)?'Loaded':`Load ~${info?.download||(inputKind==='image'?'595 MB':'406 MB')}`;
+    $('unload-local-model').disabled=inFlight||running||comparing||LocalDecisions.loading||!LocalDecisions.ready(false,selectedModel);
     if($('key-privacy'))$('key-privacy').textContent=local?'No key · no inference uploads · first load downloads weights.':'Tab only · sent to OpenRouter · billed to your account.';
   }
   if(info&&!info.vision)inputKind='structured';
   $('input-kind').value=inputKind;$('input-kind').disabled=!info?.vision||inFlight||comparing||running||LocalDecisions.loading;
   $('image-size').disabled=inputKind==='structured'||comparing||inFlight;
   $('api-status').textContent=modelAvailable()?`${info.label} ready`:local?LocalDecisions.message:PUBLIC_SITE?'Connect your key · or explore recordings':'OpenRouter key missing';
-  $('model-note').textContent=local?LocalDecisions.message+' · Follow-up image check: 6/18 lanes correct. Compare accuracy as well as speed.':!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':(RoadChat.isChat({model:selectedModel})?'Chat '+(inputKind==='image'?'VLM':'LLM')+' · short JSON answers, no class probabilities. ':(['cloudflare/clef','cloudflare/clef-flash'].includes(selectedModel)?'Decisions API · Cloudflare provider pinned. ':'Decisions API · typed answers and probabilities. '))+(inputKind==='structured'?'Obstacle coordinates sent; no image.':'Road PNG sent; no obstacle coordinates.');
+  $('model-note').textContent=local?LocalDecisions.message+' · '+info.note:!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':(RoadChat.isChat({model:selectedModel})?'Chat '+(inputKind==='image'?'VLM':'LLM')+' · short JSON answers, no class probabilities. ':(['cloudflare/clef','cloudflare/clef-flash'].includes(selectedModel)?'Decisions API · Cloudflare provider pinned. ':'Decisions API · typed answers and probabilities. '))+(inputKind==='structured'?'Obstacle coordinates sent; no image.':'Road PNG sent; no obstacle coordinates.');
 }
 function draw(){
   const f=replay?frames[selected]:null;
@@ -330,7 +331,7 @@ $('sound-toggle').addEventListener('click',()=>{RoadSound.unlock();RoadSound.set
 $('compare-questions').addEventListener('click',compareQuestions);
 $('compare-chat').addEventListener('click',compareChat);
 $('load-chat-comparison').addEventListener('click',()=>loadRecording('./chat-comparison-run.json'));
-$('model-select').addEventListener('change',()=>{const wasLocal=localModel();selectedModel=$('model-select').value;if(wasLocal&&!localModel())LocalDecisions.unload().catch(e=>toast(e.message));syncModelControls();event('model',{model:selectedModel,input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
+$('model-select').addEventListener('change',()=>{const previousModel=selectedModel;selectedModel=$('model-select').value;if(LocalDecisions.isLocal(previousModel)&&previousModel!==selectedModel)LocalDecisions.unload().catch(e=>toast(e.message));syncModelControls();event('model',{model:selectedModel,input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('input-kind').addEventListener('change',()=>{inputKind=$('input-kind').value;syncModelControls();event('input_kind',{input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('question-count').addEventListener('change',()=>{questionCount=Number($('question-count').value);event('question_count',{count:questionCount});if(!frames.length)renderSelection();updateHud();});
 let loadingRecording=false;
@@ -355,7 +356,7 @@ async function renderModelBenchmark(){
   }catch{$('model-benchmark-rows').innerHTML='<tr><td colspan="5">No recorded model measurements yet. Live calls still appear in Run history.</td></tr>';}
 }
 window.addEventListener('local-model-changed',()=>{if(config)updateControls();});
-$('load-local-model').addEventListener('click',async()=>{try{await LocalDecisions.load(inputKind==='image');$('road-message').textContent='Local model ready. Start with One decision to inspect its answer. No inference data is sent.';}catch(e){$('road-message').textContent=e.message;}updateControls();});
+$('load-local-model').addEventListener('click',async()=>{try{await LocalDecisions.load(inputKind==='image',selectedModel);$('road-message').textContent='Local model ready. Start with One decision to inspect its answer. No inference data is sent.';}catch(e){$('road-message').textContent=e.message;}updateControls();});
 $('unload-local-model').addEventListener('click',async()=>{try{await LocalDecisions.unload();}catch(e){$('road-message').textContent=e.message;}updateControls();});
 if(PUBLIC_SITE)window.addEventListener('public-connection-changed',()=>{
   if(!config)return;
@@ -368,10 +369,12 @@ async function init(){
   try{
     if(PUBLIC_SITE)config=PublicDecisions.config;
     else{const r=await fetch('/api/config');if(!r.ok)throw new Error();config=await r.json();}
-    if(!config.road_models.some(m=>LocalDecisions.isLocal(m.id)))config.road_models.push(LocalDecisions.model);
+    for(const model of LocalDecisions.models)if(!config.road_models.some(m=>m.id===model.id))config.road_models.push(model);
+    if(new URLSearchParams(location.search).get('model')==='trained')selectedModel='Nipun/pocket-pilot-json-decisions-0.8b';
     $('model-select').innerHTML=['decisions','chat completions','local decisions'].map(kind=>`<optgroup label="${kind==='decisions'?'Decisions API':kind==='local decisions'?'On your device · no key':'Standard chat · LLM / VLM'}">${config.road_models.filter(m=>(m.api_kind||'decisions')===kind).map(m=>`<option value="${esc(m.id)}">${esc(m.label)}${m.available?'':' · needs setup'}</option>`).join('')}</optgroup>`).join('');
+    $('model-select').value=selectedModel;
     syncModelControls();renderSelection();renderComparison();updateControls();
-    if(PUBLIC_SITE)$('road-message').textContent='Explore a recording, connect OpenRouter, or choose Liquid for local WebGPU.';
+    if(PUBLIC_SITE)$('road-message').textContent='Explore a recording, connect OpenRouter, or choose a local WebGPU model.';
     else if(!config.live_available)$('road-message').textContent='Set OPENROUTER_API_KEY on the local server to run live.';
   }catch{
     $('api-status').textContent=PUBLIC_SITE?'Could not load the game':'Local server unavailable';

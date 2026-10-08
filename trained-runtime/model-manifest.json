@@ -1,0 +1,7 @@
+{
+  "model": "Nipun/pocket-pilot-json-decisions-0.8b",
+  "revision": "e6ab86afc8976a2aca90acc43b91294aaeab9330",
+  "download_bytes": 1384242946,
+  "runtime": "ONNX Runtime Web 1.31.0-dev.20260914-8d85527a0",
+  "format": "fp16 materialized trained backbone + fp32 decision head"
+}

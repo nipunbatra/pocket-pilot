@@ -38,6 +38,32 @@ and includes a script to restore exact requests/responses. Speaker notes explain
 sample limits, scoring and timings. The animated walkthrough at
 `walkthrough.html` includes Gemini narration, an original Lyria instrumental score, 1080p motion graphics, captions, chapters and a transcript. Animations explain the system; benchmark numbers come from saved calls.
 
+## Trained Pocket Pilot model — no API key
+
+Choose **Pocket Pilot · trained JSON · local WebGPU**, then Load and One decision.
+This is our trained Qwen3.5-0.8B backbone + LoRA + Clef-style decision head,
+not the original chat model. It scores supplied answers with zero generated tokens.
+Only structured scene input is supported by this checkpoint. All one/two/three
+question versions remain available. Changing models releases the active GPU sessions.
+
+The first load downloads about 1.38 GB from
+[Nipun/pocket-pilot-json-decisions-0.8b](https://huggingface.co/Nipun/pocket-pilot-json-decisions-0.8b).
+The game pins the exact revision in trained-runtime/model-manifest.json.
+Weights are cached when possible. WebGPU with float16 shader support and sufficient
+memory is required; inference stays on the device. The image experiment is separate.
+
+On Apple M2 Max, 216 held-out scenes at each question count gave 216/216 correct
+lanes. Median warm browser latency: 111.2 ms (one question), 138.6 ms (two),
+166.9 ms (three). The three-question middle-blocked result was 216/216 and
+vertical-position accuracy was 204/216, matching native classifications.
+These are local browser measurements, not network round trips; download/setup is
+excluded. They measure this game and schema, not general reasoning. Full evidence,
+training data and export scripts are included in the model repository.
+
+Runtime source is in trained-runtime/source. To rebuild from that directory:
+`npm ci --ignore-scripts` then `node build.mjs ..`. It shares the pinned WebAssembly
+files in local-runtime/. See trained-runtime/NOTICE.md for provenance and licenses.
+
 ## Local Liquid model — no API key
 
 Choose **Liquid 600M · local WebGPU · experimental**, then **Load model**.
