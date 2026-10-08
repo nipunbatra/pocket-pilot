@@ -1,0 +1,402 @@
+[
+  {
+    "model": "cloudflare/clef-flash",
+    "id": "0",
+    "expected": "left",
+    "response": {
+      "model": "cloudflare/clef-flash",
+      "answers": {
+        "lane": {
+          "type": "choice",
+          "choice": "left",
+          "probabilities": {
+            "left": 0.9538,
+            "middle": 0.0217,
+            "right": 0.0245
+          },
+          "confidence": 0.8662
+        }
+      },
+      "usage": {
+        "input_tokens": 441,
+        "output_tokens": 0,
+        "cost": 3.969e-05
+      },
+      "id": "gen-dec-1791433891-9VJQ44iDZVo4z74lmhmo",
+      "provider": "Cloudflare"
+    },
+    "metadata": {
+      "source": "live",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "api_kind": "decisions",
+      "timing_origin": "local server",
+      "started_at": "2026-10-08T04:31:30.791154+00:00",
+      "http_status": 200,
+      "upstream_round_trip_ms": 2365.43,
+      "provider_processing_ms": null,
+      "timing_note": "Provider-only processing time was not supplied. Upstream timing includes network, TLS and routing; the browser timer also includes the local server.",
+      "provider": "OpenRouter",
+      "transport": "persistent HTTPS",
+      "connection_reused": false,
+      "connection_setup_ms": 76.71,
+      "local_handler_ms": 2366.34
+    },
+    "error": null,
+    "provider_request": {
+      "only": [
+        "cloudflare"
+      ],
+      "allow_fallbacks": false
+    }
+  },
+  {
+    "model": "cloudflare/clef-flash",
+    "id": "1",
+    "expected": "middle",
+    "response": {
+      "model": "cloudflare/clef-flash",
+      "answers": {
+        "lane": {
+          "type": "choice",
+          "choice": "middle",
+          "probabilities": {
+            "left": 0.0173,
+            "middle": 0.9691,
+            "right": 0.0136
+          },
+          "confidence": 0.9094
+        }
+      },
+      "usage": {
+        "input_tokens": 441,
+        "output_tokens": 0,
+        "cost": 3.969e-05
+      },
+      "id": "gen-dec-1791433893-UaeVFSN9BFsmrcstZABD",
+      "provider": "Cloudflare"
+    },
+    "metadata": {
+      "source": "live",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "api_kind": "decisions",
+      "timing_origin": "local server",
+      "started_at": "2026-10-08T04:31:33.158142+00:00",
+      "http_status": 200,
+      "upstream_round_trip_ms": 1842.82,
+      "provider_processing_ms": null,
+      "timing_note": "Provider-only processing time was not supplied. Upstream timing includes network, TLS and routing; the browser timer also includes the local server.",
+      "provider": "OpenRouter",
+      "transport": "persistent HTTPS",
+      "connection_reused": true,
+      "connection_setup_ms": 0,
+      "local_handler_ms": 1843.02
+    },
+    "error": null,
+    "provider_request": {
+      "only": [
+        "cloudflare"
+      ],
+      "allow_fallbacks": false
+    }
+  },
+  {
+    "model": "cloudflare/clef-flash",
+    "id": "2",
+    "expected": "right",
+    "response": {
+      "model": "cloudflare/clef-flash",
+      "answers": {
+        "lane": {
+          "type": "choice",
+          "choice": "middle",
+          "probabilities": {
+            "left": 0.1155,
+            "middle": 0.5286,
+            "right": 0.3559
+          },
+          "confidence": 0.1291
+        }
+      },
+      "usage": {
+        "input_tokens": 441,
+        "output_tokens": 0,
+        "cost": 3.969e-05
+      },
+      "id": "gen-dec-1791433895-PBlhW8HAO70pCr30Zd6C",
+      "provider": "Cloudflare"
+    },
+    "metadata": {
+      "source": "live",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "api_kind": "decisions",
+      "timing_origin": "local server",
+      "started_at": "2026-10-08T04:31:35.001818+00:00",
+      "http_status": 200,
+      "upstream_round_trip_ms": 837.83,
+      "provider_processing_ms": null,
+      "timing_note": "Provider-only processing time was not supplied. Upstream timing includes network, TLS and routing; the browser timer also includes the local server.",
+      "provider": "OpenRouter",
+      "transport": "persistent HTTPS",
+      "connection_reused": true,
+      "connection_setup_ms": 0,
+      "local_handler_ms": 839.18
+    },
+    "error": null,
+    "provider_request": {
+      "only": [
+        "cloudflare"
+      ],
+      "allow_fallbacks": false
+    }
+  },
+  {
+    "model": "cloudflare/clef-flash",
+    "id": "exact-failure",
+    "expected": "middle",
+    "response": {
+      "model": "cloudflare/clef-flash",
+      "answers": {
+        "lane": {
+          "type": "choice",
+          "choice": "middle",
+          "probabilities": {
+            "left": 0.0289,
+            "middle": 0.8962,
+            "right": 0.0749
+          },
+          "confidence": 0.7146
+        }
+      },
+      "usage": {
+        "input_tokens": 441,
+        "output_tokens": 0,
+        "cost": 3.969e-05
+      },
+      "id": "gen-dec-1791433895-gCkCrcE8EIXRD0po5bOx",
+      "provider": "Cloudflare"
+    },
+    "metadata": {
+      "source": "live",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "api_kind": "decisions",
+      "timing_origin": "local server",
+      "started_at": "2026-10-08T04:31:35.841898+00:00",
+      "http_status": 200,
+      "upstream_round_trip_ms": 856.17,
+      "provider_processing_ms": null,
+      "timing_note": "Provider-only processing time was not supplied. Upstream timing includes network, TLS and routing; the browser timer also includes the local server.",
+      "provider": "OpenRouter",
+      "transport": "persistent HTTPS",
+      "connection_reused": true,
+      "connection_setup_ms": 0,
+      "local_handler_ms": 856.34
+    },
+    "error": null,
+    "provider_request": {
+      "only": [
+        "cloudflare"
+      ],
+      "allow_fallbacks": false
+    }
+  },
+  {
+    "model": "cloudflare/clef",
+    "id": "0",
+    "expected": "left",
+    "response": {
+      "model": "cloudflare/clef",
+      "answers": {
+        "lane": {
+          "type": "choice",
+          "choice": "left",
+          "probabilities": {
+            "left": 0.9877,
+            "middle": 0.0062,
+            "right": 0.0061
+          },
+          "confidence": 0.9635
+        }
+      },
+      "usage": {
+        "input_tokens": 441,
+        "output_tokens": 0,
+        "cost": 0.00010584
+      },
+      "id": "gen-dec-1791433896-kumcPbS6nhyutxvQRwUB",
+      "provider": "Cloudflare"
+    },
+    "metadata": {
+      "source": "live",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "api_kind": "decisions",
+      "timing_origin": "local server",
+      "started_at": "2026-10-08T04:31:36.698788+00:00",
+      "http_status": 200,
+      "upstream_round_trip_ms": 1004.28,
+      "provider_processing_ms": null,
+      "timing_note": "Provider-only processing time was not supplied. Upstream timing includes network, TLS and routing; the browser timer also includes the local server.",
+      "provider": "OpenRouter",
+      "transport": "persistent HTTPS",
+      "connection_reused": true,
+      "connection_setup_ms": 0,
+      "local_handler_ms": 1004.43
+    },
+    "error": null,
+    "provider_request": {
+      "only": [
+        "cloudflare"
+      ],
+      "allow_fallbacks": false
+    }
+  },
+  {
+    "model": "cloudflare/clef",
+    "id": "1",
+    "expected": "middle",
+    "response": {
+      "model": "cloudflare/clef",
+      "answers": {
+        "lane": {
+          "type": "choice",
+          "choice": "middle",
+          "probabilities": {
+            "left": 0.0054,
+            "middle": 0.9896,
+            "right": 0.005
+          },
+          "confidence": 0.9689
+        }
+      },
+      "usage": {
+        "input_tokens": 441,
+        "output_tokens": 0,
+        "cost": 0.00010584
+      },
+      "id": "gen-dec-1791433897-6fr4CMYBxdQVld3eWtS2",
+      "provider": "Cloudflare"
+    },
+    "metadata": {
+      "source": "live",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "api_kind": "decisions",
+      "timing_origin": "local server",
+      "started_at": "2026-10-08T04:31:37.703697+00:00",
+      "http_status": 200,
+      "upstream_round_trip_ms": 934.5,
+      "provider_processing_ms": null,
+      "timing_note": "Provider-only processing time was not supplied. Upstream timing includes network, TLS and routing; the browser timer also includes the local server.",
+      "provider": "OpenRouter",
+      "transport": "persistent HTTPS",
+      "connection_reused": true,
+      "connection_setup_ms": 0,
+      "local_handler_ms": 934.64
+    },
+    "error": null,
+    "provider_request": {
+      "only": [
+        "cloudflare"
+      ],
+      "allow_fallbacks": false
+    }
+  },
+  {
+    "model": "cloudflare/clef",
+    "id": "2",
+    "expected": "right",
+    "response": {
+      "model": "cloudflare/clef",
+      "answers": {
+        "lane": {
+          "type": "choice",
+          "choice": "right",
+          "probabilities": {
+            "left": 0.009,
+            "middle": 0.0086,
+            "right": 0.9824
+          },
+          "confidence": 0.948
+        }
+      },
+      "usage": {
+        "input_tokens": 441,
+        "output_tokens": 0,
+        "cost": 0.00010584
+      },
+      "id": "gen-dec-1791433898-fMWwUGhn06P1v78Op1IX",
+      "provider": "Cloudflare"
+    },
+    "metadata": {
+      "source": "live",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "api_kind": "decisions",
+      "timing_origin": "local server",
+      "started_at": "2026-10-08T04:31:38.639171+00:00",
+      "http_status": 200,
+      "upstream_round_trip_ms": 1290.52,
+      "provider_processing_ms": null,
+      "timing_note": "Provider-only processing time was not supplied. Upstream timing includes network, TLS and routing; the browser timer also includes the local server.",
+      "provider": "OpenRouter",
+      "transport": "persistent HTTPS",
+      "connection_reused": true,
+      "connection_setup_ms": 0,
+      "local_handler_ms": 1290.67
+    },
+    "error": null,
+    "provider_request": {
+      "only": [
+        "cloudflare"
+      ],
+      "allow_fallbacks": false
+    }
+  },
+  {
+    "model": "cloudflare/clef",
+    "id": "exact-failure",
+    "expected": "middle",
+    "response": {
+      "model": "cloudflare/clef",
+      "answers": {
+        "lane": {
+          "type": "choice",
+          "choice": "middle",
+          "probabilities": {
+            "left": 0.0057,
+            "middle": 0.9882,
+            "right": 0.0061
+          },
+          "confidence": 0.9648
+        }
+      },
+      "usage": {
+        "input_tokens": 441,
+        "output_tokens": 0,
+        "cost": 0.00010584
+      },
+      "id": "gen-dec-1791433899-tgE2L1e0fCock8n526pK",
+      "provider": "Cloudflare"
+    },
+    "metadata": {
+      "source": "live",
+      "endpoint": "https://openrouter.ai/api/alpha/decisions",
+      "api_kind": "decisions",
+      "timing_origin": "local server",
+      "started_at": "2026-10-08T04:31:39.930436+00:00",
+      "http_status": 200,
+      "upstream_round_trip_ms": 1226.01,
+      "provider_processing_ms": null,
+      "timing_note": "Provider-only processing time was not supplied. Upstream timing includes network, TLS and routing; the browser timer also includes the local server.",
+      "provider": "OpenRouter",
+      "transport": "persistent HTTPS",
+      "connection_reused": true,
+      "connection_setup_ms": 0,
+      "local_handler_ms": 1226.15
+    },
+    "error": null,
+    "provider_request": {
+      "only": [
+        "cloudflare"
+      ],
+      "allow_fallbacks": false
+    }
+  }
+]

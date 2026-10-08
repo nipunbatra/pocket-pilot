@@ -83,6 +83,14 @@ history stays in the tab until exported. Exports contain game inputs/answers,
 not the API key. Browser-direct timings include network and routing; the
 recorded comparison table retains the original local-server timings.
 
+## Verified Clef route
+
+Both Clef variants pin OpenRouter to Cloudflare and disable fallback. The client
+refuses to steer unless the response confirms Cloudflare. A provider routing
+change on 8 October produced near-constant wrong choices and 16,384-token image
+usage; pinning Cloudflare restored 441-token inputs and 4/4 Clef, 3/4 Clef-flash
+correct lanes on the four checked images. See [routing and local model checks](./liquid-local.html).
+
 ## Models and controls
 
 Luna, Clef-flash, and Clef can receive a road image. Jev uses explicitly labelled

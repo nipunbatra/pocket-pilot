@@ -1,0 +1,4182 @@
+{
+  "experiments": [
+    {
+      "model": "LiquidAI/d1-3B",
+      "conditions": "22 frozen scenes: original 3, balanced 18, exact failure. Same model-visible state and questions as original diagnostic. Expected labels only used after inference. Warm native timing excludes downloads. Cloud time is complete network round trip; no retries.",
+      "results": [
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-0",
+          "split": "previous-smoke-test",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.958676176030875,
+                "probabilities": {
+                  "left": 0.958676176030875,
+                  "middle": 0.024569131784148355,
+                  "right": 0.016754692184976785
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 121.18941699736752,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-0",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.4235052754900068,
+                "probabilities": {
+                  "left": 0.4235052754900068,
+                  "middle": 0.385605941432757,
+                  "right": 0.19088878307723608
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 318.65679202019237,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-0",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "short",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7067939699984632,
+                "probabilities": {
+                  "left": 0.22590492140344487,
+                  "middle": 0.7067939699984632,
+                  "right": 0.06730110859809203
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 415.2812499960419,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-0",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "opening",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5872551017576675,
+                "probabilities": {
+                  "left": 0.21603907865968922,
+                  "middle": 0.5872551017576675,
+                  "right": 0.19670581958264324
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 268.0868330062367,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-0",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "safe",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.48938251650637427,
+                "probabilities": {
+                  "left": 0.48938251650637427,
+                  "middle": 0.3636782055792594,
+                  "right": 0.14693927791436626
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 271.586707996903,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-1",
+          "split": "previous-smoke-test",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9626807824509075,
+                "probabilities": {
+                  "left": 0.01982431816905234,
+                  "middle": 0.9626807824509075,
+                  "right": 0.01749489938004021
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 120.67608299548738,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-1",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7685309211088323,
+                "probabilities": {
+                  "left": 0.07037624644903458,
+                  "middle": 0.7685309211088323,
+                  "right": 0.16109283244213324
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 312.6129580195993,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-1",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "short",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9385583987804529,
+                "probabilities": {
+                  "left": 0.028564296954664583,
+                  "middle": 0.9385583987804529,
+                  "right": 0.03287730426488259
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 264.16291599161923,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-1",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "opening",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.8116520452921384,
+                "probabilities": {
+                  "left": 0.07850279526867393,
+                  "middle": 0.8116520452921384,
+                  "right": 0.10984515943918756
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 262.11133401375264,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-1",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "safe",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.763720373599045,
+                "probabilities": {
+                  "left": 0.10663925812494524,
+                  "middle": 0.763720373599045,
+                  "right": 0.1296403682760097
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 265.7504999951925,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-2",
+          "split": "previous-smoke-test",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.9313210341870183,
+                "probabilities": {
+                  "left": 0.03874170022462832,
+                  "middle": 0.02993726558835345,
+                  "right": 0.9313210341870183
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 122.26995802484453,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-2",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.6544588538151399,
+                "probabilities": {
+                  "left": 0.041189514304106986,
+                  "middle": 0.304351631880753,
+                  "right": 0.6544588538151399
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 308.2092080148868,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-2",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "short",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5611992297309374,
+                "probabilities": {
+                  "left": 0.09305595470193694,
+                  "middle": 0.5611992297309374,
+                  "right": 0.3457448155671256
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 261.4107909903396,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-2",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "opening",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.4486812459459454,
+                "probabilities": {
+                  "left": 0.22561109890496756,
+                  "middle": 0.4486812459459454,
+                  "right": 0.3257076551490871
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 265.0139160105027,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "saved-2",
+          "split": "previous-smoke-test",
+          "input": "image",
+          "variant": "safe",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5252510436736502,
+                "probabilities": {
+                  "left": 0.08441552470818485,
+                  "middle": 0.5252510436736502,
+                  "right": 0.39033343161816497
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 268.243500002427,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.961815965959186,
+                "probabilities": {
+                  "left": 0.961815965959186,
+                  "middle": 0.022269056830217435,
+                  "right": 0.015914977210596638
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 120.83641701610759,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.347336134100112,
+                "probabilities": {
+                  "left": 0.32123341140959316,
+                  "middle": 0.347336134100112,
+                  "right": 0.3314304544902948
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 312.27866699919105,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.47487660549625427,
+                "probabilities": {
+                  "left": 0.4675143261282853,
+                  "middle": 0.47487660549625427,
+                  "right": 0.05760906837546035
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 263.73770798090845,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5618901966406065,
+                "probabilities": {
+                  "left": 0.26130320842701943,
+                  "middle": 0.5618901966406065,
+                  "right": 0.17680659493237405
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 263.4680419869255,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5938770497308284,
+                "probabilities": {
+                  "left": 0.2594456685544692,
+                  "middle": 0.5938770497308284,
+                  "right": 0.1466772817147023
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 267.25791598437354,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9701628938261939,
+                "probabilities": {
+                  "left": 0.01555919044091728,
+                  "middle": 0.9701628938261939,
+                  "right": 0.014277915732888747
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 121.28662498435006,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7626862371865764,
+                "probabilities": {
+                  "left": 0.07492849240654742,
+                  "middle": 0.7626862371865764,
+                  "right": 0.16238527040687625
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 309.7729999863077,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9605346518197739,
+                "probabilities": {
+                  "left": 0.022413816089033898,
+                  "middle": 0.9605346518197739,
+                  "right": 0.017051532091192256
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 267.55987500655465,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.8423586373254963,
+                "probabilities": {
+                  "left": 0.07023388301537628,
+                  "middle": 0.8423586373254963,
+                  "right": 0.08740747965912743
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 265.62429100158624,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.8965741056026385,
+                "probabilities": {
+                  "left": 0.04429042220582016,
+                  "middle": 0.8965741056026385,
+                  "right": 0.059135472191541284
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 268.79975001793355,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.9655406473546398,
+                "probabilities": {
+                  "left": 0.016355483130396444,
+                  "middle": 0.01810386951496368,
+                  "right": 0.9655406473546398
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 120.4447079799138,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.6810540544218104,
+                "probabilities": {
+                  "left": 0.06044698368115446,
+                  "middle": 0.25849896189703525,
+                  "right": 0.6810540544218104
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 308.46854200353846,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7596606681812403,
+                "probabilities": {
+                  "left": 0.05417647883064838,
+                  "middle": 0.7596606681812403,
+                  "right": 0.18616285298811128
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 262.01641699299216,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6039611452080097,
+                "probabilities": {
+                  "left": 0.1703550633257483,
+                  "middle": 0.6039611452080097,
+                  "right": 0.22568379146624207
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 260.387415997684,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car0-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.488990157470303,
+                "probabilities": {
+                  "left": 0.07268189827170753,
+                  "middle": 0.488990157470303,
+                  "right": 0.43832794425798954
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 268.7442500027828,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.9572510052540056,
+                "probabilities": {
+                  "left": 0.9572510052540056,
+                  "middle": 0.027155120813348983,
+                  "right": 0.01559387393264529
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 124.89412500872277,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.5623415768353822,
+                "probabilities": {
+                  "left": 0.2068739050336681,
+                  "middle": 0.23078451813094966,
+                  "right": 0.5623415768353822
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 315.8927920158021,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7959653279121421,
+                "probabilities": {
+                  "left": 0.10440792964272637,
+                  "middle": 0.7959653279121421,
+                  "right": 0.0996267424451315
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 266.44820801448077,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5092088861370594,
+                "probabilities": {
+                  "left": 0.2683342266038944,
+                  "middle": 0.5092088861370594,
+                  "right": 0.2224568872590463
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 264.04633399215527,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.636340704514342,
+                "probabilities": {
+                  "left": 0.20023348663975965,
+                  "middle": 0.636340704514342,
+                  "right": 0.1634258088458983
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 266.84233301784843,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9678050247967651,
+                "probabilities": {
+                  "left": 0.016914236205053456,
+                  "middle": 0.9678050247967651,
+                  "right": 0.015280738998181383
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 122.2533330146689,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.8346445129996097,
+                "probabilities": {
+                  "left": 0.03934301309931501,
+                  "middle": 0.8346445129996097,
+                  "right": 0.12601247390107514
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 308.8618329784367,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9711903079322762,
+                "probabilities": {
+                  "left": 0.012613560189493434,
+                  "middle": 0.9711903079322762,
+                  "right": 0.016196131878230217
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 269.5998330018483,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9188016663551472,
+                "probabilities": {
+                  "left": 0.029766475720665344,
+                  "middle": 0.9188016663551472,
+                  "right": 0.051431857924187446
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 269.7029580012895,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.912942709093906,
+                "probabilities": {
+                  "left": 0.0322308197040169,
+                  "middle": 0.912942709093906,
+                  "right": 0.05482647120207725
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 268.9353339956142,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.9618731958784886,
+                "probabilities": {
+                  "left": 0.01831911644249523,
+                  "middle": 0.019807687679016042,
+                  "right": 0.9618731958784886
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 120.91095899813809,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.7631266340435174,
+                "probabilities": {
+                  "left": 0.04691612749234759,
+                  "middle": 0.18995723846413487,
+                  "right": 0.7631266340435174
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 313.23920798604377,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7906281979888167,
+                "probabilities": {
+                  "left": 0.03018070511731014,
+                  "middle": 0.7906281979888167,
+                  "right": 0.17919109689387328
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 260.7681670051534,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6234223104012824,
+                "probabilities": {
+                  "left": 0.12469230653001455,
+                  "middle": 0.6234223104012824,
+                  "right": 0.2518853830687031
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 262.8393339982722,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car1-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5567822601215807,
+                "probabilities": {
+                  "left": 0.060547261875850536,
+                  "middle": 0.5567822601215807,
+                  "right": 0.38267047800256876
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 265.0577919848729,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.9480853853795705,
+                "probabilities": {
+                  "left": 0.9480853853795705,
+                  "middle": 0.033998607475172665,
+                  "right": 0.017916007145256856
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 120.8683330041822,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.5509249247727085,
+                "probabilities": {
+                  "left": 0.15418621298673435,
+                  "middle": 0.2948888622405572,
+                  "right": 0.5509249247727085
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 313.42099999892525,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7893879824517708,
+                "probabilities": {
+                  "left": 0.06685378621822047,
+                  "middle": 0.7893879824517708,
+                  "right": 0.14375823133000878
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 264.13125000544824,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5200307830997065,
+                "probabilities": {
+                  "left": 0.21848131764080406,
+                  "middle": 0.5200307830997065,
+                  "right": 0.2614878992594895
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 262.5224170042202,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7405074409053561,
+                "probabilities": {
+                  "left": 0.10668021152867878,
+                  "middle": 0.7405074409053561,
+                  "right": 0.15281234756596515
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 265.584333013976,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9605682503284052,
+                "probabilities": {
+                  "left": 0.020408725638276008,
+                  "middle": 0.9605682503284052,
+                  "right": 0.019023024033318858
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 120.52366699208505,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7278894659726973,
+                "probabilities": {
+                  "left": 0.05355848338389017,
+                  "middle": 0.7278894659726973,
+                  "right": 0.21855205064341257
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 308.13791701802984,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9474272773785096,
+                "probabilities": {
+                  "left": 0.01668796301351638,
+                  "middle": 0.9474272773785096,
+                  "right": 0.03588475960797387
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 259.77124998462386,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.8523456312817959,
+                "probabilities": {
+                  "left": 0.043442125982170156,
+                  "middle": 0.8523456312817959,
+                  "right": 0.10421224273603413
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 259.9332499958109,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.8855127222445042,
+                "probabilities": {
+                  "left": 0.032762737718045214,
+                  "middle": 0.8855127222445042,
+                  "right": 0.08172454003745071
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 272.16391600086354,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.9432507870905369,
+                "probabilities": {
+                  "left": 0.02804210675582913,
+                  "middle": 0.02870710615363398,
+                  "right": 0.9432507870905369
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 121.44279200583696,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.8494814841763124,
+                "probabilities": {
+                  "left": 0.04502086931094557,
+                  "middle": 0.10549764651274206,
+                  "right": 0.8494814841763124
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 310.00662498991005,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.5336377992498653,
+                "probabilities": {
+                  "left": 0.030819722632804046,
+                  "middle": 0.43554247811733066,
+                  "right": 0.5336377992498653
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 260.8201250259299,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.4632530131289011,
+                "probabilities": {
+                  "left": 0.23293824359139836,
+                  "middle": 0.4632530131289011,
+                  "right": 0.3038087432797005
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 263.40379199245945,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y90-car2-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.638364039134986,
+                "probabilities": {
+                  "left": 0.055345547588112644,
+                  "middle": 0.30629041327690143,
+                  "right": 0.638364039134986
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 264.9450830067508,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.963151727224602,
+                "probabilities": {
+                  "left": 0.963151727224602,
+                  "middle": 0.02014635656104609,
+                  "right": 0.01670191621435196
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 119.34600002132356,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.6271517443940258,
+                "probabilities": {
+                  "left": 0.6271517443940258,
+                  "middle": 0.21673784332509374,
+                  "right": 0.1561104122808805
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 309.5380830054637,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.5911951536485484,
+                "probabilities": {
+                  "left": 0.5911951536485484,
+                  "middle": 0.31153795356892994,
+                  "right": 0.0972668927825218
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 259.92924999445677,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.4752108085411284,
+                "probabilities": {
+                  "left": 0.30206236812888876,
+                  "middle": 0.4752108085411284,
+                  "right": 0.22272682332998275
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 260.84858301328495,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.4735351507428326,
+                "probabilities": {
+                  "left": 0.4735351507428326,
+                  "middle": 0.38648812606624794,
+                  "right": 0.13997672319091947
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 266.76770800258964,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9692539826198456,
+                "probabilities": {
+                  "left": 0.01591324347530171,
+                  "middle": 0.9692539826198456,
+                  "right": 0.014832773904852714
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 119.90383398369886,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6807762237889221,
+                "probabilities": {
+                  "left": 0.12110660039155693,
+                  "middle": 0.6807762237889221,
+                  "right": 0.19811717581952093
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 308.5646670078859,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9105468987723544,
+                "probabilities": {
+                  "left": 0.05730686397305261,
+                  "middle": 0.9105468987723544,
+                  "right": 0.032146237254592896
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 261.34962498326786,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6456653954782959,
+                "probabilities": {
+                  "left": 0.19235524675228347,
+                  "middle": 0.6456653954782959,
+                  "right": 0.16197935776942055
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 265.46037499792874,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7888410566865246,
+                "probabilities": {
+                  "left": 0.10186922180620527,
+                  "middle": 0.7888410566865246,
+                  "right": 0.10928972150727025
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 267.60904100956395,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.9627497480405584,
+                "probabilities": {
+                  "left": 0.018770631816125663,
+                  "middle": 0.018479620143316073,
+                  "right": 0.9627497480405584
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 121.38083300669678,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.6449680773244739,
+                "probabilities": {
+                  "left": 0.07763460923434459,
+                  "middle": 0.27739731344118146,
+                  "right": 0.6449680773244739
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 315.36824998329394,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6324939311259005,
+                "probabilities": {
+                  "left": 0.17156858951209006,
+                  "middle": 0.6324939311259005,
+                  "right": 0.1959374793620096
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 261.14362498628907,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5256956572068288,
+                "probabilities": {
+                  "left": 0.2602382211755899,
+                  "middle": 0.5256956572068288,
+                  "right": 0.2140661216175813
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 262.52558300620876,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car0-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6283675037441457,
+                "probabilities": {
+                  "left": 0.09711906425727138,
+                  "middle": 0.6283675037441457,
+                  "right": 0.2745134319985829
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 265.5746249947697,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.9590414836423332,
+                "probabilities": {
+                  "left": 0.9590414836423332,
+                  "middle": 0.02419743972637149,
+                  "right": 0.016761076631295408
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 119.2812499939464,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.46785633321644904,
+                "probabilities": {
+                  "left": 0.13196493831567688,
+                  "middle": 0.46785633321644904,
+                  "right": 0.4001787284678741
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 309.92662502103485,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.83241577265065,
+                "probabilities": {
+                  "left": 0.05753865844864836,
+                  "middle": 0.83241577265065,
+                  "right": 0.11004556890070169
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 263.65558299585246,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6366263911788513,
+                "probabilities": {
+                  "left": 0.1823965148805327,
+                  "middle": 0.6366263911788513,
+                  "right": 0.18097709394061598
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 263.54870799696073,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6715575445897652,
+                "probabilities": {
+                  "left": 0.1204036331258407,
+                  "middle": 0.6715575445897652,
+                  "right": 0.20803882228439402
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 263.91733399941586,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9669481421595382,
+                "probabilities": {
+                  "left": 0.017300014963848278,
+                  "middle": 0.9669481421595382,
+                  "right": 0.015751842876613496
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 120.63099999795668,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7599226527615779,
+                "probabilities": {
+                  "left": 0.062378249906203644,
+                  "middle": 0.7599226527615779,
+                  "right": 0.1776990973322185
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 312.39266600459814,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9223232454578243,
+                "probabilities": {
+                  "left": 0.03520790931162412,
+                  "middle": 0.9223232454578243,
+                  "right": 0.042468845230551625
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 276.53649999410845,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.8237223591041198,
+                "probabilities": {
+                  "left": 0.08092485680207405,
+                  "middle": 0.8237223591041198,
+                  "right": 0.09535278409380613
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 262.07466699997894,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7992487334362117,
+                "probabilities": {
+                  "left": 0.07913634122799058,
+                  "middle": 0.7992487334362117,
+                  "right": 0.12161492533579772
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 266.04333298746496,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.9591960693144195,
+                "probabilities": {
+                  "left": 0.021357607637420124,
+                  "middle": 0.019446323048160373,
+                  "right": 0.9591960693144195
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 121.45025000791065,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.6025664556432985,
+                "probabilities": {
+                  "left": 0.04869483461706139,
+                  "middle": 0.34873870973964016,
+                  "right": 0.6025664556432985
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 312.5565829977859,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.8069486209882859,
+                "probabilities": {
+                  "left": 0.04378089344803226,
+                  "middle": 0.8069486209882859,
+                  "right": 0.14927048556368183
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 260.87050000205636,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6393276853663545,
+                "probabilities": {
+                  "left": 0.18174500488289996,
+                  "middle": 0.6393276853663545,
+                  "right": 0.17892730975074558
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 263.57933299732395,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car1-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.702126757492728,
+                "probabilities": {
+                  "left": 0.06633641245871437,
+                  "middle": 0.702126757492728,
+                  "right": 0.23153683004855766
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 264.8013750149403,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.9502082117275907,
+                "probabilities": {
+                  "left": 0.9502082117275907,
+                  "middle": 0.030070845995850744,
+                  "right": 0.01972094227655844
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 121.55608297325671,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.54430063557728,
+                "probabilities": {
+                  "left": 0.10972083026170051,
+                  "middle": 0.3459785341610195,
+                  "right": 0.54430063557728
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 309.6892919857055,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6093628336847373,
+                "probabilities": {
+                  "left": 0.07450389279613326,
+                  "middle": 0.6093628336847373,
+                  "right": 0.31613327351912934
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 276.0654589801561,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5733745167641148,
+                "probabilities": {
+                  "left": 0.18760742414540754,
+                  "middle": 0.5733745167641148,
+                  "right": 0.23901805909047766
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 260.42466700891964,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap0",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "left",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.4931958254624937,
+                "probabilities": {
+                  "left": 0.12865781808431034,
+                  "middle": 0.4931958254624937,
+                  "right": 0.37814635645319605
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 268.3188329974655,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9576728777082061,
+                "probabilities": {
+                  "left": 0.021659491306054813,
+                  "middle": 0.9576728777082061,
+                  "right": 0.02066763098573918
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 119.75304200313985,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6078041052600726,
+                "probabilities": {
+                  "left": 0.05653458839091,
+                  "middle": 0.6078041052600726,
+                  "right": 0.3356613063490174
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 309.6127080207225,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.8406254396722934,
+                "probabilities": {
+                  "left": 0.03442674336764505,
+                  "middle": 0.8406254396722934,
+                  "right": 0.12494781696006144
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 265.3042089950759,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.6582701642553582,
+                "probabilities": {
+                  "left": 0.12465537515650846,
+                  "middle": 0.6582701642553582,
+                  "right": 0.2170744605881333
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 263.11916700797155,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap1",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.7490506518031176,
+                "probabilities": {
+                  "left": 0.055547810875986425,
+                  "middle": 0.7490506518031176,
+                  "right": 0.19540153732089605
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 265.9327500150539,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.9386935227927587,
+                "probabilities": {
+                  "left": 0.03339985434784974,
+                  "middle": 0.027906622859391567,
+                  "right": 0.9386935227927587
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 121.00854201707989,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.8285987695277083,
+                "probabilities": {
+                  "left": 0.04029786720666532,
+                  "middle": 0.13110336326562647,
+                  "right": 0.8285987695277083
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 311.8792909954209,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "short",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.4887115668584386,
+                "probabilities": {
+                  "left": 0.07321021589406994,
+                  "middle": 0.43807821724749135,
+                  "right": 0.4887115668584386
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 263.7701249914244,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "opening",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5199399484395181,
+                "probabilities": {
+                  "left": 0.24752852332760222,
+                  "middle": 0.5199399484395181,
+                  "right": 0.23253152823287968
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 264.24154100823216,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "new-y250-car2-gap2",
+          "split": "new-scenes",
+          "input": "image",
+          "variant": "safe",
+          "expected": "right",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.586355161866814,
+                "probabilities": {
+                  "left": 0.06894442079294137,
+                  "middle": 0.34470041734024454,
+                  "right": 0.586355161866814
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 266.92741599981673,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "exact-live-failure",
+          "split": "live-failure",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.9687756916848435,
+                "probabilities": {
+                  "left": 0.01628257635413527,
+                  "middle": 0.9687756916848435,
+                  "right": 0.014941731961021262
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 178,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 122.8865000011865,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "exact-live-failure",
+          "split": "live-failure",
+          "input": "image",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "confidence": 0.36505196360176767,
+                "probabilities": {
+                  "left": 0.2755556789104639,
+                  "middle": 0.3593923574877683,
+                  "right": 0.36505196360176767
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 327,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 312.87212498136796,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "exact-live-failure",
+          "split": "live-failure",
+          "input": "image",
+          "variant": "short",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5343846913961536,
+                "probabilities": {
+                  "left": 0.3396755765519951,
+                  "middle": 0.5343846913961536,
+                  "right": 0.12593973205185133
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 232,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 264.12308297585696,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "exact-live-failure",
+          "split": "live-failure",
+          "input": "image",
+          "variant": "opening",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "middle",
+                "confidence": 0.5605755589736826,
+                "probabilities": {
+                  "left": 0.24110054358838806,
+                  "middle": 0.5605755589736826,
+                  "right": 0.19832389743792922
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 238,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 261.60216599237174,
+          "metadata": null,
+          "error": null,
+          "correct": true
+        },
+        {
+          "model": "LiquidAI/d1-3B",
+          "scene_id": "exact-live-failure",
+          "split": "live-failure",
+          "input": "image",
+          "variant": "safe",
+          "expected": "middle",
+          "response": {
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "confidence": 0.4323539593194935,
+                "probabilities": {
+                  "left": 0.4323539593194935,
+                  "middle": 0.3212981804558469,
+                  "right": 0.24634786022465957
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 251,
+              "output_tokens": 0
+            }
+          },
+          "elapsed_ms": 264.95775001239963,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        }
+      ],
+      "revision": "051bcc464b01b9f92942b364d9586b0ef5912432",
+      "device": "mps",
+      "dtype": "float16",
+      "complete": true
+    },
+    {
+      "model": "convaiinnovations/laya",
+      "conditions": "22 frozen scenes: original 3, balanced 18, exact failure. Same model-visible state and questions as original diagnostic. Expected labels only used after inference. Warm native timing excludes downloads. Cloud time is complete network round trip; no retries.",
+      "results": [
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "saved-0",
+          "split": "previous-smoke-test",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "probabilities": {
+                  "left": 0.2966,
+                  "middle": 0.0984,
+                  "right": 0.6051
+                },
+                "confidence": 0.1876,
+                "answer_confidence": 0.6051,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 211.04929101420566,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "saved-1",
+          "split": "previous-smoke-test",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.5837,
+                  "middle": 0.0165,
+                  "right": 0.3998
+                },
+                "confidence": 0.3188,
+                "answer_confidence": 0.5837,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 219.96137499809265,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "saved-2",
+          "split": "previous-smoke-test",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.8829,
+                  "middle": 0.0957,
+                  "right": 0.0213
+                },
+                "confidence": 0.6208,
+                "answer_confidence": 0.8829,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 228.9212920004502,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y90-car0-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "probabilities": {
+                  "left": 0.1422,
+                  "middle": 0.1333,
+                  "right": 0.7245
+                },
+                "confidence": 0.2906,
+                "answer_confidence": 0.7245,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 222.0048750168644,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y90-car0-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "probabilities": {
+                  "left": 0.4866,
+                  "middle": 0.0143,
+                  "right": 0.4991
+                },
+                "confidence": 0.3099,
+                "answer_confidence": 0.4991,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 229.34266598895192,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y90-car0-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.9078,
+                  "middle": 0.0667,
+                  "right": 0.0255
+                },
+                "confidence": 0.6706,
+                "answer_confidence": 0.9078,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 238.27454101410694,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y90-car1-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "probabilities": {
+                  "left": 0.1284,
+                  "middle": 0.1459,
+                  "right": 0.7257
+                },
+                "confidence": 0.2927,
+                "answer_confidence": 0.7257,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 247.64783401042223,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y90-car1-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.5159,
+                  "middle": 0.0173,
+                  "right": 0.4668
+                },
+                "confidence": 0.3017,
+                "answer_confidence": 0.5159,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 227.29616702417843,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y90-car1-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.9128,
+                  "middle": 0.0597,
+                  "right": 0.0275
+                },
+                "confidence": 0.6812,
+                "answer_confidence": 0.9128,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 223.43891698983498,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y90-car2-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "probabilities": {
+                  "left": 0.0897,
+                  "middle": 0.0949,
+                  "right": 0.8155
+                },
+                "confidence": 0.4484,
+                "answer_confidence": 0.8155,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 225.96404200885445,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y90-car2-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "probabilities": {
+                  "left": 0.4643,
+                  "middle": 0.0163,
+                  "right": 0.5194
+                },
+                "confidence": 0.3049,
+                "answer_confidence": 0.5194,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 218.71787498821504,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y90-car2-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.915,
+                  "middle": 0.061,
+                  "right": 0.024
+                },
+                "confidence": 0.6893,
+                "answer_confidence": 0.915,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 219.03691699844785,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y250-car0-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "probabilities": {
+                  "left": 0.1228,
+                  "middle": 0.1931,
+                  "right": 0.6841
+                },
+                "confidence": 0.2401,
+                "answer_confidence": 0.6841,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 219.1587499983143,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y250-car0-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.4947,
+                  "middle": 0.018,
+                  "right": 0.4873
+                },
+                "confidence": 0.2984,
+                "answer_confidence": 0.4947,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 226.84258400113322,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y250-car0-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.8398,
+                  "middle": 0.132,
+                  "right": 0.0282
+                },
+                "confidence": 0.5317,
+                "answer_confidence": 0.8398,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 229.21791701810434,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y250-car1-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "probabilities": {
+                  "left": 0.1137,
+                  "middle": 0.1461,
+                  "right": 0.7402
+                },
+                "confidence": 0.3165,
+                "answer_confidence": 0.7402,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 231.41295899404213,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y250-car1-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.5089,
+                  "middle": 0.0191,
+                  "right": 0.472
+                },
+                "confidence": 0.2956,
+                "answer_confidence": 0.5089,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 487.35937499441206,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y250-car1-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.8588,
+                  "middle": 0.1137,
+                  "right": 0.0275
+                },
+                "confidence": 0.5659,
+                "answer_confidence": 0.8588,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 829.3802500120364,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y250-car2-gap0",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "left",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "right",
+                "probabilities": {
+                  "left": 0.1182,
+                  "middle": 0.149,
+                  "right": 0.7328
+                },
+                "confidence": 0.3047,
+                "answer_confidence": 0.7328,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 629.7416669840459,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y250-car2-gap1",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.5164,
+                  "middle": 0.0208,
+                  "right": 0.4628
+                },
+                "confidence": 0.2915,
+                "answer_confidence": 0.5164,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 676.5856249839999,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "new-y250-car2-gap2",
+          "split": "new-scenes",
+          "input": "structured",
+          "variant": "original",
+          "expected": "right",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.8457,
+                  "middle": 0.1272,
+                  "right": 0.0271
+                },
+                "confidence": 0.5432,
+                "answer_confidence": 0.8457,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 759.479750005994,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        },
+        {
+          "model": "convaiinnovations/laya",
+          "scene_id": "exact-live-failure",
+          "split": "live-failure",
+          "input": "structured",
+          "variant": "original",
+          "expected": "middle",
+          "response": {
+            "model": "laya-rl-agent",
+            "answers": {
+              "lane": {
+                "type": "choice",
+                "choice": "left",
+                "probabilities": {
+                  "left": 0.5059,
+                  "middle": 0.0158,
+                  "right": 0.4783
+                },
+                "confidence": 0.3055,
+                "answer_confidence": 0.5059,
+                "action": {
+                  "act_probability": 1.0
+                }
+              }
+            },
+            "usage": {
+              "input_tokens": 139,
+              "output_tokens": 0,
+              "state_tokens": 81,
+              "state_tokens_dropped": 0,
+              "truncated": false,
+              "truncated_questions": []
+            }
+          },
+          "elapsed_ms": 416.9573339750059,
+          "metadata": null,
+          "error": null,
+          "correct": false
+        }
+      ],
+      "revision": "7b928d828b7b0e022f929d9bd2e44165aa270148",
+      "device": "cpu",
+      "library": "laya 0.4.0",
+      "complete": true
+    }
+  ]
+}
