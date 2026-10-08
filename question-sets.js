@@ -23,6 +23,7 @@
       return name==='lane'?keys.includes(v.choice)&&p[v.choice]+.025>=Math.max(...Object.values(p)):Number.isFinite(v.score)&&v.score>=0&&v.score<=2&&Math.abs(v.score-keys.reduce((s,k)=>s+Number(k)*p[k],0))<=.04;
     });
   }
+  function elapsed(f){return f?.metadata?.source==='local'?f.metadata.local_inference_ms:f?.metadata?.upstream_round_trip_ms;}
   function mean(values){const a=values.filter(Number.isFinite);return a.length?a.reduce((x,y)=>x+y,0)/a.length:null;}
   function median(values){const a=values.filter(Number.isFinite).sort((x,y)=>x-y),n=a.length;return n?(a[Math.floor((n-1)/2)]+a[Math.floor(n/2)])/2:null;}
   function summarize(frames){
@@ -31,9 +32,9 @@
     const paired=[...groups.values()].filter(g=>g.length===3&&new Set(g.map(count)).size===3&&g.every(f=>[1,2,3].includes(count(f))&&f.application.status!=='pending'&&f.image===g[0].image&&JSON.stringify(f.request.state)===JSON.stringify(g[0].request.state)&&f.request.model===g[0].request.model&&JSON.stringify(f.scene)===JSON.stringify(g[0].scene)));
     return {pairs:paired.length,versions:[1,2,3].map(n=>{
       const set=paired.flat().filter(f=>count(f)===n);
-      return {count:n,attempts:set.length,correct:set.filter(f=>!f.error&&['left','middle','right'].indexOf(f.response?.answers?.lane?.choice)>=0&&!f.scene.row.blocked.includes(['left','middle','right'].indexOf(f.response.answers.lane.choice))).length,errors:set.filter(f=>f.error).length,median_ms:median(set.map(f=>f.metadata.upstream_round_trip_ms)),mean_tokens:mean(set.map(f=>f.response?.usage?.input_tokens)),mean_cost:mean(set.map(f=>f.response?.usage?.cost))};
+      return {count:n,attempts:set.length,correct:set.filter(f=>!f.error&&['left','middle','right'].indexOf(f.response?.answers?.lane?.choice)>=0&&!f.scene.row.blocked.includes(['left','middle','right'].indexOf(f.response.answers.lane.choice))).length,errors:set.filter(f=>f.error).length,median_ms:median(set.map(elapsed)),mean_tokens:mean(set.map(f=>f.response?.usage?.input_tokens)),mean_cost:mean(set.map(f=>f.response?.usage?.cost))};
     })};
   }
-  const api={names,select,count,validSavedAnswers,summarize};
+  const api={names,select,count,validSavedAnswers,summarize,elapsed};
   if(typeof module!=='undefined')module.exports=api;else root.RoadQuestions=api;
 })(typeof window==='undefined'?this:window);

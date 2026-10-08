@@ -41,14 +41,15 @@
     form.querySelector('label').textContent='OpenRouter API key';$('visitor-key').placeholder='Paste your key for live play';
     $('connect-key').textContent='Connect';
     connected.querySelector('strong').textContent='Key connected for this tab';connected.querySelector('p').hidden=true;
-    privacyNote=privacy;connectionField.append(form,connected);connection.remove();
+    privacyNote=privacy;const remote=el('div');remote.id='remote-key-controls';remote.append(form,connected);connectionField.append(remote);connection.remove();
     apiStatus.className='sr-only';connectionField.append(apiStatus);
   }else{
     connectionField.append(el('span','control-label','Connection'));apiStatus.className='local-connection-state';connectionField.append(apiStatus);
   }
+  const local=el('div');local.id='local-model-controls';local.hidden=true;local.innerHTML='<label>Local model · no API key</label><div class="key-entry"><button id="load-local-model" class="primary" type="button">Load model</button><button id="unload-local-model" class="secondary" type="button" disabled>Unload</button></div>';connectionField.append(local);
   const soundField=el('div','sound-field'),soundLabel=el('label','','Sound & volume');soundLabel.htmlFor='volume';soundField.append(soundLabel,audio);
   secondary.append(connectionField,samplingField,imageField,soundField);
-  const note=el('div','controls-note');note.append($('model-note'));if(privacyNote)note.append(privacyNote);
+  const note=el('div','controls-note');note.append($('model-note'));const localResults=el('a','','Local benchmark ↗');localResults.id='local-results-link';localResults.href='./liquid-local.html';localResults.target='_blank';localResults.rel='noreferrer';localResults.hidden=true;note.append(localResults);if(privacyNote)note.append(privacyNote);
   controls.append(primary,secondary,note);
   header.after(controls);
   one('.race-toolbar').remove();document.querySelectorAll('.sampling-controls').forEach(n=>n.remove());
@@ -87,7 +88,7 @@
     host.replaceChildren();$('compact-history-count').textContent=`${frames.length} call${frames.length===1?'':'s'}`;
     $('history-caption').textContent=replay?'Recorded run · controls configure your next live run':following?'Following incoming decisions':'Pinned to history · live road is separate';
     if(!frames.length){const empty=el('div','history-empty');empty.append(el('strong','','Your first decision starts here.'),el('p','','Take one decision, or explore a recorded run without an API key.'),button('Open recorded run',()=>$('load-comparison').click()));host.append(empty);}
-    frames.forEach((f,i)=>{const b=button('',()=>{},'history-frame');b.dataset.log=i;b.setAttribute('aria-label',`Inspect decision ${f.frame_id}`);b.setAttribute('aria-pressed',String(i===selected));const top=el('span','history-frame-top'),answer=f.error?'Error':f.response?.answers?.lane?.choice||'Waiting…';top.append(el('b','',`#${String(f.frame_id).padStart(2,'0')}`),el('strong','',answer));const bottom=el('span','history-frame-bottom');bottom.append(el('span','',`${Object.keys(f.request.questions).length}Q · ${f.speed}×`),el('span','',Number.isFinite(f.metadata.upstream_round_trip_ms)?`${Math.round(f.metadata.upstream_round_trip_ms)} ms`:'pending'));b.append(top,bottom,el('span','history-outcome',`${f.request.model.split('/').at(-1)} · ${f.application.status}`));if(f.error||f.application.collision_observed)b.classList.add('has-error');host.append(b);});
+    frames.forEach((f,i)=>{const b=button('',()=>{},'history-frame');b.dataset.log=i;b.setAttribute('aria-label',`Inspect decision ${f.frame_id}`);b.setAttribute('aria-pressed',String(i===selected));const top=el('span','history-frame-top'),answer=f.error?'Error':f.response?.answers?.lane?.choice||'Waiting…';top.append(el('b','',`#${String(f.frame_id).padStart(2,'0')}`),el('strong','',answer));const bottom=el('span','history-frame-bottom');bottom.append(el('span','',`${Object.keys(f.request.questions).length}Q · ${f.speed}×`),el('span','',Number.isFinite(RoadQuestions.elapsed(f))?`${Math.round(RoadQuestions.elapsed(f))} ms`:'pending'));b.append(top,bottom,el('span','history-outcome',`${f.request.model.split('/').at(-1)} · ${f.application.status}`));if(f.error||f.application.collision_observed)b.classList.add('has-error');host.append(b);});
     host.scrollTop=following?host.scrollHeight:prior;
     if(active!==undefined)host.querySelector(`[data-log="${active}"]`)?.focus({preventScroll:true});
     history.querySelectorAll('.history-tools button')[1].disabled=!frames.length;
@@ -97,7 +98,7 @@
     roadHeader.querySelector('h2').textContent=data.replay?'Recorded scene':'Live road';roadDetails.hidden=data.replay;one('.road-metrics').hidden=data.replay;
     $('selected-label').textContent=f?`Frame ${String(f.frame_id).padStart(2,'0')} · ${data.replay?'Recorded':data.following?'Latest':'Pinned'} · ${f.request.model.split('/').at(-1)}`:'Next frame · not sent';
     const a=f?.response?.answers?.lane;facts.replaceChildren();
-    for(const [label,value] of [['Lane choice',f?.error?'Error':a?.choice||'—'],['Round trip',Number.isFinite(f?.metadata.upstream_round_trip_ms)?`${Math.round(f.metadata.upstream_round_trip_ms)} ms`:'—'],['Questions',String(Object.keys(data.request.questions).length)]]){const item=el('div');item.append(el('span','',label),el('strong','',value));facts.append(item);}
+    for(const [label,value] of [['Lane choice',f?.error?'Error':a?.choice||'—'],[f?.metadata.source==='local'?'Local compute':'Round trip',Number.isFinite(RoadQuestions.elapsed(f))?`${Math.round(RoadQuestions.elapsed(f))} ms`:'—'],['Questions',String(Object.keys(data.request.questions).length)]]){const item=el('div');item.append(el('span','',label),el('strong','',value));facts.append(item);}
     renderJSON();refreshHistory(data.frames,data.selected,data.following,data.replay);
   }
   $('inspect-chat-history').addEventListener('click',()=>compare.close());

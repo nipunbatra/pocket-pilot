@@ -38,6 +38,28 @@ and includes a script to restore exact requests/responses. Speaker notes explain
 sample limits, scoring and timings. The animated walkthrough at
 `walkthrough.html` includes Gemini narration, an original Lyria instrumental score, 1080p motion graphics, captions, chapters and a transcript. Animations explain the system; benchmark numbers come from saved calls.
 
+## Local Liquid model — no API key
+
+Choose **Liquid d1 · local WebGPU · experimental**, then **Load model**.
+Recent browsers with WebGPU and enough GPU memory can run image and structured
+JSON decisions on the device. The first load downloads approximately 595 MB
+for images or 406 MB for text, plus tokenizer/runtime files. Weights are cached
+when possible. Unload frees model sessions; switching to a cloud model also unloads.
+No model input or output is sent for local inference. Hugging Face serves downloads.
+
+The warm three-scene check measured 217 ms/image and 60 ms/JSON for one question
+on an Apple GPU, but only 2/3 and 1/3 correct lanes respectively. This is an
+experimental teaching comparison, not a reliable driver. The local timing label
+excludes model loading and is distinct from a network round trip.
+See [all 18 measurements and limitations](./liquid-local.html).
+
+Weights are pinned to revision 4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0 of
+onnx-community/d1-omni-600M-ONNX. Liquid's LFM Open License v1.0 applies, including
+its commercial threshold. Runtime source and exact dependency lock are included
+in local-runtime/source. To rebuild that bundle: cd local-runtime/source,
+then npm ci --ignore-scripts and node build.mjs .. . Run node test-contract.mjs
+for the question/answer contract checks. The static host needs no build or backend.
+
 ## Visitors supply their own OpenRouter key
 
 Connect a dedicated key with a small credit limit. Live calls go directly from
@@ -51,8 +73,7 @@ the first live call. There is no shared site-owner API key.
 The page's JavaScript can access the key while connected, so users must trust
 the site's code and should use limited-credit keys. Static hosting does not
 make a browser immune to malicious extensions or compromised site code.
-No analytics, third-party scripts, or remote fonts are loaded. A restrictive
-Content Security Policy allows inference connections only to OpenRouter.
+No analytics, third-party scripts, or remote fonts are loaded. The Content Security Policy permits OpenRouter calls and pinned model downloads from Hugging Face. Runtime JavaScript and WebAssembly are self-hosted; WebAssembly compilation is permitted.
 GitHub still serves the files and may log ordinary web requests.
 
 Images/structured scenes are sent to OpenRouter and the selected provider;

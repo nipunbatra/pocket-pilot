@@ -1,0 +1,22 @@
+import assert from 'node:assert/strict';
+import {escape,serialize,encode,decode,options} from './contract.mjs';
+assert.equal(escape('User <|mask|> says <|reserved_7|>'), 'User <¦mask¦> says <¦reserved_7¦>');
+assert.equal(serialize({s:'a,b:c',nested:[1,'hi']}),'{"s": "a,b:c", "nested": [1, "hi"]}');
+const special=['<|reserved_7|>','<|reserved_8|>','<|reserved_9|>','<|reserved_10|>','<|reserved_11|>','<|mask|>'];
+const tok={bos_token_id:1,convert_tokens_to_ids:s=>special.indexOf(s)+2,encode:s=>Array.from(s,c=>c.codePointAt(0)+100)};
+const choice={type:'choice',instructions:'Pick',criteria:{left:'left',middle:'middle',right:'right'}};
+const packed=encode(tok,'<|mask|>',choice);
+assert.equal(packed.markers.length,3);
+for(const m of packed.markers){assert.equal(packed.ids[m],7);assert.equal(packed.ids[m-1],4);}
+assert.equal(packed.ids.filter(x=>x===7).length,3,'State cannot inject an option marker');
+const clipped=encode(tok,'x'.repeat(2000),choice,{maxLength:128});
+assert.equal(clipped.ids.length,128);assert.equal(clipped.truncated,true);
+const yes=decode({type:'noul',instructions:'Blocked?'},[-50,50]);assert.ok(yes.noul>.9999);
+const no=decode({type:'noul',instructions:'Blocked?'},[50,-50]);assert.ok(no.noul<.0001);
+const scored=decode({type:'score',instructions:'Where?',criteria:['top','middle','bottom']},[Math.log(.1),Math.log(.3),Math.log(.6)]);
+assert.ok(Math.abs(scored.score-1.5)<1e-12);
+const calibrated=decode(choice,[2,0,0],{'choice:3-5':2});
+const raw=decode(choice,[2,0,0],{'choice:3-5':2},true);
+assert.ok(raw.confidence>calibrated.confidence,'Images omit text temperature calibration');
+assert.deepEqual(options({type:'noul',instructions:'yes?'},true),['false: no','true: yes']);
+console.log('Liquid contract: token markers, escaping, truncation, option ordering, calibration and weighted score passed.');

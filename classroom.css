@@ -101,3 +101,8 @@
 .comparison-group{font-size:14px;margin:20px 0 8px;font-weight:600}.comparison-empty{padding:16px;background:var(--soft);font-size:13px;line-height:1.6}.chat-comparison .section-heading{gap:16px;flex-wrap:wrap}.chat-comparison .log-table th,.chat-comparison .log-table td{white-space:nowrap}
 .comparison-method{font-size:12px;margin:10px 0}.comparison-method summary{cursor:pointer;color:var(--muted)}
 .chat-comparison .log-table th,.chat-comparison .log-table td{padding:7px 12px}.chat-comparison tbody th{position:static;text-align:left;background:transparent}.chat-comparison .comparison-group{margin-top:14px}.chat-comparison .log-table .time{margin-top:3px}
+/* Local model controls occupy the existing connection slot, keeping two rows. */
+#local-model-controls .key-entry{display:flex;gap:6px}#local-model-controls button{font-size:12px;white-space:nowrap;padding:9px 12px}#local-model-controls[hidden],#remote-key-controls[hidden]{display:none!important}
+.local-report{max-width:960px;margin:40px auto;padding:0 24px 60px;font-size:16px;line-height:1.65}.local-report h1{font-size:38px;letter-spacing:-1.3px;line-height:1.2}.local-report h2{font-size:23px;margin-top:34px}.local-report .eyebrow{margin-top:35px}.local-report table{width:100%;border-collapse:collapse;white-space:nowrap;font-size:14px}.local-report th,.local-report td{text-align:left;padding:12px;border-bottom:1px solid var(--line)}.local-report td{font-variant-numeric:tabular-nums}.local-report code{overflow-wrap:anywhere}.local-report a{color:var(--accent)}#local-results-link[hidden]{display:none}
+
+.local-report .log-scroll{overflow-x:auto}

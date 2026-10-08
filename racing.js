@@ -20,18 +20,27 @@ function runData(){return {format:'pocket-pilot-road-v2',run_id:runId,model:sele
 const MAX_CALLS=30;
 function newRunId(){return 'road-'+new Date().toISOString().replace(/[:.]/g,'-')+'-'+Math.random().toString(36).slice(2,7);}
 function modelInfo(){return config?.road_models?.find(m=>m.id===selectedModel);}
-function modelAvailable(){return !!modelInfo()?.available&&(!PUBLIC_SITE||PublicDecisions.connected);}
+function localModel(){return LocalDecisions.isLocal(selectedModel);}
+function modelAvailable(){return localModel()?LocalDecisions.ready(inputKind==='image')&&!LocalDecisions.loading:!!modelInfo()?.available&&(!PUBLIC_SITE||PublicDecisions.connected);}
 function recentLatency(){
   const samples=frames.filter(f=>f.request.model===selectedModel&&(f.input_kind||'image')===inputKind&&RoadQuestions.count(f)===questionCount&&(inputKind==='structured'||f.image_width===inputCanvas.width)&&Number.isFinite(f.metadata?.browser_round_trip_ms)).slice(-5);
   return samples.length?Math.max(...samples.map(f=>f.metadata.browser_round_trip_ms)):null;
 }
 function syncModelControls(){
-  const info=modelInfo();
+  const info=modelInfo(),local=localModel();
+  if($('local-model-controls')){
+    $('local-model-controls').hidden=!local;if($('local-results-link'))$('local-results-link').hidden=!local;
+    if($('remote-key-controls'))$('remote-key-controls').hidden=local;
+    $('load-local-model').disabled=inFlight||running||comparing||LocalDecisions.loading||LocalDecisions.ready(inputKind==='image');
+    $('load-local-model').textContent=LocalDecisions.loading?'Loading…':LocalDecisions.ready(inputKind==='image')?'Loaded':`Load ~${inputKind==='image'?'595':'406'} MB`;
+    $('unload-local-model').disabled=inFlight||running||comparing||LocalDecisions.loading||!LocalDecisions.ready(false);
+    if($('key-privacy'))$('key-privacy').textContent=local?'No key · no inference uploads · first load downloads weights.':'Tab only · sent to OpenRouter · billed to your account.';
+  }
   if(info&&!info.vision)inputKind='structured';
-  $('input-kind').value=inputKind;$('input-kind').disabled=!info?.vision||inFlight||comparing||running;
+  $('input-kind').value=inputKind;$('input-kind').disabled=!info?.vision||inFlight||comparing||running||LocalDecisions.loading;
   $('image-size').disabled=inputKind==='structured'||comparing||inFlight;
-  $('api-status').textContent=modelAvailable()?`${info.label} ready`:PUBLIC_SITE?'Connect your key · or explore recordings':'OpenRouter key missing';
-  $('model-note').textContent=!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':(RoadChat.isChat({model:selectedModel})?'Chat '+(inputKind==='image'?'VLM':'LLM')+' · short JSON answers, no class probabilities. ':'Decisions API · typed answers and probabilities. ')+(inputKind==='structured'?'Obstacle coordinates sent; no image.':'Road PNG sent; no obstacle coordinates.');
+  $('api-status').textContent=modelAvailable()?`${info.label} ready`:local?LocalDecisions.message:PUBLIC_SITE?'Connect your key · or explore recordings':'OpenRouter key missing';
+  $('model-note').textContent=local?LocalDecisions.message+' · Warm three-scene check: image 2/3, JSON 1/3 lanes correct.':!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':(RoadChat.isChat({model:selectedModel})?'Chat '+(inputKind==='image'?'VLM':'LLM')+' · short JSON answers, no class probabilities. ':'Decisions API · typed answers and probabilities. ')+(inputKind==='structured'?'Obstacle coordinates sent; no image.':'Road PNG sent; no obstacle coordinates.');
 }
 function draw(){
   const f=replay?frames[selected]:null;
@@ -44,9 +53,9 @@ function updateHud(){
   $('retry-run').hidden=!crashed;
   $('retry-run').disabled=inFlight||comparing;
   $('retry-run').textContent=inFlight?'Finishing request…':'Play again';
-  $('overlay-kicker').textContent=crashed?'RUN STOPPED':'LIVE API · ROAD HELD';
+  $('overlay-kicker').textContent=crashed?'RUN STOPPED':'LIVE MODEL · ROAD HELD';
   $('overlay-title').textContent=crashed?'Let’s inspect that collision.':'Waiting for the next decision';
-  $('overlay-detail').textContent=crashed?'The cause and exact frame are in the inspector.':'Game time is paused. Only the API wait timer is running.';
+  $('overlay-detail').textContent=crashed?'The cause and exact frame are in the inspector.':'Game time is paused. Only the decision wait timer is running.';
   const recorded=replay?frames[selected]:null;
   $('sim-clock').textContent=((recorded?.elapsed_at_capture_ms??elapsed)/1000).toFixed(1)+' s';
   $('hud-speed').textContent=`${recorded?.speed??speed}×`;
@@ -55,8 +64,8 @@ function updateHud(){
   $('sampling-status').textContent=`${checkpoint===null?'Next image: next barrier':`Next image in ${Math.max(0,(checkpoint-row.y)/(RoadEngine.BASE_SPEED*speed)).toFixed(1)} driving s`} · barrier reaches car in ${contact.toFixed(1)} driving s`;
   const budget=RoadEngine.timingBudget(game,speed,recentLatency());
   $('latency-budget').classList.toggle('tight',budget.required_ms!==null&&budget.required_ms>budget.initial_ms);
-  $('latency-budget').textContent=`${speed}× gives ${ms(budget.initial_ms)} from first sight to contact. `+(budget.required_ms===null?'Make a call to measure the decision budget.':`Recent API wait ${ms(budget.latency_ms)} + turn / margin ${ms(budget.steering_ms+budget.margin_ms)}. ${budget.suggested_speed?`Measured budget fits up to ${budget.suggested_speed}×`:'Use Classroom for this measured delay'}; delays vary.`);
-  $('request-status').textContent=recorded?'Recorded snapshot · no API calls':inFlight?(held?'Road held · waiting for API':'Sending input · awaiting answer'):running?'Driving on the latest lane choice':'Ready when you are';
+  $('latency-budget').textContent=`${speed}× gives ${ms(budget.initial_ms)} from first sight to contact. `+(budget.required_ms===null?'Make a call to measure the decision budget.':`Recent decision wait ${ms(budget.latency_ms)} + turn / margin ${ms(budget.steering_ms+budget.margin_ms)}. ${budget.suggested_speed?`Measured budget fits up to ${budget.suggested_speed}×`:'Use Classroom for this measured delay'}; delays vary.`);
+  $('request-status').textContent=recorded?'Recorded snapshot · no API calls':inFlight?(held?'Road held · waiting for model':'Evaluating input · awaiting answer'):running?'Driving on the latest lane choice':'Ready when you are';
   $('request-clock').textContent=inFlight?ms(performance.now()-requestStarted):'';
   $('run-state').textContent=crashed?'COLLISION':held?'WAITING FOR AI':running?'LIVE':replay?'REPLAY':'PAUSED';
   $('run-state').className='run-state'+(running?' running':'')+(held?' held':'');
@@ -69,11 +78,11 @@ function updateControls(){
   $('step').disabled=comparing||loadingRecording||!modelAvailable()||running||inFlight||crashed||frames.length>=MAX_CALLS||replay;
   $('new-run').disabled=inFlight||comparing||loadingRecording;
   $('compare-questions').disabled=!modelAvailable()||inFlight||comparing||replay||frames.length>MAX_CALLS-3;
-  $('compare-chat').disabled=!modelAvailable()||inFlight||comparing||loadingRecording||replay||frames.length>MAX_CALLS-3;
+  $('compare-chat').disabled=(PUBLIC_SITE&&!PublicDecisions.connected)||!modelAvailable()||inFlight||comparing||loadingRecording||replay||frames.length>MAX_CALLS-3;
   $('load-chat-comparison').disabled=inFlight||comparing||loadingRecording;
   $('load-comparison').disabled=inFlight||comparing||loadingRecording;$('load-model-benchmark').disabled=inFlight||comparing||loadingRecording;
   for(const id of ['question-count','sampling','drive-mode'])$(id).disabled=comparing;
-  $('model-select').disabled=inFlight||comparing||running;syncModelControls();
+  $('model-select').disabled=inFlight||comparing||running||LocalDecisions.loading;syncModelControls();
   $('run-state').textContent=crashed?'COLLISION':running?'● LIVE':replay?'REPLAY':'PAUSED';$('run-state').className='run-state'+(running?' running':'');
   $('passed').textContent=passed;$('call-count').textContent=`${frames.length} / ${MAX_CALLS}`;
   $('export-session').disabled=!frames.length;
@@ -81,7 +90,7 @@ function updateControls(){
   $('timeline').disabled=!frames.length;$('timeline').max=Math.max(0,frames.length-1);$('timeline').value=Math.max(0,selected);
   $('timeline-label').textContent=frames[selected]?`Decision ${selected+1} of ${frames.length}`:'Waiting for the first frame';
   $('previous').disabled=selected<=0;$('next').disabled=selected>=frames.length-1;
-  $('request-status').textContent=inFlight?'Live API request in flight':running?'Ready for the next frame':'No request in flight';
+  $('request-status').textContent=inFlight?'Live decision in progress':running?'Ready for the next frame':'No request in flight';
   updateHud();
 }
 function pause(reason='Paused. Inspect the log or resume when ready.'){
@@ -146,7 +155,8 @@ async function requestDecision(single,comparison=null){
   frames.push(f);activeRequest=f;if(following)selected=frames.length-1;renderLog();if(following)renderSelection();updateControls();
   try{
     let result;
-    if(PUBLIC_SITE){result=await PublicDecisions.submit(f.request);}
+    if(LocalDecisions.isLocal(f.request.model)){result=await LocalDecisions.submit(f.request);}
+    else if(PUBLIC_SITE){result=await PublicDecisions.submit(f.request);}
     else{
       const res=await fetch('/api/road',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({run_id:runId,frame_id:f.frame_id,image,question_count:count,model:f.request.model,input_kind:f.input_kind,...(f.input_kind==='structured'?{scene:f.scene}:{})}),signal:AbortSignal.timeout(30000)});
       result=await res.json();
@@ -157,7 +167,7 @@ async function requestDecision(single,comparison=null){
   f.received_at=new Date().toISOString();f.metadata.browser_round_trip_ms=Number((performance.now()-requestStarted).toFixed(2));
   f.application.received_scene={lane,row:structuredClone(row)};
   const a=f.response?.answers;
-  if(f.error){f.application.status='error';f.application.reason=f.error;pause('API call failed. Its error and timing are in the log.');}
+  if(f.error){f.application.status='error';f.application.reason=f.error;pause('Decision failed. Its error and timing are in the log.');}
   else if(comparison){
     f.application.status='compared';f.application.reason='Same-input comparison only; no steering applied.';
     f.application.local_scene_check={actual_open_lane:RoadEngine.lanes[[0,1,2].find(l=>!f.scene.row.blocked.includes(l))],model_matches_scene:!f.scene.row.blocked.includes(RoadEngine.lanes.indexOf(a.lane.choice)),note:'Local evaluation only; no answer label supplied and no comparison steering.'};
@@ -181,7 +191,7 @@ async function requestDecision(single,comparison=null){
   f.application.road_pixels_moved=Number((distance-f.distance_at_capture).toFixed(1));
   event('decision',{frame_id:f.frame_id,status:f.application.status});
   inFlight=false;activeRequest=null;nextCall=performance.now();
-  $('last-latency').textContent=ms(f.metadata.upstream_round_trip_ms);
+  $('last-latency').textContent=ms(RoadQuestions.elapsed(f));
   if(frames.length>=MAX_CALLS)pause('30-call teaching run complete. Export or rewind this run; reset the road for a new one.');
   else if(single&&!f.error)$('road-message').textContent=`Open lane: ${a.lane.choice}. ${f.application.reason} Road remains paused.`;
   else if(running)$('road-message').textContent=`Frame ${f.frame_id}: ${a?.lane.choice??'error'} · ${f.application.reason}`;
@@ -232,10 +242,10 @@ function renderSelection(){
   const structured=(f?(f.input_kind||'image'):inputKind)==='structured';
   $('input-heading').textContent=structured?'SCENE PREVIEW · NOT SENT':'THE INPUT IMAGE';
   $('structured-input-panel').hidden=!structured;if(structured)setJSON('structured-input',request.state);
-  $('input-frame').alt=structured?'Local scene preview, not sent to the model':'Exact PNG frame sent to the selected model';
-  $('input-frame').onload=()=>{$('image-caption').textContent=`${$('input-frame').naturalWidth} × ${$('input-frame').naturalHeight} PNG · ${(image.length*.75/1024).toFixed(1)} KB${structured?' · local preview, not sent':f?' · exact sent image':' · preview'}`;};
+  $('input-frame').alt=structured?'Local scene preview, not sent to the model':'Exact PNG frame evaluated by the selected model';
+  $('input-frame').onload=()=>{$('image-caption').textContent=`${$('input-frame').naturalWidth} × ${$('input-frame').naturalHeight} PNG · ${(image.length*.75/1024).toFixed(1)} KB${structured?' · local preview, not sent':f?' · exact model input':' · preview'}`;};
   $('input-frame').src=image;$('download-image').href=image;$('download-image').download=`road-frame-${f?.frame_id||'preview'}.png`;
-  $('image-caption').textContent=`${f?.image_width||$('input-frame').naturalWidth||canvas.width} × ${f?.image_height||$('input-frame').naturalHeight||canvas.height} PNG · ${(image.length*.75/1024).toFixed(1)} KB${structured?' · local preview, not sent':f?' · exact sent image':' · preview'}`;
+  $('image-caption').textContent=`${f?.image_width||$('input-frame').naturalWidth||canvas.width} × ${f?.image_height||$('input-frame').naturalHeight||canvas.height} PNG · ${(image.length*.75/1024).toFixed(1)} KB${structured?' · local preview, not sent':f?' · exact model input':' · preview'}`;
   $('selected-label').textContent=f?`FRAME ${String(f.frame_id).padStart(3,'0')} · ${f.speed}× · ${RoadQuestions.count(f)}Q · ${f.request.model} · ${f.input_kind||'image'} · ${replay?'SAVED RUN':following?'LIVE LOG':'HISTORY'}`:'NEXT FRAME · PREVIEW';
   $('selected-time').textContent=f?`${time(f.captured_at)} captured`:'Not sent yet';
   $('timeline-label').textContent=f?`Decision ${selected+1} of ${frames.length}`:'Waiting for the first frame';
@@ -265,7 +275,7 @@ function renderMetadata(f){
   if(!f){$('race-metadata').innerHTML='<p class="metadata-explanation">Make a live call to inspect its timing, usage and provenance.</p>';return;}
   const m=f.metadata||{},r=f.response||{},u=r.usage||{};
   const item=(label,value)=>`<dt>${esc(label)}</dt><dd>${esc(value===undefined?'not supplied':value===null?'null':value)}</dd>`;
-  $('race-metadata').innerHTML=`<div class="selected-outcome">${esc(f.application.status)} · ${esc(f.application.reason||'Waiting for the API')}</div><span class="question-type">API ROUND TRIP · NETWORK INCLUDED</span><strong class="latency-value">${ms(m.upstream_round_trip_ms)}</strong><p class="metadata-explanation">${RoadQuestions.count(f)} question${RoadQuestions.count(f)===1?'':'s'} in this request; one shared duration. Speed ${f.speed}× changes the simulation, not the reported API time. Provider-only processing time is <code>null</code> because no such timing was returned. ${m.timing_origin==='browser'?'This live call went directly from your browser to OpenRouter; no app server was used.':'This recorded/local measurement includes the server-to-provider round trip.'}</p><div class="race-metadata-grid"><dl>${item('API',m.api_kind||'decisions')}${item('Endpoint',m.endpoint)}${item('Model returned',r.model)}${item('Provider',r.provider||m.provider)}${item('Input mode',f.input_kind||'image')}${item('Connection reused',m.connection_reused)}${item('Connection setup (ms)',m.connection_setup_ms)}${item('Request ID',r.id)}${item('Captured at',f.captured_at)}${item('Response received at',f.received_at)}${item('HTTP status',m.http_status)}${item('Question count',RoadQuestions.count(f))}${item('Decision mode',f.mode)}${item('Capture point',f.checkpoint)}${item('Sampling policy',f.sampling)}${item('Image size',f.image_width+' × '+f.image_height)}</dl><dl>${item('Input tokens',u.input_tokens)}${item('Output tokens',u.output_tokens)}${item('Cost (USD)',u.cost)}${item('Browser round trip (ms)',m.browser_round_trip_ms)}${item('Provider processing (ms)',m.provider_processing_ms)}${item('Road pixels moved during call',f.application.road_pixels_moved)}${item('Simulation held during call (ms)',f.application.simulation_held_ms)}${item('Driving mode',f.driving_mode)}${item('Game time at capture (ms)',f.elapsed_at_capture_ms)}${item('Application / schema error',f.error)}</dl></div><details><summary>Local metadata + action JSON</summary><div class="code-panel"><pre id="race-local-meta" tabindex="0"></pre></div></details>`;
+  $('race-metadata').innerHTML=`<div class="selected-outcome">${esc(f.application.status)} · ${esc(f.application.reason||'Waiting for the API')}</div><span class="question-type">${m.source==='local'?'LOCAL COMPUTE · NO NETWORK ROUND TRIP':'API ROUND TRIP · NETWORK INCLUDED'}</span><strong class="latency-value">${ms(RoadQuestions.elapsed(f))}</strong><p class="metadata-explanation">${m.source==='local'?esc(m.timing_note)+' ':''}${RoadQuestions.count(f)} question${RoadQuestions.count(f)===1?'':'s'} in this request; one shared duration. Speed ${f.speed}× changes the simulation, not the measured decision time. ${m.source==='local'?'':"Provider-only processing time is <code>null</code> because no such timing was returned."} ${m.source==='local'?'No OpenRouter call was made. Download and model preparation are shown separately.':m.timing_origin==='browser'?'This live call went directly from your browser to OpenRouter; no app server was used.':'This recorded/local measurement includes the server-to-provider round trip.'}</p><div class="race-metadata-grid"><dl>${item('API',m.api_kind||'decisions')}${item('Endpoint',m.endpoint)}${item('Model',r.model||m.model||f.request.model)}${item('Provider',r.provider||m.provider)}${item('Input mode',f.input_kind||'image')}${item('Connection reused',m.connection_reused)}${item('Connection setup (ms)',m.connection_setup_ms)}${item('Request ID',r.id)}${item('Captured at',f.captured_at)}${item('Response received at',f.received_at)}${item('HTTP status',m.http_status)}${item('Question count',RoadQuestions.count(f))}${item('Decision mode',f.mode)}${item('Capture point',f.checkpoint)}${item('Sampling policy',f.sampling)}${item('Image size',f.image_width+' × '+f.image_height)}</dl><dl>${m.source==='local'?item('Model load (ms)',m.model_load_ms)+item('Preprocess (ms)',m.preprocess_ms)+item('Vision encoder (ms)',m.vision_ms)+item('Decision heads (ms)',m.decision_ms)+item('Model revision',m.model_revision)+item('API fee','None · on device'):''}${item('Input tokens',u.input_tokens)}${item('Output tokens',u.output_tokens)}${item('Cost (USD)',u.cost)}${item(m.source==='local'?'Browser elapsed (ms)':'Browser round trip (ms)',m.browser_round_trip_ms)}${item('Provider processing (ms)',m.provider_processing_ms)}${item('Road pixels moved during call',f.application.road_pixels_moved)}${item('Simulation held during call (ms)',f.application.simulation_held_ms)}${item('Driving mode',f.driving_mode)}${item('Game time at capture (ms)',f.elapsed_at_capture_ms)}${item('Application / schema error',f.error)}</dl></div><details><summary>Local metadata + action JSON</summary><div class="code-panel"><pre id="race-local-meta" tabindex="0"></pre></div></details>`;
   setJSON('race-local-meta',{metadata:m,application:f.application});
 }
 function renderLog(){
@@ -273,7 +283,7 @@ function renderLog(){
   window.ClassroomUI?.refreshHistory(frames,selected,following,replay);
   $('log-count').textContent=`${frames.length} decisions`;
   if(!frames.length){$('log-rows').innerHTML='<tr><td colspan="8" class="empty-log">Your first decision starts the story. Try “One decision” or start a live run.</td></tr>';return;}
-  $('log-rows').innerHTML=frames.map((f,i)=>{const a=f.response?.answers;return `<tr data-log="${i}" aria-selected="${i===selected}"><td><button aria-label="Inspect decision ${f.frame_id}">#${String(f.frame_id).padStart(3,'0')}<span class="time">${time(f.captured_at)}${f.checkpoint?' · '+esc(f.checkpoint):''}</span></button></td><td>${RoadQuestions.count(f)}Q</td><td>${f.speed}×</td><td>${esc(a?.lane?.choice??'…')}</td><td>${f.request.questions.middle_blocked?(a?.middle_blocked?.type==='boolean'?String(a.middle_blocked.value):pct(a?.middle_blocked?.noul)):'not asked'}</td><td>${!f.request.questions.proximity?'not asked':Number.isFinite(a?.proximity?.level)?String(a.proximity.level):Number.isFinite(a?.proximity?.score)?a.proximity.score.toFixed(2):'—'}</td><td>${ms(f.metadata?.upstream_round_trip_ms)}</td><td class="${['error','stale','blocked','skipped'].includes(f.application.status)?'outcome-bad':f.application.status==='applied'?'outcome-good':''}">${esc(f.application.status)}${f.application.steering?' · '+esc(f.application.steering):''}${f.application.collision_observed?' · collision':f.application.barrier_passed?' · passed':''}</td></tr>`;}).join('');
+  $('log-rows').innerHTML=frames.map((f,i)=>{const a=f.response?.answers;return `<tr data-log="${i}" aria-selected="${i===selected}"><td><button aria-label="Inspect decision ${f.frame_id}">#${String(f.frame_id).padStart(3,'0')}<span class="time">${time(f.captured_at)}${f.checkpoint?' · '+esc(f.checkpoint):''}</span></button></td><td>${RoadQuestions.count(f)}Q</td><td>${f.speed}×</td><td>${esc(a?.lane?.choice??'…')}</td><td>${f.request.questions.middle_blocked?(a?.middle_blocked?.type==='boolean'?String(a.middle_blocked.value):pct(a?.middle_blocked?.noul)):'not asked'}</td><td>${!f.request.questions.proximity?'not asked':Number.isFinite(a?.proximity?.level)?String(a.proximity.level):Number.isFinite(a?.proximity?.score)?a.proximity.score.toFixed(2):'—'}</td><td>${ms(RoadQuestions.elapsed(f))}</td><td class="${['error','stale','blocked','skipped'].includes(f.application.status)?'outcome-bad':f.application.status==='applied'?'outcome-good':''}">${esc(f.application.status)}${f.application.steering?' · '+esc(f.application.steering):''}${f.application.collision_observed?' · collision':f.application.barrier_passed?' · passed':''}</td></tr>`;}).join('');
   const cost=frames.reduce((n,f)=>n+(f.response?.usage?.cost||0),0);
   $('run-summary').textContent=`Run ${runId} · reported API cost $${cost.toFixed(6)} · ${PUBLIC_SITE?'history stays in this tab; export before refreshing. Your key is never exported.':'raw image requests saved locally; Export run also includes action outcomes and speed-change events.'}`;
   if(following)document.querySelector('.log-scroll').scrollTop=100000;
@@ -313,12 +323,12 @@ document.addEventListener('click',async e=>{
 });
 document.querySelector('.decision-tabs').addEventListener('keydown',e=>{if(!['ArrowLeft','ArrowRight','Home','End'].includes(e.key))return;e.preventDefault();const tabs=[...document.querySelectorAll('[data-view]')];let i=tabs.indexOf(document.activeElement);i=e.key==='Home'?0:e.key==='End'?tabs.length-1:(i+(e.key==='ArrowRight'?1:-1)+tabs.length)%tabs.length;switchView(tabs[i].dataset.view);tabs[i].focus();});
 document.addEventListener('visibilitychange',()=>{if(document.hidden&&running)pause('Paused because this browser tab became hidden.');});
-$('drive-mode').addEventListener('change',()=>{driveMode=$('drive-mode').value;event('driving_mode',{mode:driveMode});$('pace-note').textContent=driveMode==='paced'?'Game time pauses during each API request. The API wait timer shows real elapsed time.':'Real-time mode never holds the road for the API. Higher speeds can outrun a response.';updateHud();});
+$('drive-mode').addEventListener('change',()=>{driveMode=$('drive-mode').value;event('driving_mode',{mode:driveMode});$('pace-note').textContent=driveMode==='paced'?'Game time pauses during each decision. The decision wait timer shows real elapsed time.':'Real-time mode never holds the road for the model. Higher speeds can outrun a response.';updateHud();});
 $('sound-toggle').addEventListener('click',()=>{RoadSound.unlock();RoadSound.setEnabled(!RoadSound.enabled);$('sound-toggle').textContent=RoadSound.enabled?'Sound on':'Sound off';$('sound-toggle').setAttribute('aria-pressed',RoadSound.enabled);if(RoadSound.enabled)RoadSound.steer('right');});
 $('compare-questions').addEventListener('click',compareQuestions);
 $('compare-chat').addEventListener('click',compareChat);
 $('load-chat-comparison').addEventListener('click',()=>loadRecording('./chat-comparison-run.json'));
-$('model-select').addEventListener('change',()=>{selectedModel=$('model-select').value;syncModelControls();event('model',{model:selectedModel,input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
+$('model-select').addEventListener('change',()=>{const wasLocal=localModel();selectedModel=$('model-select').value;if(wasLocal&&!localModel())LocalDecisions.unload().catch(e=>toast(e.message));syncModelControls();event('model',{model:selectedModel,input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('input-kind').addEventListener('change',()=>{inputKind=$('input-kind').value;syncModelControls();event('input_kind',{input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('question-count').addEventListener('change',()=>{questionCount=Number($('question-count').value);event('question_count',{count:questionCount});if(!frames.length)renderSelection();updateHud();});
 let loadingRecording=false;
@@ -342,20 +352,24 @@ async function renderModelBenchmark(){
     $('model-benchmark-note').textContent=`Recorded ${new Date(data.measured_at).toLocaleString()}. Timings include network and routing. Smaller-image follow-up was measured later, so timing differences are exploratory.`;
   }catch{$('model-benchmark-rows').innerHTML='<tr><td colspan="5">No recorded model measurements yet. Live calls still appear in Run history.</td></tr>';}
 }
+window.addEventListener('local-model-changed',()=>{if(config)updateControls();});
+$('load-local-model').addEventListener('click',async()=>{try{await LocalDecisions.load(inputKind==='image');$('road-message').textContent='Local model ready. Start with One decision to inspect its answer. No inference data is sent.';}catch(e){$('road-message').textContent=e.message;}updateControls();});
+$('unload-local-model').addEventListener('click',async()=>{try{await LocalDecisions.unload();}catch(e){$('road-message').textContent=e.message;}updateControls();});
 if(PUBLIC_SITE)window.addEventListener('public-connection-changed',()=>{
   if(!config)return;
-  if(!PublicDecisions.connected&&(running||inFlight))pause('Disconnected. The key was cleared and new calls have stopped.');
+  if(!localModel()&&!PublicDecisions.connected&&(running||inFlight))pause('Disconnected. The key was cleared and new calls have stopped.');
   updateControls();
-  if(PublicDecisions.connected&&!frames.length)$('road-message').textContent='Connected for this tab. One decision sends your first live request to OpenRouter.';
+  if(!localModel()&&PublicDecisions.connected&&!frames.length)$('road-message').textContent='Connected for this tab. One decision sends your first live request to OpenRouter.';
 });
 async function init(){
   renderModelBenchmark();draw();requestAnimationFrame(tick);switchView('overview');
   try{
     if(PUBLIC_SITE)config=PublicDecisions.config;
     else{const r=await fetch('/api/config');if(!r.ok)throw new Error();config=await r.json();}
-    $('model-select').innerHTML=['decisions','chat completions'].map(kind=>`<optgroup label="${kind==='decisions'?'Decisions API':'Standard chat · LLM / VLM'}">${config.road_models.filter(m=>(m.api_kind||'decisions')===kind).map(m=>`<option value="${esc(m.id)}">${esc(m.label)}${m.available?'':' · needs setup'}</option>`).join('')}</optgroup>`).join('');
+    if(!config.road_models.some(m=>LocalDecisions.isLocal(m.id)))config.road_models.push(LocalDecisions.model);
+    $('model-select').innerHTML=['decisions','chat completions','local decisions'].map(kind=>`<optgroup label="${kind==='decisions'?'Decisions API':kind==='local decisions'?'On your device · no key':'Standard chat · LLM / VLM'}">${config.road_models.filter(m=>(m.api_kind||'decisions')===kind).map(m=>`<option value="${esc(m.id)}">${esc(m.label)}${m.available?'':' · needs setup'}</option>`).join('')}</optgroup>`).join('');
     syncModelControls();renderSelection();renderComparison();updateControls();
-    if(PUBLIC_SITE)$('road-message').textContent='Open Recorded demo, or Connect key for live play.';
+    if(PUBLIC_SITE)$('road-message').textContent='Explore a recording, connect OpenRouter, or choose Liquid for local WebGPU.';
     else if(!config.live_available)$('road-message').textContent='Set OPENROUTER_API_KEY on the local server to run live.';
   }catch{
     $('api-status').textContent=PUBLIC_SITE?'Could not load the game':'Local server unavailable';
