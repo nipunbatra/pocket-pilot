@@ -20,3 +20,16 @@ This is an experimental teaching option. Warm performance does not measure model
 downloads, initial session setup, or cold shader compilation. A three-scene road
 check is a smoke test, not a general accuracy benchmark. Inputs and results remain
 in the browser; initial downloads contact Hugging Face and its model CDN.
+
+## Pocket Pilot task-specific fine-tunes
+
+Two independent derivatives adapt the Liquid language trunk with LoRA and train
+its original decision head on road JSON or screenshots. LoRA is merged before
+q8 ONNX export. Fine-tuning does not use answer correction. The 202 frozen vision
+and token-embedding tensors are checked against the original at float16 training
+precision before reusing the pinned community q4 embedding/fp16 vision assets.
+Fine-tuned decoder weights come from the selected Nipun/pocket-pilot-liquid-600m-*
+repository at the exact revision in source/checkpoints.mjs. Each modality has
+separate weights, cache keys and runtime metadata. The original model is retained
+as an explicitly labelled baseline. All weights retain the LFM Open License v1.0.
+Browser test accuracy and timing are reported in ../liquid-finetuned.html.

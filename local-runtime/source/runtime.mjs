@@ -5,16 +5,23 @@ import {Lfm2VlImageProcessor} from './node_modules/@huggingface/transformers/src
 import {RawImage} from './node_modules/@huggingface/transformers/src/utils/image.js';
 import {env} from './node_modules/@huggingface/transformers/src/env.js';
 import {MODEL, REPO, REVISION, TYPES, encode, decode} from './contract.mjs';
-const BASE=`https://huggingface.co/${REPO}/resolve/${REVISION}/`;
-const CACHE='pocket-pilot-liquid-'+REVISION;
+import {CHECKPOINTS} from './checkpoints.mjs';
+const original={model:MODEL,repo:REPO,revision:REVISION,trained:false};
+let checkpoint=original,baseOverride=null;
+const sharedPaths=new Set(['onnx/embed_tokens_quantized.onnx','onnx/embed_tokens_quantized.onnx_data','onnx/vision_encoder_fp16.onnx','onnx/vision_encoder_fp16.onnx_data','preprocessor_config.json']);
+function assetSource(path){
+  const shared=checkpoint.trained&&sharedPaths.has(path);
+  const repo=shared?REPO:checkpoint.repo,revision=shared?REVISION:checkpoint.revision;
+  return {url:(!shared&&baseOverride?baseOverride:`https://huggingface.co/${repo}/resolve/${revision}/${checkpoint.trained&&!shared?'browser/':''}`)+path,cache:shared||!checkpoint.trained?'pocket-pilot-liquid-'+revision:'pocket-pilot-liquid-'+repo+'-'+revision};
+}
 const sessions={};let tokenizer,processor,config,deviceInfo,loading,busy=false;
 const round=v=>Math.round(v*100)/100;
 ort.env.wasm.numThreads=1;
 ort.env.wasm.wasmPaths=new URL('./',import.meta.url).href;
 env.allowLocalModels=false;
 async function file(path, progress) {
-  let cache;try{cache=await caches.open(CACHE);}catch{}
-  const url=BASE+path, cached=await cache?.match(url);
+  const source=assetSource(path);let cache;try{cache=(!baseOverride||sharedPaths.has(path))?await caches.open(source.cache):null;}catch{}
+  const url=source.url, cached=await cache?.match(url);
   if(cached){progress?.(`Cached: ${path}`);return new Uint8Array(await cached.arrayBuffer());}
   const r=await fetch(url,{credentials:'omit',referrerPolicy:'no-referrer'});
   if(!r.ok)throw new Error(`Model download failed (HTTP ${r.status}).`);
@@ -32,8 +39,15 @@ async function session(name, progress) {
   sessions[name]=await ort.InferenceSession.create(graph,{executionProviders:['webgpu'],externalData:[{path:filename+'_data',data:weights}],graphOptimizationLevel:'all'});
   return sessions[name];
 }
-export async function load({image=false,progress}={}) {
+export async function load({image=false,progress,model=MODEL,baseURL=null,modelRevision=null}={}) {
   if(loading)await loading;
+  const selected=model===MODEL?original:CHECKPOINTS[model];
+  if(!selected)throw new Error('Unknown Liquid checkpoint.');
+  if(selected.input==='structured'&&image)throw new Error('This Liquid fine-tune requires structured JSON.');
+  if(selected.input==='image'&&!image)throw new Error('This Liquid fine-tune requires a road image.');
+  const next={...selected,revision:modelRevision||selected.revision};
+  if(next.model!==checkpoint.model||next.revision!==checkpoint.revision||baseURL!==baseOverride){await dispose();checkpoint=next;baseOverride=baseURL;}
+
   const start=performance.now();
   loading=(async()=>{
     if(!navigator.gpu)throw new Error('WebGPU is not available. Use a recent Chrome or Edge browser with graphics acceleration.');
@@ -49,6 +63,8 @@ const i64=(values,dims)=>new ort.Tensor('int64',BigInt64Array.from(values,BigInt
 export async function decide(request) {
   if(busy)throw new Error('A local decision is already running.');
   const parts=Array.isArray(request.state)?request.state:null,imagePart=parts?.find(x=>x.type==='image_url');
+  if(request.model&&request.model!==checkpoint.model)throw new Error('Loaded Liquid weights do not match the requested model.');
+  if(checkpoint.input&&((!!imagePart)!==(checkpoint.input==='image')))throw new Error('Input modality does not match this Liquid fine-tune.');
   if(!tokenizer||!sessions.decision_quantized||(imagePart&&!sessions.vision_encoder_fp16))throw new Error('Load the local model before starting.');
   busy=true;const started=performance.now();
   try{
@@ -74,8 +90,8 @@ export async function decide(request) {
       const ms=performance.now()-t;decisionMs+=ms;rows.push({name,text_tokens:n,image_tokens:prefixLength,elapsed_ms:round(ms)});
     }
     const elapsed=round(performance.now()-started);
-    return {request,wire_request:{runtime:'ONNX Runtime Web · WebGPU',model:MODEL,revision:REVISION,state:request.state,questions:request.questions},response:{answers,usage:{input_tokens:inputTokens,output_tokens:0}},raw_response:null,error:null,metadata:{source:'local',timing_origin:'browser-local',provider:'Liquid AI · on device',api_kind:'local decisions',transport:'in-browser WebGPU; no inference request sent',endpoint:null,http_status:null,provider_processing_ms:null,started_at:new Date(Date.now()-elapsed).toISOString(),upstream_round_trip_ms:null,browser_round_trip_ms:elapsed,local_inference_ms:elapsed,preprocess_ms:round(preprocessMs),vision_ms:round(visionMs),decision_ms:round(decisionMs),questions:rows,model:MODEL,model_repo:REPO,model_revision:REVISION,quantization:'q8 decision + q4 embedding + fp16 vision',device:deviceInfo,state_truncated:truncated,timing_note:'Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee.'},openai_preview:null};
+    return {request,wire_request:{runtime:'ONNX Runtime Web · WebGPU',model:checkpoint.model,revision:checkpoint.revision,state:request.state,questions:request.questions},response:{answers,usage:{input_tokens:inputTokens,output_tokens:0}},raw_response:null,error:null,metadata:{source:'local',timing_origin:'browser-local',provider:'Liquid AI · on device',api_kind:'local decisions',transport:'in-browser WebGPU; no inference request sent',endpoint:null,http_status:null,provider_processing_ms:null,started_at:new Date(Date.now()-elapsed).toISOString(),upstream_round_trip_ms:null,browser_round_trip_ms:elapsed,local_inference_ms:elapsed,preprocess_ms:round(preprocessMs),vision_ms:round(visionMs),decision_ms:round(decisionMs),questions:rows,model:checkpoint.model,model_repo:checkpoint.repo,model_revision:checkpoint.revision,fine_tuned:checkpoint.trained,training_input:checkpoint.input||null,shared_model_repo:REPO,shared_model_revision:REVISION,quantization:'q8 decision + q4 embedding + fp16 vision',device:deviceInfo,state_truncated:truncated,timing_note:'Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee.'},openai_preview:null};
   }finally{busy=false;}
 }
-export async function dispose(){if(busy||loading)throw new Error('Wait for local work to finish.');for(const s of Object.values(sessions))await s.release();for(const k of Object.keys(sessions))delete sessions[k];}
+export async function dispose(){if(busy||loading)throw new Error('Wait for local work to finish.');for(const s of Object.values(sessions))await s.release();for(const k of Object.keys(sessions))delete sessions[k];tokenizer=null;processor=null;config=null;}
 export function ready(image=false){return !!sessions.decision_quantized&&(!image||!!sessions.vision_encoder_fp16);}

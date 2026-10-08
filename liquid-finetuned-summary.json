@@ -1,0 +1,100 @@
+{
+  "json": {
+    "device": "Apple M2 Max; Chromium WebGPU metal-3",
+    "precision": "q8 trained decision weights; shared q4 embedding and fp16 vision",
+    "timing": "warm browser wall clock includes tokenization, vision for image input and answer readback; excludes download/load; no inference network",
+    "results": [
+      {
+        "questions": 1,
+        "scenes": 216,
+        "correct": {
+          "lane": 216
+        },
+        "native_label_changes": {
+          "lane": 0
+        },
+        "median_ms": 56.7,
+        "p95_ms": 60.1
+      },
+      {
+        "questions": 2,
+        "scenes": 216,
+        "correct": {
+          "lane": 216,
+          "middle_blocked": 216
+        },
+        "native_label_changes": {
+          "lane": 0,
+          "middle_blocked": 0
+        },
+        "median_ms": 111.5,
+        "p95_ms": 117.3
+      },
+      {
+        "questions": 3,
+        "scenes": 216,
+        "correct": {
+          "lane": 216,
+          "middle_blocked": 216,
+          "proximity": 214
+        },
+        "native_label_changes": {
+          "lane": 0,
+          "middle_blocked": 0,
+          "proximity": 2
+        },
+        "median_ms": 171.5,
+        "p95_ms": 177.9
+      }
+    ]
+  },
+  "image": {
+    "device": "Apple M2 Max; Chromium WebGPU metal-3",
+    "precision": "q8 trained decision weights; shared q4 embedding and fp16 vision",
+    "timing": "warm browser wall clock includes tokenization, vision for image input and answer readback; excludes download/load; no inference network",
+    "results": [
+      {
+        "questions": 1,
+        "scenes": 216,
+        "correct": {
+          "lane": 216
+        },
+        "native_label_changes": {
+          "lane": 0
+        },
+        "median_ms": 206.0,
+        "p95_ms": 215.4
+      },
+      {
+        "questions": 2,
+        "scenes": 216,
+        "correct": {
+          "lane": 216,
+          "middle_blocked": 210
+        },
+        "native_label_changes": {
+          "lane": 0,
+          "middle_blocked": 4
+        },
+        "median_ms": 280.1,
+        "p95_ms": 288.1
+      },
+      {
+        "questions": 3,
+        "scenes": 216,
+        "correct": {
+          "lane": 216,
+          "middle_blocked": 210,
+          "proximity": 210
+        },
+        "native_label_changes": {
+          "lane": 0,
+          "middle_blocked": 4,
+          "proximity": 4
+        },
+        "median_ms": 373.35,
+        "p95_ms": 380.1
+      }
+    ]
+  }
+}

@@ -125,6 +125,22 @@ questions demonstrate probability and ordered-score outputs. Classroom mode
 freezes game time during API waits. Real time intentionally exposes latency.
 Every run stops after 30 requests, a collision, or an API error.
 
+## Fine-tuned Liquid models
+
+The model selector keeps the **original, not fine-tuned Liquid 600M** and adds
+separate **fine-tuned JSON** and **fine-tuned image** choices. Each fine-tune loads
+its own immutable Hugging Face weights, locks the matching input modality and
+reports its revision/fine-tuned status in Timing + metadata and exported JSON.
+Use `?model=liquid-json` or `?model=liquid-image` for direct links.
+
+Both browser variants retain 216/216 held-out correct lane choices at every
+question count. On Apple M2 Max, one-question medians were 56.7 ms for JSON and
+206.0 ms for image input. Warm timing includes preprocessing/readback; download
+and setup are excluded. See [full browser results](./liquid-finetuned.html),
+including auxiliary errors, precision, native comparisons and model links.
+These are independent task-specific fine-tunes, not a single jointly trained
+multimodal checkpoint. Image input is perception, not image generation.
+
 ## Maintenance
 
 `public-client.js` owns key handling and browser transport; `racing.js` owns the
