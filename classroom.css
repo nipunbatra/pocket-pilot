@@ -86,7 +86,7 @@
 }
 @media(min-width:801px) and (max-width:1199px){
   .classroom-layout .race-layout{grid-template-rows:minmax(0,1fr) 92px;min-height:450px;gap:10px}
-  .lab-controls .control-row{gap:10px}.lab-controls .primary-settings{grid-template-columns:1fr 1fr 1.1fr 1.15fr 138px}
+  .lab-controls .control-row{gap:10px}.lab-controls .primary-settings{grid-template-columns:1fr 1fr 1.1fr 1.15fr 172px}
   .lab-controls .secondary-settings{grid-template-columns:1.65fr 1.1fr .9fr 1fr}.lab-controls select{font-size:10px;padding-left:6px}
 }
 @media(max-width:800px){
