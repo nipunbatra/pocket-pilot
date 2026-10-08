@@ -14,13 +14,15 @@
     if(active)throw new Error('A decision is already in progress.');
     if(!root.POCKET_PILOT_PUBLIC.road_models.some(m=>m.id===request.model))throw new Error('Unsupported model.');
     const chat=root.RoadChat?.isChat(request),endpoint=chat?root.RoadChat.endpoint:decisionsEndpoint;
-    const wire_request=chat?root.RoadChat.build(request):request;
+    const pinnedProvider=['cloudflare/clef','cloudflare/clef-flash'].includes(request.model)?'Cloudflare':null;
+    const wire_request=chat?root.RoadChat.build(request):pinnedProvider?{...request,provider:{only:['cloudflare'],allow_fallbacks:false}}:request;
     const controller=new AbortController();active=controller;
     const timer=setTimeout(()=>controller.abort(),30000),started=performance.now();
     const metadata={source:'live',endpoint,provider:'OpenRouter',timing_origin:'browser',transport:'browser directly to OpenRouter',
       started_at:new Date().toISOString(),http_status:null,upstream_round_trip_ms:null,provider_processing_ms:null,local_handler_ms:null,
       timing_note:'Measured in this browser, from the outgoing OpenRouter request through its complete response. Network and routing are included. There is no app server hop. Provider-only processing time was not supplied.'};
     metadata.api_kind=chat?'chat completions':'decisions';
+    metadata.requested_provider=pinnedProvider;metadata.actual_provider=null;
     let response=null,raw_response=null,error=null;
     try{
       const res=await fetch(endpoint,{method:'POST',headers:{'Authorization':'Bearer '+key,'Content-Type':'application/json'},
@@ -32,6 +34,8 @@
         raw_response=await res.json();
         if(chat){try{response=root.RoadChat.normalize(raw_response,request);}catch(exc){error=exc.message;}}
         else response=raw_response;
+        metadata.actual_provider=raw_response?.provider??null;
+        if(pinnedProvider&&metadata.actual_provider!==pinnedProvider)error='The requested Cloudflare provider was not confirmed. No move was applied.';
         if(!chat&&(!response||typeof response!=='object'||Array.isArray(response)||!root.RoadQuestions.validSavedAnswers({request,response})))
           error='The response did not match the requested answer schema. No move was applied.';
       }
