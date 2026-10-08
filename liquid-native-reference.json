@@ -1,0 +1,171 @@
+{
+  "model": "LiquidAI/d1-omni-600M",
+  "revision": "02b55d7076f15129e59ab3f94783f32c4b088674",
+  "device": "cpu",
+  "dtype": "float32",
+  "torch": "2.14.0",
+  "results": [
+    {
+      "id": "left-json",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "choice": "left",
+            "confidence": 0.568594753742218,
+            "probabilities": {
+              "left": 0.568594753742218,
+              "middle": 0.2062458097934723,
+              "right": 0.22515937685966492
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 151,
+          "output_tokens": 0
+        }
+      },
+      "elapsed_ms": 672.9063329985365
+    },
+    {
+      "id": "left-image",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "choice": "left",
+            "confidence": 0.418409138917923,
+            "probabilities": {
+              "left": 0.418409138917923,
+              "middle": 0.23469141125679016,
+              "right": 0.34689947962760925
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "elapsed_ms": 596.7693339916877
+    },
+    {
+      "id": "middle-json",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "choice": "left",
+            "confidence": 0.35955873131752014,
+            "probabilities": {
+              "left": 0.35955873131752014,
+              "middle": 0.28374627232551575,
+              "right": 0.3566949963569641
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 151,
+          "output_tokens": 0
+        }
+      },
+      "elapsed_ms": 171.98779102182016
+    },
+    {
+      "id": "middle-image",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "choice": "left",
+            "confidence": 0.40022706985473633,
+            "probabilities": {
+              "left": 0.40022706985473633,
+              "middle": 0.2826065123081207,
+              "right": 0.31716644763946533
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "elapsed_ms": 538.1644169974606
+    },
+    {
+      "id": "right-json",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "choice": "left",
+            "confidence": 0.6693810820579529,
+            "probabilities": {
+              "left": 0.6693810820579529,
+              "middle": 0.22146475315093994,
+              "right": 0.10915419459342957
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 151,
+          "output_tokens": 0
+        }
+      },
+      "elapsed_ms": 169.79904202162288
+    },
+    {
+      "id": "right-image",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "choice": "right",
+            "confidence": 0.3448682129383087,
+            "probabilities": {
+              "left": 0.3325813114643097,
+              "middle": 0.322550505399704,
+              "right": 0.3448682129383087
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "elapsed_ms": 519.8048340098467
+    },
+    {
+      "id": "live-middle-gap-failure",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "choice": "left",
+            "confidence": 0.4973093271255493,
+            "probabilities": {
+              "left": 0.4973093271255493,
+              "middle": 0.2841900885105133,
+              "right": 0.2185005247592926
+            }
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "elapsed_ms": 524.4883749983273
+    }
+  ],
+  "conditions": "Original checkpoint, CPU float32, official model image preprocessing and system_one method. Single calls, no warm latency benchmark. Three saved image cases, three matching structured cases and the exact live failing image. No answer repair."
+}

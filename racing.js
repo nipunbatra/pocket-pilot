@@ -40,7 +40,7 @@ function syncModelControls(){
   $('input-kind').value=inputKind;$('input-kind').disabled=!info?.vision||inFlight||comparing||running||LocalDecisions.loading;
   $('image-size').disabled=inputKind==='structured'||comparing||inFlight;
   $('api-status').textContent=modelAvailable()?`${info.label} ready`:local?LocalDecisions.message:PUBLIC_SITE?'Connect your key · or explore recordings':'OpenRouter key missing';
-  $('model-note').textContent=local?LocalDecisions.message+' · Warm three-scene check: image 2/3, JSON 1/3 lanes correct.':!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':(RoadChat.isChat({model:selectedModel})?'Chat '+(inputKind==='image'?'VLM':'LLM')+' · short JSON answers, no class probabilities. ':'Decisions API · typed answers and probabilities. ')+(inputKind==='structured'?'Obstacle coordinates sent; no image.':'Road PNG sent; no obstacle coordinates.');
+  $('model-note').textContent=local?LocalDecisions.message+' · Follow-up image check: 6/18 lanes correct. Compare accuracy as well as speed.':!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':(RoadChat.isChat({model:selectedModel})?'Chat '+(inputKind==='image'?'VLM':'LLM')+' · short JSON answers, no class probabilities. ':'Decisions API · typed answers and probabilities. ')+(inputKind==='structured'?'Obstacle coordinates sent; no image.':'Road PNG sent; no obstacle coordinates.');
 }
 function draw(){
   const f=replay?frames[selected]:null;
@@ -193,7 +193,7 @@ async function requestDecision(single,comparison=null){
   inFlight=false;activeRequest=null;nextCall=performance.now();
   $('last-latency').textContent=ms(RoadQuestions.elapsed(f));
   if(frames.length>=MAX_CALLS)pause('30-call teaching run complete. Export or rewind this run; reset the road for a new one.');
-  else if(single&&!f.error)$('road-message').textContent=`Open lane: ${a.lane.choice}. ${f.application.reason} Road remains paused.`;
+  else if(single&&!f.error)$('road-message').textContent=`Model chose ${a.lane.choice}. ${f.application.reason} Road remains paused.`;
   else if(running)$('road-message').textContent=`Frame ${f.frame_id}: ${a?.lane.choice??'error'} · ${f.application.reason}`;
   if(following)selected=frames.length-1;
   draw();renderLog();if(following||frames[selected]===f)renderSelection();updateControls();
@@ -250,11 +250,13 @@ function renderSelection(){
   $('selected-time').textContent=f?`${time(f.captured_at)} captured`:'Not sent yet';
   $('timeline-label').textContent=f?`Decision ${selected+1} of ${frames.length}`:'Waiting for the first frame';
   const a=f&&!f.error?f.response?.answers:null,chat=RoadChat.isChat(request);
-  $('action-title').textContent=f?.error?'Request failed':a?`Open lane: ${a.lane.choice}.`:f?'Reading the road…':'Find the open lane.';
+  $('action-title').textContent=f?.error?'Request failed':a?`Model chose ${a.lane.choice}.`:f?'Reading the road…':'Find the open lane.';
   $('action-detail').textContent=f?(f.application.reason||'This exact input is being evaluated. Classroom mode pauses the game clock until the answer arrives.'):`${inputKind==='image'?'One image':'Structured road JSON'} goes in with ${questionCount} question${questionCount===1?'':'s'}. Only the lane choice steers. Extra questions describe the scene and are optional.`;
   const diagnostic=f?.application.diagnosis,check=f?.application.local_scene_check;
   $('decision-diagnosis').hidden=!diagnostic&&check?.model_matches_scene!==false;
-  $('decision-diagnosis').textContent=diagnostic?`Collision diagnosis: ${diagnostic.cause.replaceAll('_',' ')}. Opening: ${diagnostic.actual_open_lane}. Target: ${diagnostic.model_target??'no current answer'}.`:check?.model_matches_scene===false?`Scene mismatch: the model chose ${a?.lane.choice}; the actual gap is ${check.actual_open_lane}. This is a local check, not a corrected answer.`:'';
+  const wrongLane=check?.model_matches_scene===false&&a?.lane;
+  const probability=a?.lane?.probabilities?.[a.lane.choice];
+  $('decision-diagnosis').textContent=wrongLane&&(!diagnostic||diagnostic.cause==='model_chose_blocked_lane')?`Wrong lane prediction${diagnostic?' · collision':''}. Model: ${a.lane.choice}${Number.isFinite(probability)?` (${pct(probability)} model probability)`:''}. Actual gap: ${check.actual_open_lane}. The response was valid, but the lane was wrong. This game check does not change the answer.`:diagnostic?`Collision diagnosis: ${diagnostic.cause.replaceAll('_',' ')}. Opening: ${diagnostic.actual_open_lane}. Target: ${diagnostic.model_target??'no current answer'}.`:'';
   const titles={lane:'Which lane is the gap in the barrier?',middle_blocked:'Is the middle lane blocked?',proximity:'Where is the barrier: top, middle or bottom?'};
   $('race-questions').innerHTML=Object.entries(request.questions).map(([name,q])=>{
     const answer=a?.[name],value=!answer?'—':chat?(name==='lane'?answer.choice:name==='middle_blocked'?String(answer.value):['0 · top','1 · middle','2 · bottom'][answer.level]):q.type==='choice'?answer.choice:q.type==='noul'?pct(answer.noul):`${answer.score.toFixed(2)} / 2`;

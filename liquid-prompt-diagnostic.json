@@ -1,0 +1,5642 @@
+{
+  "purpose": "Diagnose prompt sensitivity; exploratory experiment, not model selection on held-out data",
+  "variants": [
+    {
+      "name": "original",
+      "context": "Top-down three-lane road. The cream car at the bottom is YOU. Orange striped blocks form a barrier with one open lane. Find the opening from the image. No game coordinates are provided.",
+      "question": {
+        "type": "choice",
+        "instructions": "Which of the three road lanes has NO orange striped obstacle? Look at the row of orange blocks. Choose the gap, ignoring where the cream car is.",
+        "criteria": {
+          "left": "The LEFT lane is the gap in the orange barrier.",
+          "middle": "The MIDDLE lane is the gap in the orange barrier.",
+          "right": "The RIGHT lane is the gap in the orange barrier."
+        }
+      }
+    },
+    {
+      "name": "short",
+      "context": "",
+      "question": {
+        "type": "choice",
+        "instructions": "Which lane is open?",
+        "criteria": {
+          "left": null,
+          "middle": null,
+          "right": null
+        }
+      }
+    },
+    {
+      "name": "opening",
+      "context": "",
+      "question": {
+        "type": "choice",
+        "instructions": "Where is the opening in the row of orange barriers?",
+        "criteria": {
+          "left": null,
+          "middle": null,
+          "right": null
+        }
+      }
+    },
+    {
+      "name": "safe",
+      "context": "A top-down view of a three-lane driving game. Orange blocks are obstacles.",
+      "question": {
+        "type": "choice",
+        "instructions": "Which lane is safe to drive in?",
+        "criteria": {
+          "left": null,
+          "middle": null,
+          "right": null
+        }
+      }
+    }
+  ],
+  "scenes": [
+    {
+      "scene": {
+        "lane": 1,
+        "row": {
+          "blocked": [
+            1,
+            2
+          ],
+          "decision": null,
+          "id": 0,
+          "y": 35
+        }
+      },
+      "expected": "left",
+      "id": "saved-0",
+      "split": "previous-smoke-test"
+    },
+    {
+      "scene": {
+        "lane": 1,
+        "row": {
+          "blocked": [
+            0,
+            2
+          ],
+          "decision": 4,
+          "id": 1,
+          "observedY": 35,
+          "y": 180
+        }
+      },
+      "expected": "middle",
+      "id": "saved-1",
+      "split": "previous-smoke-test"
+    },
+    {
+      "scene": {
+        "lane": 2,
+        "row": {
+          "blocked": [
+            0,
+            1
+          ],
+          "decision": 8,
+          "id": 2,
+          "observedY": 180,
+          "y": 310
+        }
+      },
+      "expected": "right",
+      "id": "saved-2",
+      "split": "previous-smoke-test"
+    },
+    {
+      "id": "new-y90-car0-gap0",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 0,
+        "row": {
+          "id": 0,
+          "y": 90,
+          "blocked": [
+            1,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "left"
+    },
+    {
+      "id": "new-y90-car0-gap1",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 0,
+        "row": {
+          "id": 0,
+          "y": 90,
+          "blocked": [
+            0,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "middle"
+    },
+    {
+      "id": "new-y90-car0-gap2",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 0,
+        "row": {
+          "id": 0,
+          "y": 90,
+          "blocked": [
+            0,
+            1
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "right"
+    },
+    {
+      "id": "new-y90-car1-gap0",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 1,
+        "row": {
+          "id": 0,
+          "y": 90,
+          "blocked": [
+            1,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "left"
+    },
+    {
+      "id": "new-y90-car1-gap1",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 1,
+        "row": {
+          "id": 0,
+          "y": 90,
+          "blocked": [
+            0,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "middle"
+    },
+    {
+      "id": "new-y90-car1-gap2",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 1,
+        "row": {
+          "id": 0,
+          "y": 90,
+          "blocked": [
+            0,
+            1
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "right"
+    },
+    {
+      "id": "new-y90-car2-gap0",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 2,
+        "row": {
+          "id": 0,
+          "y": 90,
+          "blocked": [
+            1,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "left"
+    },
+    {
+      "id": "new-y90-car2-gap1",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 2,
+        "row": {
+          "id": 0,
+          "y": 90,
+          "blocked": [
+            0,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "middle"
+    },
+    {
+      "id": "new-y90-car2-gap2",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 2,
+        "row": {
+          "id": 0,
+          "y": 90,
+          "blocked": [
+            0,
+            1
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "right"
+    },
+    {
+      "id": "new-y250-car0-gap0",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 0,
+        "row": {
+          "id": 0,
+          "y": 250,
+          "blocked": [
+            1,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "left"
+    },
+    {
+      "id": "new-y250-car0-gap1",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 0,
+        "row": {
+          "id": 0,
+          "y": 250,
+          "blocked": [
+            0,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "middle"
+    },
+    {
+      "id": "new-y250-car0-gap2",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 0,
+        "row": {
+          "id": 0,
+          "y": 250,
+          "blocked": [
+            0,
+            1
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "right"
+    },
+    {
+      "id": "new-y250-car1-gap0",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 1,
+        "row": {
+          "id": 0,
+          "y": 250,
+          "blocked": [
+            1,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "left"
+    },
+    {
+      "id": "new-y250-car1-gap1",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 1,
+        "row": {
+          "id": 0,
+          "y": 250,
+          "blocked": [
+            0,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "middle"
+    },
+    {
+      "id": "new-y250-car1-gap2",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 1,
+        "row": {
+          "id": 0,
+          "y": 250,
+          "blocked": [
+            0,
+            1
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "right"
+    },
+    {
+      "id": "new-y250-car2-gap0",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 2,
+        "row": {
+          "id": 0,
+          "y": 250,
+          "blocked": [
+            1,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "left"
+    },
+    {
+      "id": "new-y250-car2-gap1",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 2,
+        "row": {
+          "id": 0,
+          "y": 250,
+          "blocked": [
+            0,
+            2
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "middle"
+    },
+    {
+      "id": "new-y250-car2-gap2",
+      "split": "new-scenes",
+      "scene": {
+        "lane": 2,
+        "row": {
+          "id": 0,
+          "y": 250,
+          "blocked": [
+            0,
+            1
+          ]
+        },
+        "distance": 73,
+        "crashed": false,
+        "holding": false
+      },
+      "expected": "right"
+    }
+  ],
+  "results": [
+    {
+      "scene_id": "saved-0",
+      "split": "previous-smoke-test",
+      "variant": "original",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4199284476379673,
+            "probabilities": {
+              "left": 0.4199284476379673,
+              "middle": 0.20492117041050412,
+              "right": 0.3751503819515286
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:07.147Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 313.1,
+        "local_inference_ms": 313.1,
+        "preprocess_ms": 35.4,
+        "vision_ms": 165.7,
+        "decision_ms": 112,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 112
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-0",
+      "split": "previous-smoke-test",
+      "variant": "short",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.7826961391000272,
+            "probabilities": {
+              "left": 0.7826961391000272,
+              "middle": 0.07969081729715745,
+              "right": 0.13761304360281534
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:07.461Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 189.2,
+        "local_inference_ms": 189.2,
+        "preprocess_ms": 19.7,
+        "vision_ms": 98.5,
+        "decision_ms": 71,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 71
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-0",
+      "split": "previous-smoke-test",
+      "variant": "opening",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5778385244932209,
+            "probabilities": {
+              "left": 0.3857315225666442,
+              "middle": 0.03642995294013483,
+              "right": 0.5778385244932209
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:07.650Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 203.6,
+        "local_inference_ms": 203.6,
+        "preprocess_ms": 34.6,
+        "vision_ms": 101,
+        "decision_ms": 68,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 68
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-0",
+      "split": "previous-smoke-test",
+      "variant": "safe",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4797370790611786,
+            "probabilities": {
+              "left": 0.4797370790611786,
+              "middle": 0.13877265461823024,
+              "right": 0.3814902663205912
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:07.854Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 193.3,
+        "local_inference_ms": 193.3,
+        "preprocess_ms": 22.7,
+        "vision_ms": 97.4,
+        "decision_ms": 73.1,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 73.1
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-1",
+      "split": "previous-smoke-test",
+      "variant": "original",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4190367900063406,
+            "probabilities": {
+              "left": 0.4190367900063406,
+              "middle": 0.23551047773924555,
+              "right": 0.3454527322544138
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:08.047Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 208.7,
+        "local_inference_ms": 208.7,
+        "preprocess_ms": 18.7,
+        "vision_ms": 96.1,
+        "decision_ms": 93.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-1",
+      "split": "previous-smoke-test",
+      "variant": "short",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.7660023376539629,
+            "probabilities": {
+              "left": 0.7660023376539629,
+              "middle": 0.053721288098201835,
+              "right": 0.18027637424783535
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:08.256Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 198.7,
+        "local_inference_ms": 198.7,
+        "preprocess_ms": 28.4,
+        "vision_ms": 99.3,
+        "decision_ms": 71,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 71
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-1",
+      "split": "previous-smoke-test",
+      "variant": "opening",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5707716644192876,
+            "probabilities": {
+              "left": 0.5707716644192876,
+              "middle": 0.028212466859214663,
+              "right": 0.4010158687214978
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:08.455Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 186.6,
+        "local_inference_ms": 186.6,
+        "preprocess_ms": 20.5,
+        "vision_ms": 97.4,
+        "decision_ms": 68.7,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 68.7
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-1",
+      "split": "previous-smoke-test",
+      "variant": "safe",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.45491191647028084,
+            "probabilities": {
+              "left": 0.45491191647028084,
+              "middle": 0.12784376369512584,
+              "right": 0.41724431983459326
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:08.641Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 187.4,
+        "local_inference_ms": 187.4,
+        "preprocess_ms": 17.8,
+        "vision_ms": 96.2,
+        "decision_ms": 73.4,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 73.4
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-2",
+      "split": "previous-smoke-test",
+      "variant": "original",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.3819958359861642,
+            "probabilities": {
+              "left": 0.34155055261253536,
+              "middle": 0.27645361140130054,
+              "right": 0.3819958359861642
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:08.829Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 213.7,
+        "local_inference_ms": 213.7,
+        "preprocess_ms": 18.9,
+        "vision_ms": 101.7,
+        "decision_ms": 93.1,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93.1
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-2",
+      "split": "previous-smoke-test",
+      "variant": "short",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6646213515550987,
+            "probabilities": {
+              "left": 0.6646213515550987,
+              "middle": 0.05387012153798648,
+              "right": 0.2815085269069148
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:09.043Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183.7,
+        "local_inference_ms": 183.7,
+        "preprocess_ms": 16.6,
+        "vision_ms": 96.2,
+        "decision_ms": 70.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-2",
+      "split": "previous-smoke-test",
+      "variant": "opening",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6853968506050448,
+            "probabilities": {
+              "left": 0.3010999213988126,
+              "middle": 0.013503227996142644,
+              "right": 0.6853968506050448
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:09.226Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 184.4,
+        "local_inference_ms": 184.4,
+        "preprocess_ms": 16.5,
+        "vision_ms": 100.5,
+        "decision_ms": 67.4,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.4
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "saved-2",
+      "split": "previous-smoke-test",
+      "variant": "safe",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.536455816280029,
+            "probabilities": {
+              "left": 0.536455816280029,
+              "middle": 0.07224613819931952,
+              "right": 0.39129804552065145
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:09.411Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183.2,
+        "local_inference_ms": 183.2,
+        "preprocess_ms": 17,
+        "vision_ms": 94.4,
+        "decision_ms": 71.8,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.8
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap0",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.41507272590585526,
+            "probabilities": {
+              "left": 0.41507272590585526,
+              "middle": 0.3226975879460492,
+              "right": 0.26222968614809566
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:09.595Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 214.9,
+        "local_inference_ms": 214.9,
+        "preprocess_ms": 20.2,
+        "vision_ms": 100,
+        "decision_ms": 94.7,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 94.7
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap0",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.7240408118876371,
+            "probabilities": {
+              "left": 0.7240408118876371,
+              "middle": 0.07486078883235013,
+              "right": 0.20109839928001258
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:09.809Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183.3,
+        "local_inference_ms": 183.3,
+        "preprocess_ms": 16.1,
+        "vision_ms": 95.7,
+        "decision_ms": 71.5,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 71.5
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap0",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6789342783101979,
+            "probabilities": {
+              "left": 0.6789342783101979,
+              "middle": 0.023851687769372465,
+              "right": 0.29721403392042967
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:09.992Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 187.1,
+        "local_inference_ms": 187.1,
+        "preprocess_ms": 18.6,
+        "vision_ms": 101.5,
+        "decision_ms": 67,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap0",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4484657614601568,
+            "probabilities": {
+              "left": 0.4484657614601568,
+              "middle": 0.13155632375573328,
+              "right": 0.41997791478410984
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:10.180Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 184.6,
+        "local_inference_ms": 184.6,
+        "preprocess_ms": 16.2,
+        "vision_ms": 94.4,
+        "decision_ms": 74,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 74
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap1",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4036825546321917,
+            "probabilities": {
+              "left": 0.4036825546321917,
+              "middle": 0.30107920804796395,
+              "right": 0.2952382373198444
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:10.365Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 212.8,
+        "local_inference_ms": 212.8,
+        "preprocess_ms": 20,
+        "vision_ms": 99.3,
+        "decision_ms": 93.5,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93.5
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap1",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6340982670340248,
+            "probabilities": {
+              "left": 0.6340982670340248,
+              "middle": 0.11264907045849087,
+              "right": 0.25325266250748435
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:10.577Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 180.1,
+        "local_inference_ms": 180.1,
+        "preprocess_ms": 16.3,
+        "vision_ms": 93.9,
+        "decision_ms": 69.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 69.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap1",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5630801069848236,
+            "probabilities": {
+              "left": 0.5630801069848236,
+              "middle": 0.07364176285684429,
+              "right": 0.3632781301583321
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:10.758Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183,
+        "local_inference_ms": 183,
+        "preprocess_ms": 16.8,
+        "vision_ms": 98.3,
+        "decision_ms": 67.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap1",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4444642987581605,
+            "probabilities": {
+              "left": 0.3342496728896547,
+              "middle": 0.2212860283521849,
+              "right": 0.4444642987581605
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:10.941Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 189.8,
+        "local_inference_ms": 189.8,
+        "preprocess_ms": 19.7,
+        "vision_ms": 95.8,
+        "decision_ms": 74.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 74.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap2",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.3954399624608637,
+            "probabilities": {
+              "left": 0.3954399624608637,
+              "middle": 0.2574618929159958,
+              "right": 0.3470981446231405
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:11.130Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 214.1,
+        "local_inference_ms": 214.1,
+        "preprocess_ms": 21.4,
+        "vision_ms": 99,
+        "decision_ms": 93.7,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93.7
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap2",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.7170556130051744,
+            "probabilities": {
+              "left": 0.7170556130051744,
+              "middle": 0.08622625173674539,
+              "right": 0.19671813525808018
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:11.344Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 182.2,
+        "local_inference_ms": 182.2,
+        "preprocess_ms": 17.1,
+        "vision_ms": 94.2,
+        "decision_ms": 70.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap2",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6651455569259187,
+            "probabilities": {
+              "left": 0.6651455569259187,
+              "middle": 0.024365931921285836,
+              "right": 0.3104885111527954
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:11.527Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 186.8,
+        "local_inference_ms": 186.8,
+        "preprocess_ms": 19,
+        "vision_ms": 100.5,
+        "decision_ms": 67.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car0-gap2",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5483538991446546,
+            "probabilities": {
+              "left": 0.3589144369111025,
+              "middle": 0.0927316639442429,
+              "right": 0.5483538991446546
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:11.713Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 184.1,
+        "local_inference_ms": 184.1,
+        "preprocess_ms": 16.4,
+        "vision_ms": 96.3,
+        "decision_ms": 71.4,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.4
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap0",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.3800980539004752,
+            "probabilities": {
+              "left": 0.3059803975292427,
+              "middle": 0.31392154857028204,
+              "right": 0.3800980539004752
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:11.897Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 214.1,
+        "local_inference_ms": 214.1,
+        "preprocess_ms": 19.4,
+        "vision_ms": 101.4,
+        "decision_ms": 93.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap0",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.7350254208277529,
+            "probabilities": {
+              "left": 0.7350254208277529,
+              "middle": 0.10734041420828626,
+              "right": 0.1576341649639608
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:12.112Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 182,
+        "local_inference_ms": 182,
+        "preprocess_ms": 15,
+        "vision_ms": 94.8,
+        "decision_ms": 72.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 72.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap0",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5087738648590027,
+            "probabilities": {
+              "left": 0.4369930917139834,
+              "middle": 0.05423304342701398,
+              "right": 0.5087738648590027
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:12.293Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 177.2,
+        "local_inference_ms": 177.2,
+        "preprocess_ms": 15,
+        "vision_ms": 94.5,
+        "decision_ms": 67.7,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.7
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap0",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5036785683522421,
+            "probabilities": {
+              "left": 0.5036785683522421,
+              "middle": 0.15214067404775244,
+              "right": 0.3441807576000053
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:12.471Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 185,
+        "local_inference_ms": 185,
+        "preprocess_ms": 14.4,
+        "vision_ms": 98.7,
+        "decision_ms": 71.7,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.7
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap1",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.38016507230087215,
+            "probabilities": {
+              "left": 0.325577895496025,
+              "middle": 0.2942570322031028,
+              "right": 0.38016507230087215
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:12.656Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 207.7,
+        "local_inference_ms": 207.7,
+        "preprocess_ms": 17.9,
+        "vision_ms": 95.8,
+        "decision_ms": 94,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 94
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap1",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6856536033346831,
+            "probabilities": {
+              "left": 0.6856536033346831,
+              "middle": 0.13072375783650136,
+              "right": 0.18362263882881552
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:12.864Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 184.6,
+        "local_inference_ms": 184.6,
+        "preprocess_ms": 16.1,
+        "vision_ms": 97.2,
+        "decision_ms": 71.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 71.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap1",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5201894680429524,
+            "probabilities": {
+              "left": 0.4018866498160866,
+              "middle": 0.07792388214096091,
+              "right": 0.5201894680429524
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:13.048Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 180.2,
+        "local_inference_ms": 180.2,
+        "preprocess_ms": 14.8,
+        "vision_ms": 97.3,
+        "decision_ms": 68.1,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 68.1
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap1",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4065209123827151,
+            "probabilities": {
+              "left": 0.4065209123827151,
+              "middle": 0.2581229190938523,
+              "right": 0.3353561685234325
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:13.228Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 182.1,
+        "local_inference_ms": 182.1,
+        "preprocess_ms": 15.7,
+        "vision_ms": 94.6,
+        "decision_ms": 71.8,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.8
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap2",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4002226670123365,
+            "probabilities": {
+              "left": 0.34351963345783,
+              "middle": 0.2562576995298334,
+              "right": 0.4002226670123365
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:13.410Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 208.2,
+        "local_inference_ms": 208.2,
+        "preprocess_ms": 17.5,
+        "vision_ms": 94.6,
+        "decision_ms": 96.1,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 96.1
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap2",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.7619986525415102,
+            "probabilities": {
+              "left": 0.7619986525415102,
+              "middle": 0.10079960004627812,
+              "right": 0.13720174741221164
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:13.619Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 188.6,
+        "local_inference_ms": 188.6,
+        "preprocess_ms": 16,
+        "vision_ms": 101.9,
+        "decision_ms": 70.7,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.7
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap2",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.484343115765024,
+            "probabilities": {
+              "left": 0.484343115765024,
+              "middle": 0.052730432199658984,
+              "right": 0.46292645203531707
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:13.807Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 180.6,
+        "local_inference_ms": 180.6,
+        "preprocess_ms": 15,
+        "vision_ms": 97,
+        "decision_ms": 68.6,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 68.6
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car1-gap2",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.474479957637534,
+            "probabilities": {
+              "left": 0.474479957637534,
+              "middle": 0.16031172884467973,
+              "right": 0.36520831351778626
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:13.988Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 184.4,
+        "local_inference_ms": 184.4,
+        "preprocess_ms": 15.1,
+        "vision_ms": 97.5,
+        "decision_ms": 71.8,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.8
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap0",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.37249960800496257,
+            "probabilities": {
+              "left": 0.3189789235560994,
+              "middle": 0.37249960800496257,
+              "right": 0.3085214684389381
+            },
+            "choice": "middle"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:14.173Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 211,
+        "local_inference_ms": 211,
+        "preprocess_ms": 19.1,
+        "vision_ms": 96.3,
+        "decision_ms": 95.6,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 95.6
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap0",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6434777192480576,
+            "probabilities": {
+              "left": 0.6434777192480576,
+              "middle": 0.13373905111224307,
+              "right": 0.2227832296396994
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:14.384Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 181.9,
+        "local_inference_ms": 181.9,
+        "preprocess_ms": 16.2,
+        "vision_ms": 95.5,
+        "decision_ms": 70.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap0",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5238617858694394,
+            "probabilities": {
+              "left": 0.4150438779481142,
+              "middle": 0.06109433618244642,
+              "right": 0.5238617858694394
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:14.565Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 180.3,
+        "local_inference_ms": 180.3,
+        "preprocess_ms": 15.5,
+        "vision_ms": 97.1,
+        "decision_ms": 67.7,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.7
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap0",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.593165684828131,
+            "probabilities": {
+              "left": 0.593165684828131,
+              "middle": 0.09917244792469075,
+              "right": 0.30766186724717826
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:14.746Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 192.4,
+        "local_inference_ms": 192.4,
+        "preprocess_ms": 15.5,
+        "vision_ms": 104.7,
+        "decision_ms": 72.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 72.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap1",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.3560087600539634,
+            "probabilities": {
+              "left": 0.30487076124970397,
+              "middle": 0.3560087600539634,
+              "right": 0.33912047869633255
+            },
+            "choice": "middle"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:14.938Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 210.6,
+        "local_inference_ms": 210.6,
+        "preprocess_ms": 19.5,
+        "vision_ms": 97.2,
+        "decision_ms": 93.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap1",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5987331235567355,
+            "probabilities": {
+              "left": 0.5987331235567355,
+              "middle": 0.13314151652872477,
+              "right": 0.26812535991453984
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:15.149Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 184.2,
+        "local_inference_ms": 184.2,
+        "preprocess_ms": 16.5,
+        "vision_ms": 97.5,
+        "decision_ms": 70.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap1",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5629172337567026,
+            "probabilities": {
+              "left": 0.37487627151006764,
+              "middle": 0.0622064947332298,
+              "right": 0.5629172337567026
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:15.333Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 181.5,
+        "local_inference_ms": 181.5,
+        "preprocess_ms": 16.6,
+        "vision_ms": 96.8,
+        "decision_ms": 68.1,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 68.1
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap1",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5335089414926569,
+            "probabilities": {
+              "left": 0.5335089414926569,
+              "middle": 0.1739443286596282,
+              "right": 0.2925467298477148
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:15.514Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 184.1,
+        "local_inference_ms": 184.1,
+        "preprocess_ms": 15.6,
+        "vision_ms": 96.9,
+        "decision_ms": 71.6,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.6
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap2",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.361369110341421,
+            "probabilities": {
+              "left": 0.3197574691086157,
+              "middle": 0.361369110341421,
+              "right": 0.31887342054996326
+            },
+            "choice": "middle"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:15.699Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 211.4,
+        "local_inference_ms": 211.4,
+        "preprocess_ms": 19.6,
+        "vision_ms": 96.6,
+        "decision_ms": 95.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 95.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap2",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6862187765675655,
+            "probabilities": {
+              "left": 0.6862187765675655,
+              "middle": 0.10112437605902219,
+              "right": 0.2126568473734124
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:15.910Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 189.5,
+        "local_inference_ms": 189.5,
+        "preprocess_ms": 16,
+        "vision_ms": 103.5,
+        "decision_ms": 70,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap2",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.49748486231587763,
+            "probabilities": {
+              "left": 0.4510667736238916,
+              "middle": 0.05144836406023066,
+              "right": 0.49748486231587763
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:16.100Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 179.1,
+        "local_inference_ms": 179.1,
+        "preprocess_ms": 15.4,
+        "vision_ms": 96.6,
+        "decision_ms": 67.1,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.1
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y90-car2-gap2",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5047758123875229,
+            "probabilities": {
+              "left": 0.5047758123875229,
+              "middle": 0.09599778046397232,
+              "right": 0.3992264071485047
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:16.279Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183.7,
+        "local_inference_ms": 183.7,
+        "preprocess_ms": 15.9,
+        "vision_ms": 94.2,
+        "decision_ms": 73.6,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 73.6
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap0",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.3799234853517735,
+            "probabilities": {
+              "left": 0.31153724200740635,
+              "middle": 0.3799234853517735,
+              "right": 0.30853927264082015
+            },
+            "choice": "middle"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:16.463Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 209.8,
+        "local_inference_ms": 209.8,
+        "preprocess_ms": 18.3,
+        "vision_ms": 97.2,
+        "decision_ms": 94.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 94.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap0",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.60380058920953,
+            "probabilities": {
+              "left": 0.60380058920953,
+              "middle": 0.1375862132791087,
+              "right": 0.25861319751136136
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:16.673Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183.9,
+        "local_inference_ms": 183.9,
+        "preprocess_ms": 15.7,
+        "vision_ms": 97.3,
+        "decision_ms": 70.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap0",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5446398422885778,
+            "probabilities": {
+              "left": 0.4246835009306714,
+              "middle": 0.030676656780750898,
+              "right": 0.5446398422885778
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:16.857Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 180.4,
+        "local_inference_ms": 180.4,
+        "preprocess_ms": 15.1,
+        "vision_ms": 97.3,
+        "decision_ms": 68,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 68
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap0",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.44067064295131203,
+            "probabilities": {
+              "left": 0.44067064295131203,
+              "middle": 0.11935561058342017,
+              "right": 0.43997374646526777
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:17.038Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 191.7,
+        "local_inference_ms": 191.7,
+        "preprocess_ms": 15.2,
+        "vision_ms": 104.2,
+        "decision_ms": 72.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 72.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap1",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4011738804492844,
+            "probabilities": {
+              "left": 0.4011738804492844,
+              "middle": 0.2879109077527259,
+              "right": 0.3109152117979897
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:17.229Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 213.4,
+        "local_inference_ms": 213.4,
+        "preprocess_ms": 19.8,
+        "vision_ms": 99.1,
+        "decision_ms": 94.5,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 94.5
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap1",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6090493754483254,
+            "probabilities": {
+              "left": 0.6090493754483254,
+              "middle": 0.188757568504853,
+              "right": 0.20219305604682153
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:17.443Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183.6,
+        "local_inference_ms": 183.6,
+        "preprocess_ms": 17.2,
+        "vision_ms": 95.5,
+        "decision_ms": 70.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap1",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6840795668103611,
+            "probabilities": {
+              "left": 0.6840795668103611,
+              "middle": 0.027238335217143143,
+              "right": 0.2886820979724956
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:17.627Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183.9,
+        "local_inference_ms": 183.9,
+        "preprocess_ms": 17.5,
+        "vision_ms": 95.1,
+        "decision_ms": 71.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 71.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap1",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4422800025425935,
+            "probabilities": {
+              "left": 0.4422800025425935,
+              "middle": 0.177441353908688,
+              "right": 0.38027864354871843
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:17.810Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 186.4,
+        "local_inference_ms": 186.4,
+        "preprocess_ms": 18.6,
+        "vision_ms": 94.9,
+        "decision_ms": 72.8,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 72.8
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap2",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.3634461410894856,
+            "probabilities": {
+              "left": 0.3601063920438152,
+              "middle": 0.27644746686669924,
+              "right": 0.3634461410894856
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:17.996Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 212.1,
+        "local_inference_ms": 212.1,
+        "preprocess_ms": 22.2,
+        "vision_ms": 96.7,
+        "decision_ms": 93.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap2",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6902876866522792,
+            "probabilities": {
+              "left": 0.6902876866522792,
+              "middle": 0.11387523906172373,
+              "right": 0.195837074285997
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:18.209Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 194.6,
+        "local_inference_ms": 194.6,
+        "preprocess_ms": 19.8,
+        "vision_ms": 103.6,
+        "decision_ms": 71.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 71.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap2",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6127570842737197,
+            "probabilities": {
+              "left": 0.6127570842737197,
+              "middle": 0.05633531469719065,
+              "right": 0.3309076010290896
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:18.403Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 180.4,
+        "local_inference_ms": 180.4,
+        "preprocess_ms": 16.1,
+        "vision_ms": 96.8,
+        "decision_ms": 67.5,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.5
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car0-gap2",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5440052549018797,
+            "probabilities": {
+              "left": 0.5440052549018797,
+              "middle": 0.08880040365737255,
+              "right": 0.36719434144074775
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:18.584Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 182.3,
+        "local_inference_ms": 182.3,
+        "preprocess_ms": 15.3,
+        "vision_ms": 96.4,
+        "decision_ms": 70.6,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 70.6
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap0",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4645738965805641,
+            "probabilities": {
+              "left": 0.23498421601704786,
+              "middle": 0.3004418874023881,
+              "right": 0.4645738965805641
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:18.766Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 206.7,
+        "local_inference_ms": 206.7,
+        "preprocess_ms": 18,
+        "vision_ms": 95.1,
+        "decision_ms": 93.6,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93.6
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap0",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6537259470113896,
+            "probabilities": {
+              "left": 0.6537259470113896,
+              "middle": 0.14980638411008698,
+              "right": 0.19646766887852346
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:18.973Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 182,
+        "local_inference_ms": 182,
+        "preprocess_ms": 15.5,
+        "vision_ms": 95.9,
+        "decision_ms": 70.6,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.6
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap0",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6830070056588434,
+            "probabilities": {
+              "left": 0.29421687799192686,
+              "middle": 0.02277611634922966,
+              "right": 0.6830070056588434
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:19.155Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 180,
+        "local_inference_ms": 180,
+        "preprocess_ms": 15.2,
+        "vision_ms": 97.6,
+        "decision_ms": 67.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap0",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4704064345453583,
+            "probabilities": {
+              "left": 0.4704064345453583,
+              "middle": 0.11612048192381096,
+              "right": 0.41347308353083073
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:19.335Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 191,
+        "local_inference_ms": 191,
+        "preprocess_ms": 15.9,
+        "vision_ms": 103.2,
+        "decision_ms": 71.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap1",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4122128093135489,
+            "probabilities": {
+              "left": 0.31904859397652785,
+              "middle": 0.2687385967099232,
+              "right": 0.4122128093135489
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:19.526Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 208.3,
+        "local_inference_ms": 208.3,
+        "preprocess_ms": 18.8,
+        "vision_ms": 95.4,
+        "decision_ms": 94.1,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 94.1
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap1",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6197966800070152,
+            "probabilities": {
+              "left": 0.6197966800070152,
+              "middle": 0.1742737260854567,
+              "right": 0.20592959390752805
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:19.734Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 186.3,
+        "local_inference_ms": 186.3,
+        "preprocess_ms": 18.1,
+        "vision_ms": 96.3,
+        "decision_ms": 71.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 71.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap1",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5662479579465167,
+            "probabilities": {
+              "left": 0.5662479579465167,
+              "middle": 0.04469787537447911,
+              "right": 0.3890541666790042
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:19.921Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183,
+        "local_inference_ms": 183,
+        "preprocess_ms": 19,
+        "vision_ms": 96.1,
+        "decision_ms": 67.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap1",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.48466562485245557,
+            "probabilities": {
+              "left": 0.48466562485245557,
+              "middle": 0.11345145500063043,
+              "right": 0.401882920146914
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:20.104Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 186.7,
+        "local_inference_ms": 186.7,
+        "preprocess_ms": 17.3,
+        "vision_ms": 97.5,
+        "decision_ms": 71.9,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.9
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap2",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.43308271664183606,
+            "probabilities": {
+              "left": 0.28046082451385523,
+              "middle": 0.28645645884430876,
+              "right": 0.43308271664183606
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:20.291Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 212.5,
+        "local_inference_ms": 212.5,
+        "preprocess_ms": 21.7,
+        "vision_ms": 97.6,
+        "decision_ms": 93.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap2",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.745380614094962,
+            "probabilities": {
+              "left": 0.745380614094962,
+              "middle": 0.10991824624009978,
+              "right": 0.14470113966493825
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:20.503Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 193.3,
+        "local_inference_ms": 193.3,
+        "preprocess_ms": 18,
+        "vision_ms": 104.8,
+        "decision_ms": 70.5,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.5
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap2",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5620974361579247,
+            "probabilities": {
+              "left": 0.5620974361579247,
+              "middle": 0.037084148531809434,
+              "right": 0.4008184153102658
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:20.696Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 181.1,
+        "local_inference_ms": 181.1,
+        "preprocess_ms": 15.8,
+        "vision_ms": 97.6,
+        "decision_ms": 67.7,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.7
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car1-gap2",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5813708191409398,
+            "probabilities": {
+              "left": 0.5813708191409398,
+              "middle": 0.10141417116618348,
+              "right": 0.31721500969287664
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:20.878Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 181.9,
+        "local_inference_ms": 181.9,
+        "preprocess_ms": 16.6,
+        "vision_ms": 93.6,
+        "decision_ms": 71.7,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.7
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap0",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.3835198835154577,
+            "probabilities": {
+              "left": 0.25533445376119457,
+              "middle": 0.3611456627233477,
+              "right": 0.3835198835154577
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:21.060Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 209.5,
+        "local_inference_ms": 209.5,
+        "preprocess_ms": 20,
+        "vision_ms": 96.5,
+        "decision_ms": 93,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 93
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap0",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5473699427680282,
+            "probabilities": {
+              "left": 0.5473699427680282,
+              "middle": 0.1420609623136845,
+              "right": 0.3105690949182873
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:21.269Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 185.4,
+        "local_inference_ms": 185.4,
+        "preprocess_ms": 18.1,
+        "vision_ms": 96.2,
+        "decision_ms": 71.1,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 71.1
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap0",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.7699506174041546,
+            "probabilities": {
+              "left": 0.2084130072101062,
+              "middle": 0.02163637538573913,
+              "right": 0.7699506174041546
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:21.455Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 179.7,
+        "local_inference_ms": 179.7,
+        "preprocess_ms": 15.6,
+        "vision_ms": 96.8,
+        "decision_ms": 67.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap0",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "left",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.47868442160330854,
+            "probabilities": {
+              "left": 0.47868442160330854,
+              "middle": 0.10637149679306322,
+              "right": 0.4149440816036283
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:21.635Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 194.7,
+        "local_inference_ms": 194.7,
+        "preprocess_ms": 16.4,
+        "vision_ms": 105.5,
+        "decision_ms": 72.8,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 72.8
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap1",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.3759092100713799,
+            "probabilities": {
+              "left": 0.33127097316323434,
+              "middle": 0.29281981676538577,
+              "right": 0.3759092100713799
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:21.830Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 210.7,
+        "local_inference_ms": 210.7,
+        "preprocess_ms": 18.4,
+        "vision_ms": 96.8,
+        "decision_ms": 95.5,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 95.5
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap1",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5817879723326366,
+            "probabilities": {
+              "left": 0.5817879723326366,
+              "middle": 0.13571536025323963,
+              "right": 0.2824966674141237
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:22.041Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 182,
+        "local_inference_ms": 182,
+        "preprocess_ms": 15.4,
+        "vision_ms": 96.5,
+        "decision_ms": 70.1,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 70.1
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap1",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.7402874253661053,
+            "probabilities": {
+              "left": 0.2371211546528637,
+              "middle": 0.02259141998103115,
+              "right": 0.7402874253661053
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:22.222Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 182.6,
+        "local_inference_ms": 182.6,
+        "preprocess_ms": 17.8,
+        "vision_ms": 95.8,
+        "decision_ms": 69,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 69
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap1",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "middle",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.4765414224510468,
+            "probabilities": {
+              "left": 0.4765414224510468,
+              "middle": 0.14791662183040602,
+              "right": 0.3755419557185472
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:22.405Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 183.6,
+        "local_inference_ms": 183.6,
+        "preprocess_ms": 15,
+        "vision_ms": 97.3,
+        "decision_ms": 71.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 71.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap2",
+      "split": "new-scenes",
+      "variant": "original",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.3882263266324255,
+            "probabilities": {
+              "left": 0.28977412163787486,
+              "middle": 0.3219995517296996,
+              "right": 0.3882263266324255
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 325,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:22.588Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 208.5,
+        "local_inference_ms": 208.5,
+        "preprocess_ms": 18.4,
+        "vision_ms": 95.7,
+        "decision_ms": 94.4,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 130,
+            "image_tokens": 195,
+            "elapsed_ms": 94.4
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap2",
+      "split": "new-scenes",
+      "variant": "short",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.6758154505289302,
+            "probabilities": {
+              "left": 0.6758154505289302,
+              "middle": 0.07201991398857376,
+              "right": 0.2521646354824961
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 216,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:22.797Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 184.1,
+        "local_inference_ms": 184.1,
+        "preprocess_ms": 15.5,
+        "vision_ms": 96.4,
+        "decision_ms": 72.2,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 21,
+            "image_tokens": 195,
+            "elapsed_ms": 72.2
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap2",
+      "split": "new-scenes",
+      "variant": "opening",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5723812027369143,
+            "probabilities": {
+              "left": 0.3780967962564493,
+              "middle": 0.04952200100663639,
+              "right": 0.5723812027369143
+            },
+            "choice": "right"
+          }
+        },
+        "usage": {
+          "input_tokens": 222,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:22.982Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 179.9,
+        "local_inference_ms": 179.9,
+        "preprocess_ms": 15.8,
+        "vision_ms": 96.8,
+        "decision_ms": 67.3,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 27,
+            "image_tokens": 195,
+            "elapsed_ms": 67.3
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    },
+    {
+      "scene_id": "new-y250-car2-gap2",
+      "split": "new-scenes",
+      "variant": "safe",
+      "expected": "right",
+      "response": {
+        "answers": {
+          "lane": {
+            "type": "choice",
+            "confidence": 0.5624132818022572,
+            "probabilities": {
+              "left": 0.5624132818022572,
+              "middle": 0.08026020702706065,
+              "right": 0.35732651117068215
+            },
+            "choice": "left"
+          }
+        },
+        "usage": {
+          "input_tokens": 236,
+          "output_tokens": 0
+        }
+      },
+      "metadata": {
+        "source": "local",
+        "timing_origin": "browser-local",
+        "provider": "Liquid AI \u00b7 on device",
+        "api_kind": "local decisions",
+        "transport": "in-browser WebGPU; no inference request sent",
+        "endpoint": null,
+        "http_status": null,
+        "provider_processing_ms": null,
+        "started_at": "2026-10-08T04:05:23.162Z",
+        "upstream_round_trip_ms": null,
+        "browser_round_trip_ms": 185.9,
+        "local_inference_ms": 185.9,
+        "preprocess_ms": 16.2,
+        "vision_ms": 95.8,
+        "decision_ms": 73.8,
+        "questions": [
+          {
+            "name": "lane",
+            "text_tokens": 41,
+            "image_tokens": 195,
+            "elapsed_ms": 73.8
+          }
+        ],
+        "model": "LiquidAI/d1-omni-600M",
+        "model_repo": "onnx-community/d1-omni-600M-ONNX",
+        "model_revision": "4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0",
+        "quantization": "q8 decision + q4 embedding + fp16 vision",
+        "device": {
+          "vendor": "apple",
+          "architecture": "metal-3",
+          "description": "",
+          "shader_f16": true
+        },
+        "state_truncated": false,
+        "timing_note": "Local wall-clock time: preprocessing, WebGPU/WASM operators and result readback. Model download and session preparation are excluded. No network round trip or API fee."
+      }
+    }
+  ],
+  "summary": [
+    {
+      "variant": "original",
+      "splits": [
+        {
+          "split": "previous-smoke-test",
+          "correct": 2,
+          "total": 3
+        },
+        {
+          "split": "new-scenes",
+          "correct": 6,
+          "total": 18
+        }
+      ]
+    },
+    {
+      "variant": "short",
+      "splits": [
+        {
+          "split": "previous-smoke-test",
+          "correct": 1,
+          "total": 3
+        },
+        {
+          "split": "new-scenes",
+          "correct": 6,
+          "total": 18
+        }
+      ]
+    },
+    {
+      "variant": "opening",
+      "splits": [
+        {
+          "split": "previous-smoke-test",
+          "correct": 1,
+          "total": 3
+        },
+        {
+          "split": "new-scenes",
+          "correct": 3,
+          "total": 18
+        }
+      ]
+    },
+    {
+      "variant": "safe",
+      "splits": [
+        {
+          "split": "previous-smoke-test",
+          "correct": 1,
+          "total": 3
+        },
+        {
+          "split": "new-scenes",
+          "correct": 7,
+          "total": 18
+        }
+      ]
+    }
+  ]
+}

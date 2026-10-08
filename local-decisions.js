@@ -1,6 +1,6 @@
 /* Lazy local adapter. No API key, inference fetch, or model download at page load. */
 (function(root){
-  const model={id:'LiquidAI/d1-omni-600M',label:'Liquid d1 · local WebGPU · experimental',vision:true,api_kind:'local decisions',provider:'Liquid AI · on device',available:true};
+  const model={id:'LiquidAI/d1-omni-600M',label:'Liquid 600M · local WebGPU · experimental',vision:true,api_kind:'local decisions',provider:'Liquid AI · on device',available:true};
   let runtime=null,loading=false,lastLoad=null,message='Load once from Hugging Face; decisions then stay on this device.';
   const notify=()=>root.dispatchEvent(new Event('local-model-changed'));
   const api={model,isLocal:id=>id===model.id,get loading(){return loading;},get message(){return message;},get lastLoad(){return lastLoad;},

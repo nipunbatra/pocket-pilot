@@ -40,7 +40,7 @@ sample limits, scoring and timings. The animated walkthrough at
 
 ## Local Liquid model — no API key
 
-Choose **Liquid d1 · local WebGPU · experimental**, then **Load model**.
+Choose **Liquid 600M · local WebGPU · experimental**, then **Load model**.
 Recent browsers with WebGPU and enough GPU memory can run image and structured
 JSON decisions on the device. The first load downloads approximately 595 MB
 for images or 406 MB for text, plus tokenizer/runtime files. Weights are cached
@@ -49,9 +49,10 @@ No model input or output is sent for local inference. Hugging Face serves downlo
 
 The warm three-scene check measured 217 ms/image and 60 ms/JSON for one question
 on an Apple GPU, but only 2/3 and 1/3 correct lanes respectively. This is an
-experimental teaching comparison, not a reliable driver. The local timing label
-excludes model loading and is distinct from a network round trip.
-See [all 18 measurements and limitations](./liquid-local.html).
+experimental teaching comparison, not a reliable driver. A follow-up image check
+got 6/18 lanes correct with the current prompt; three simpler formulations got
+6/18, 3/18 and 7/18. The local timing label excludes model loading and is distinct
+from a network round trip. See [timings, all 84 prompt checks and limitations](./liquid-local.html).
 
 Weights are pinned to revision 4ebc1b97bf1477485371c79d1cf8d5e4e8eebfa0 of
 onnx-community/d1-omni-600M-ONNX. Liquid's LFM Open License v1.0 applies, including
