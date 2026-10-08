@@ -15,7 +15,7 @@
     const steeringMs=2/7*1000,marginMs=100;
     const requiredMs=latencyMs===null?null:latencyMs+steeringMs+marginMs;
     const initialMs=(CAR_Y-BLOCK_H-35)/(BASE_SPEED*speed)*1000;
-    const suggestedSpeed=requiredMs===null?null:[8,4,2,1].find(v=>(CAR_Y-BLOCK_H-35)/(BASE_SPEED*v)*1000>=requiredMs)??null;
+    const suggestedSpeed=requiredMs===null?null:[16,8,4,2,1].find(v=>(CAR_Y-BLOCK_H-35)/(BASE_SPEED*v)*1000>=requiredMs)??null;
     return {contact_ms:contactMs(s,speed),initial_ms:initialMs,latency_ms:latencyMs,steering_ms:steeringMs,margin_ms:marginMs,required_ms:requiredMs,suggested_speed:suggestedSpeed};
   }
   function skipLateRecheck(s,speed,mode,policy,latencyMs){
@@ -45,7 +45,7 @@
       // The hold uses only freshness and steering completion, never the correct gap.
       const needsDecision=s.row.decision===null||Math.abs(s.target-s.lane)>.001;
       let move=mode==='paced'&&needsDecision?Math.max(0,Math.min(dy,HOLD_Y-s.row.y)):dy;
-      // Stop exactly at a sampling checkpoint, even when an 8× render step crosses it.
+      // Stop exactly at a sampling checkpoint, even when a fast render step crosses it.
       // Checkpoints depend on distance only; no hidden lane information is used.
       const checkpoint=sampling?nextCaptureY(s,sampling):null;
       if(mode==='paced'&&checkpoint!==null)move=Math.max(0,Math.min(move,checkpoint-s.row.y));

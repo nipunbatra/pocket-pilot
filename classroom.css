@@ -9,11 +9,11 @@
 #lab-connect{background:var(--accent);color:#fffefa;border-color:var(--accent)}#lab-connect.connected{background:#dde8d4;color:var(--accent);border-color:#bacbb0}
 .lab-controls{display:block;padding:12px 14px 9px;margin:12px 0;background:#e5ebe0;border:1px solid #d0dcc8;border-radius:7px}
 .lab-controls .control-row{display:grid;align-items:start;gap:10px 16px}
-.lab-controls .primary-settings{grid-template-columns:1.1fr 1fr 1.2fr 1.2fr 138px}
+.lab-controls .primary-settings{grid-template-columns:1.1fr 1fr 1.2fr 1.2fr 172px}
 .lab-controls .secondary-settings{grid-template-columns:1.65fr 1.1fr .9fr 1fr;margin-top:10px}
 .control-row>div{min-width:0}.lab-controls label,.lab-controls .control-label,.lab-controls .speed-control>span{display:block;font-size:10px;font-weight:600;color:var(--muted);margin:0 0 5px;line-height:1.2}
 .lab-controls select{display:block;width:100%;font-size:11px;color:var(--ink);background:var(--paper);padding:6px 23px 6px 8px;max-width:none;border:1px solid #c3cfba;border-radius:4px;height:31px}
-.lab-controls .pace-control,.lab-controls .speed-control{display:block}.lab-controls .pace-control select{max-width:none}.lab-controls .speed-buttons{border:1px solid #c3cfba;background:#dce5d5;height:31px;padding:2px;border-radius:4px;width:138px}.lab-controls .speed-buttons button{height:25px;width:31px;border-radius:3px;font-size:11px}
+.lab-controls .pace-control,.lab-controls .speed-control{display:block}.lab-controls .pace-control select{max-width:none}.lab-controls .speed-buttons{border:1px solid #c3cfba;background:#dce5d5;height:31px;padding:2px;border-radius:4px;width:172px}.lab-controls .speed-buttons button{height:25px;width:31px;border-radius:3px;font-size:11px}
 .lab-controls .key-entry{display:flex;gap:6px}.lab-controls .key-entry input{height:31px;min-width:0;width:100%;border:1px solid #c3cfba;border-radius:4px;padding:6px 8px;font-size:11px;background:var(--paper)}.lab-controls .key-entry button{flex:0 0 auto;white-space:nowrap;width:auto;height:31px;padding:6px 12px;font-size:11px;justify-content:center;background:var(--accent)}
 .lab-controls #key-privacy{margin:4px 0 0;font-size:9px;line-height:1.4;color:#63775a}.lab-controls #key-error{margin:5px 0 0;font-size:11px;color:#914b30}.lab-controls #key-error:empty{display:none}
 .lab-controls #key-connected{height:48px;display:flex;align-items:center;justify-content:space-between;gap:10px}.lab-controls #key-connected strong{font-size:11px;color:var(--accent);font-weight:600}.lab-controls #disconnect-key{margin:0;padding:6px 8px;font-size:10px;height:31px;white-space:nowrap;width:auto}
