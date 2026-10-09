@@ -14,12 +14,17 @@ See vendor/playmario/NOTICE.md for source and Nintendo attribution.
 Upstream has no root license file; this copy is not claimed to be permissively licensed.
 
 Use arrows or A/D/W/S, Shift or Space to run/fire. The model chooses among 13
-full button combinations, held for 4/8/16 native frames. Pause, inference and
-history inspection stop the simulation. Native input transitions preserve jump
-hold/release semantics. Changing worlds or restarting begins a new attempt and
+full button combinations. Classroom mode freezes for answers, then applies 4/8/16
+frames. Real time holds the last command while one answer is pending; start at
+1×. Pause and history inspection freeze both modes. New model jump requests
+can wait six frames for landing and re-arm on the ground; manual key holds keep
+native semantics. Exports use mario-command-v2 and separate captured/application
+frames, observation age and actual command duration. Changing worlds or restarting begins a new attempt and
 keeps old records. Each record contains its own world and captured visible scene.
 JSON lists visible geometry only; vision receives the captured canvas plus the
-control contract. Road fine-tunes are not offered as Mario-trained models.
+control contract. Vision includes the same visible player marker and motion HUD.
+Road fine-tunes are not offered as Mario-trained models. See [the Mario training
+plan](mario-training.md); no Mario fine-tune has been trained yet.
 
 Our adapter is mario-engine.js; mario-contract.js supplies the questions.
 platformer.js shares the inspector and controller with the small original game.

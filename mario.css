@@ -8,4 +8,8 @@
 .mario-lab #scene-message span{background:#203c37e8;padding:3px 9px;border-radius:3px}
 .mario-lab .manual-controls{flex-wrap:wrap}
 @media(max-width:1100px){.mario-lab .control-row.second{grid-template-columns:56px minmax(140px,1fr) 60px 102px 90px minmax(140px,1fr)}}
-@media(max-width:800px){.mario-lab .control-row.second{grid-template-columns:1fr 1fr}.mario-lab .control-row.second .local-actions{grid-column:auto}}
+@media(max-width:800px){.mario-lab .control-row.second{grid-template-columns:1fr 1fr}.mario-lab .control-row.second .local-actions{grid-column:1/-1}.mario-lab .local-actions span{max-height:none;overflow:visible}}
+
+.mario-lab .control-row:not(.second){grid-template-columns:minmax(160px,1.1fr) minmax(140px,.9fr) minmax(155px,1fr) minmax(105px,.6fr) minmax(220px,1.25fr);gap:12px}
+@media(max-width:1100px) and (min-width:801px){.mario-lab .control-row:not(.second){grid-template-columns:minmax(130px,1fr) minmax(110px,.8fr) minmax(135px,1fr) minmax(90px,.6fr) minmax(160px,1.1fr);gap:8px}}
+@media(max-width:800px){.mario-lab .control-row:not(.second){grid-template-columns:1fr 1fr}.mario-lab .connection-area{grid-column:1/-1}}

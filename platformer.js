@@ -5,10 +5,13 @@
   const LOCAL='LiquidAI/d1-omni-600M',LIMIT=200;
   let state=E.create(),running=false,busy=false,loading=false,pending=null,epoch=0,attempt=1,runCalls=0;
   let runtime=null,loadInfo=null,lastAction='wait',selected=-1,following=true,history=[],keys=new Set(),lastTick=0,accumulator=0,manualRecord=null;
-  let soundContext=null,toastTimer=null,phase='Ready';
+  let soundContext=null,toastTimer=null,phase='Ready',requestQueued=false,inFlightRecord=null;
   const explorer=JsonExplorer.create($('json-explorer'),toast);
   const mode=()=>$('controller').value,frames=()=>Number($('frames').value),isImage=()=>$('input').value==='image';
   const isModel=()=>!['manual','scripted'].includes(mode());
+  const timing=()=>$('timing')?.value||'classroom';
+  const continuous=()=>running&&isModel()&&timing()==='realtime';
+  const queueDecision=()=>{if(requestQueued)return;requestQueued=true;queueMicrotask(()=>{requestQueued=false;if(running)decide();});};
   const title=a=>({wait:'Wait',left:'Walk left',right:'Walk right',jump:'Jump',left_jump:'Jump left',right_jump:'Jump right',left_run:'Run left',right_run:'Run right',left_run_jump:'Run + jump left',right_run_jump:'Run + jump right',run:'Hold run / fire',run_jump:'Jump + fire',down:'Duck / enter pipe'})[a]||a;
   const elapsed=r=>r?.metadata?.local_inference_ms??r?.metadata?.upstream_round_trip_ms??null;
   function toast(msg){$('toast').textContent=msg;$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2500);}
@@ -23,12 +26,13 @@
     gain.gain.setValueAtTime(Number($('volume').value)/100*(event==='step'?.025:.12),t);gain.gain.exponentialRampToValueAtTime(.0001,t+d);
     osc.connect(gain).connect(soundContext.destination);osc.start(t);osc.stop(t+d);
   }
-  function syncAudio(){E.setAudio?.({enabled:$('sound').checked,volume:Number($('volume').value)/100,active:state.status==='playing'&&((running&&mode()==='manual')||!!pending)});}
+  function syncAudio(){E.setAudio?.({enabled:$('sound').checked,volume:Number($('volume').value)/100,active:state.status==='playing'&&((running&&mode()==='manual')||continuous()||!!pending)});}
   function ui(){
     syncAudio();
     const locked=busy||running||!!pending||loading,local=mode()===LOCAL,model=isModel();
     for(const id of ['controller','input','questions','frames','image-size'])$(id).disabled=locked;
     if($('level'))$('level').disabled=locked;
+    if($('timing'))$('timing').disabled=locked||!isModel();
     $('input').disabled=locked||mode()==='typesafe/jev-1.13'||!model;
     $('questions').disabled=locked||!model;$('image-size').disabled=locked||!model||!isImage();
     $('load-local').hidden=!local;$('load-local').disabled=locked;
@@ -52,22 +56,27 @@
     $('calls').textContent=history.filter(r=>r.source!=='manual').length;
     $('game-time').textContent=(state.frame/E.FPS).toFixed(1)+' s';
     const times=history.filter(r=>!r.error&&r.request?.model===mode()&&r.input_kind===$('input').value&&Object.keys(r.request.questions).length===Number($('questions').value)).map(elapsed).filter(x=>typeof x==='number').sort((a,b)=>a-b),n=times.length;
-    $('median').textContent=n?Math.round(n%2?times[n>>1]:(times[n/2-1]+times[n/2])/2)+' ms':'—';
+    const median=n?(n%2?times[n>>1]:(times[n/2-1]+times[n/2])/2):null;
+    $('median').textContent=median!==null?Math.round(median)+' ms':'—';
+    if($('timing-note'))$('timing-note').textContent=timing()==='realtime'?`Real time: previous buttons stay active while the next answer is pending. ${median!==null?'At this measured median and '+$('speed').value+'×, roughly '+Math.round(median/1000*E.FPS*Number($('speed').value))+' frames can pass per answer. ':'Start at 1×. '}One decision always uses a frozen single step.`:'Classroom: freeze → answer → advance the selected frames. Higher playback speed shortens only the movement, not the API wait.';
+    if(pending){const r=pending.record;r.frames_advanced=state.frame-(r.applied_at_frame??r.before.frame);r.applied=r.frames_advanced>0;if(following&&selected===history.indexOf(r))$('answer-time').textContent=answerSummary(r);}
   }
-  function requestFor(before,screenshot){
-    const model=mode(),count=Number($('questions').value),input=isImage();
-    return {model,state:input?[{type:'text',text:C.context+` Last applied buttons: ${lastAction}. Next action lasts ${frames()} frames at 60 fps. This screenshot is a scaled view of a ${E.WIDTH||720} × ${E.HEIGHT||405} game viewport; physics distances use those original viewport pixels.`},{type:'image_url',image_url:{url:screenshot}}]:{context:C.context,scene:E.observe(before,frames())},questions:C.questions(count)};
+  function requestFor(before,screenshot,clock=timing()){
+    const model=mode(),count=Number($('questions').value),input=isImage(),context=C.contextFor?C.contextFor(clock):C.context;
+    return {model,state:input?[{type:'text',text:context+` Last applied buttons: ${lastAction}. ${clock==='realtime'?'Minimum capture spacing':'Next action duration'}: ${frames()} frames at 60 fps. This screenshot is a scaled view of a ${E.WIDTH||720} × ${E.HEIGHT||405} game viewport; physics distances use those original viewport pixels.`},{type:'image_url',image_url:{url:screenshot}}]:{context,scene:E.observe(before,frames())},questions:C.questions(count)};
   }
-  function createRecord(source){
+  function createRecord(source,clock=timing()){
     const before=E.clone(state),screenshot=V.capture(before,Number($('image-size').value));
-    return {id:history.length+1,attempt,source,captured_at:new Date().toISOString(),before,scene:E.observe(before,frames()),screenshot,input_kind:source==='manual'||source==='scripted'?'structured':$('input').value,image_sent:isModel()&&isImage(),request:isModel()?requestFor(before,screenshot):null,response:null,metadata:{source,timing_note:source==='manual'?'Human input; no model inference.':'Scripted reference; no model inference.'},action:null,applied:false,frames_requested:frames(),frames_advanced:0,after:null,error:null};
+    return {id:history.length+1,attempt,source,action_contract:E.actionContract||'platformer-v1',timing_mode:clock,captured_at:new Date().toISOString(),before,scene:E.observe(before,frames()),screenshot,input_kind:source==='manual'||source==='scripted'?'structured':$('input').value,image_sent:isModel()&&isImage(),request:isModel()?requestFor(before,screenshot,clock):null,response:null,metadata:{source,timing_note:source==='manual'?'Human input; no model inference.':'Scripted reference; no model inference.'},action:null,applied:false,frames_requested:frames(),frames_advanced:0,after:null,error:null};
   }
   function addRecord(r){history.push(r);if(following)selected=history.length-1;renderHistory();if(following)inspect(r);repaint();}
-  function finishRecord(r){r.after=E.clone(state);r.frames_advanced=state.frame-r.before.frame;r.applied=r.frames_advanced>0;if(following){selected=history.indexOf(r);inspect(r);}renderHistory();}
+  function finishRecord(r){r.after=E.clone(state);r.frames_advanced=state.frame-(r.applied_at_frame??r.before.frame);r.applied=r.frames_advanced>0;if(following){selected=history.indexOf(r);inspect(r);}renderHistory();}
   function pause(note='Paused. The game clock is stopped.'){
+    if(busy&&inFlightRecord&&inFlightRecord.cancelled_at_frame==null){inFlightRecord.cancelled_at_frame=state.frame;inFlightRecord.frames_during_inference=state.frame-inFlightRecord.before.frame;}
     running=false;epoch++;keys.clear();
     if(pending){pending.record.outcome='Paused during action playback';finishRecord(pending.record);pending=null;}
     if(manualRecord){finishRecord(manualRecord);manualRecord=null;}
+    E.cancelAction?.(state);
     phase=busy?'Waiting · action cancelled':'Paused';message(note);ui();
   }
   function restart(){
@@ -76,18 +85,18 @@
     message('Fresh attempt. Previous decisions remain in the history.');repaint();ui();if(!history.length)preview();
   }
   function terminal(){
-    running=false;phase=state.status==='won'?'Level complete':'Try again';
+    running=false;epoch++;phase=state.status==='won'?'Level complete':'Try again';
     $('scene-message').hidden=false;
     $('scene-message').firstElementChild.textContent=state.status==='won'?'Flag reached. Nicely done.':'A useful mistake.';
     $('scene-message').lastElementChild.textContent=state.status==='won'?'Inspect the decisions, export the run, or play again.':state.reason+'. Inspect the last input or press Play again.';
     message(state.status==='won'?'Level complete. This attempt is saved in the history.':state.reason+'. You can restart immediately.');ui();
   }
   async function decide(){
-    if(busy||loading||pending||state.status!=='playing'||runCalls>=LIMIT)return;
+    if(busy||loading||(pending&&!continuous())||state.status!=='playing'||runCalls>=LIMIT)return;
     const source=mode()==='scripted'?'scripted':mode()===LOCAL?'local':'hosted';
     if(source==='hosted'&&!PublicDecisions.connected){running=false;message('Connect your OpenRouter key first.');ui();return;}
     if(source==='local'&&!runtime?.ready(isImage())){running=false;message('Load Liquid for the selected input first.');ui();return;}
-    const ticket=epoch,r=createRecord(source);busy=true;phase=source==='scripted'?'Reference step':'Waiting · simulation frozen';message(source==='scripted'?'Applying the visible reference rules.':'Waiting for an answer. No game time is passing.');ui();
+    const ticket=epoch,clock=continuous()?'realtime':'classroom',r=createRecord(source,clock);inFlightRecord=r;busy=true;phase=source==='scripted'?'Reference step':clock==='realtime'?'Live · waiting for answer':'Waiting · simulation frozen';message(source==='scripted'?'Applying the visible reference rules.':clock==='realtime'?'Game time continues. Previous buttons stay active while we wait.':'Waiting for an answer. No game time is passing.');ui();
     try{
       if(source==='scripted'){
         r.action=E.scripted(state);r.response={source:'scripted-reference',action:r.action,note:'Hand-written rules; no learned probabilities or inference latency.'};
@@ -98,21 +107,26 @@
         r.action=r.error?null:r.response.answers.action.choice;
       }
     }catch(e){r.error=source==='local'?'Local inference failed: '+e.message:'Decision failed. No action was applied.';}
-    busy=false;if(r.attempt===attempt)runCalls++;
-    if(ticket!==epoch){r.outcome='Discarded: the game was paused or restarted while waiting';addRecord(r);phase='Paused';ui();return;}
-    addRecord(r);
-    if(r.error){running=false;phase='Error';message(r.error);ui();return;}
-    pending={record:r,remaining:r.frames_requested};accumulator=0;phase='Applying '+title(r.action).toLowerCase();
-    message(source==='scripted'?'Reference action · no model call.':`Applying ${r.action} for up to ${r.frames_requested} frames. No corrective override.`);$('scene-message').hidden=true;ui();
+    busy=false;if(inFlightRecord===r)inFlightRecord=null;if(r.attempt===attempt)runCalls++;
+    r.received_at_frame=r.attempt===attempt?state.frame:null;
+    if(r.cancelled_at_frame==null)r.frames_during_inference=r.received_at_frame===null?null:r.received_at_frame-r.before.frame;
+    if(ticket!==epoch){r.outcome='Discarded: the attempt stopped, paused or restarted while waiting';addRecord(r);if(state.status==='playing')phase='Paused';ui();return;}
+    if(r.error){if(pending){pending.record.outcome='Stopped after next request failed';finishRecord(pending.record);pending=null;}running=false;addRecord(r);phase='Error';message(r.error);ui();return;}
+    if(pending){pending.record.outcome='Held until the next model answer arrived';finishRecord(pending.record);}
+    r.applied_at_frame=state.frame;r.application_before=E.clone(state);r.frame_age_at_apply=state.frame-r.before.frame;
+    r.action_execution=E.beginAction?.(state,r.action)??null;
+    addRecord(r);pending={record:r,remaining:r.frames_requested};if(clock!=='realtime')accumulator=0;phase='Applying '+title(r.action).toLowerCase();
+    message(source==='scripted'?'Reference action · no model call.':clock==='realtime'?`Holding ${r.action}. Observation was ${r.frame_age_at_apply} frames old when applied.`:`Applying ${r.action} for up to ${r.frames_requested} frames. No corrective override.`);$('scene-message').hidden=true;ui();
   }
   function preview(){
     const r=createRecord(isModel()?'preview':mode());r.id=null;inspect(r);
   }
+  function answerSummary(r){const ms=elapsed(r);return r.error||(r.action?`${ms===null?'No inference timing':Math.round(ms)+' ms '+(r.source==='local'?'local inference':'round trip')} · ${r.timing_mode==='realtime'?r.frames_advanced+' frames held · '+(r.frame_age_at_apply??'—')+' frames old at application':r.frames_advanced+'/'+r.frames_requested+' frames applied'}${r.outcome?' · '+r.outcome:''}`:r.outcome||(E.controlsText?'Choose a model, then try one decision.':'Choose a model or the scripted reference to inspect a step.'));}
   function inspect(r){
     $('selected-call').textContent=r.id?`#${r.id} · attempt ${r.attempt}`:'Preview';
     $('answer-source').textContent=r.id?({scripted:'Scripted reference · not AI',manual:'Human controller',local:'Local Liquid · original weights',hosted:'Live hosted decision'})[r.source]||r.source:'Preview · not sent';
     $('action').textContent=r.error?'No action applied':r.action?title(r.action):'What happens next?';
-    const ms=elapsed(r);$('answer-time').textContent=r.error||(r.action?`${ms===null?'No inference timing':Math.round(ms)+' ms '+(r.source==='local'?'local inference':'round trip')} · ${r.frames_advanced}/${r.frames_requested} frames applied${r.outcome?' · '+r.outcome:''}`:r.outcome||(E.controlsText?'Choose a model, then try one decision.':'Choose a model or the scripted reference to inspect a step.'));
+    $('answer-time').textContent=answerSummary(r);
     $('input-image').src=r.screenshot;
     $('input-caption').textContent=r.image_sent?'Exact screenshot sent to the model. Scene coordinates are not included.':r.source==='manual'?'Screenshot for inspection. You controlled this step.':r.source==='scripted'?'Screenshot for inspection. The reference rules read game state.':'Screenshot for inspection only. The model receives the JSON below.';
     $('input-json').textContent=JSON.stringify(r.image_sent?r.request.state.filter(p=>p.type==='text'):r.request?.state??r.scene,null,2);
@@ -139,12 +153,13 @@
   function select(i){if(!history[i])return;following=false;pause('Paused to inspect a saved decision. The scene above stays at the current game position.');selected=i;inspect(history[i]);renderHistory();}
   function tick(now){
     const delta=Math.min((now-lastTick)/1000||0,.05);lastTick=now;
-    if((running&&mode()==='manual')||pending){
+    if((running&&mode()==='manual')||pending||continuous()){
       accumulator+=delta*Number($('speed').value);let iterations=0;
       while(accumulator>=1/E.FPS&&iterations++<60&&state.status==='playing'){
         accumulator-=1/E.FPS;
         let action;
         if(pending)action=pending.record.action;
+        else if(continuous())action='wait'; // before the first response
         else if(running&&mode()==='manual'){
           const dir=keys.has('right')?'right':keys.has('left')?'left':'wait';action=E.manualAction?E.manualAction(keys):keys.has('jump')?(dir==='wait'?'jump':dir+'_jump'):dir;
           if(!manualRecord||manualRecord.action!==action||state.frame-manualRecord.before.frame>=frames()){
@@ -154,13 +169,16 @@
         }else break;
         E.step(state,action);lastAction=action;for(const event of state.events)sound(event);
         if(state.player.grounded&&state.player.vx&&state.frame%15===0)sound('step');
-        if(pending){pending.remaining--;if(pending.remaining===0||state.status!=='playing'){
-          const r=pending.record;pending=null;r.outcome=state.status==='playing'?'Applied exactly as returned':state.status==='won'?'Reached the flag':state.reason;finishRecord(r);
-          if(state.status!=='playing')terminal();
-          else if(running&&runCalls<LIMIT){queueMicrotask(decide);}
-          else{running=false;phase='Paused';message(runCalls>=LIMIT?'Stopped at 200 decisions for this attempt. Export the run, then start a new attempt.':'One decision complete. Inspect the input and answer.');ui();}
-          break;
-        }}
+        if(pending){pending.remaining=Math.max(0,pending.remaining-1);
+          if(state.status!=='playing'||(pending.remaining===0&&(!continuous()||runCalls>=LIMIT))){
+            const r=pending.record;pending=null;r.outcome=state.status==='playing'?'Applied exactly as returned':state.status==='won'?'Reached the flag':state.reason;finishRecord(r);
+            if(state.status!=='playing')terminal();
+            else if(running&&runCalls<LIMIT){queueDecision();}
+            else{running=false;phase='Paused';message(runCalls>=LIMIT?'Stopped at 200 decisions for this attempt. Export the run, then start a new attempt.':'One decision complete. Inspect the input and answer.');ui();}
+            break;
+          }
+          if(continuous()&&pending.remaining===0&&!busy)queueDecision();
+        }
         if(state.status!=='playing'){if(manualRecord){finishRecord(manualRecord);manualRecord=null;}terminal();break;}
       }
       repaint();
@@ -174,6 +192,8 @@
   });
   $('step').addEventListener('click',()=>{audioInit();following=true;decide();});$('restart').addEventListener('click',restart);
   $('controller').addEventListener('change',()=>{pause();if(mode()==='typesafe/jev-1.13')$('input').value='structured';modelNote();ui();repaint();preview();});
+  if($('timing'))$('timing').addEventListener('change',()=>{pause();if(timing()==='realtime')$('speed').value='1';message(timing()==='realtime'?'Real time selected at 1×. The game will keep moving while answers are pending.':'Classroom selected. The world freezes while waiting for each answer.');preview();repaint();ui();});
+  $('speed').addEventListener('change',repaint);
   for(const id of ['input','questions','frames','image-size'])$(id).addEventListener('change',()=>{modelNote();ui();repaint();preview();});
   $('load-local').addEventListener('click',async()=>{
     loading=true;phase='Loading Liquid';ui();message('Loading the original Liquid model; simulation is paused.');
@@ -185,7 +205,7 @@
   $('latest').addEventListener('click',()=>{following=true;selected=history.length-1;if(selected>=0)inspect(history[selected]);renderHistory();});
   $('timeline').addEventListener('input',e=>select(Number(e.target.value)));$('previous').addEventListener('click',()=>select(selected-1));$('next').addEventListener('click',()=>select(selected+1));
   $('export').addEventListener('click',()=>{
-    const data={format:(E.exportName||'pocket-pilot-platformer')+'-v1',exported_at:new Date().toISOString(),level:E.LEVEL,physics:{fps:E.FPS,speed:E.SPEED,gravity:E.GRAVITY,jump:E.JUMP},note:'Local game snapshots are inspection data. Only request.state is sent for model inference. Human and scripted traces are explicitly labelled.',records:history};
+    const data={format:(E.exportName||'pocket-pilot-platformer')+'-v'+(E.exportVersion||1),exported_at:new Date().toISOString(),level:E.LEVEL,physics:{fps:E.FPS,speed:E.SPEED,gravity:E.GRAVITY,jump:E.JUMP},note:'Local game snapshots are inspection data. Only request.state is sent for model inference. Human and scripted traces are explicitly labelled.',records:history};
     const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=(E.exportName||'pocket-pilot-platformer')+'-run.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
   document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>{const active=x===b;x.setAttribute('aria-selected',String(active));$('panel-'+x.dataset.tab).hidden=!active;});}));
