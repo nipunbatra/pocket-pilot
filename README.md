@@ -4,6 +4,26 @@ Play a three-lane driving game while inspecting every model input, typed questio
 
 [Play Pocket Pilot](https://nipunbatra.github.io/pocket-pilot/) · [Classroom slides](https://nipunbatra.github.io/pocket-pilot/slides.html)
 
+## Native Mario experiment
+
+[Play Mario](https://nipunbatra.github.io/pocket-pilot/mario.html) uses the actual
+PlayMario HTML5 remake source directly: all 32 maps, original game physics,
+power-ups, enemies and MP3 sound. No iframe, remote game embedding or ROM.
+The engine is pinned at 51d9c404db8b6f85104c9dff36e92f940b97cce7.
+See vendor/playmario/NOTICE.md for source and Nintendo attribution.
+Upstream has no root license file; this copy is not claimed to be permissively licensed.
+
+Use arrows or A/D/W/S, Shift or Space to run/fire. The model chooses among 13
+full button combinations, held for 4/8/16 native frames. Pause, inference and
+history inspection stop the simulation. Native input transitions preserve jump
+hold/release semantics. Changing worlds or restarting begins a new attempt and
+keeps old records. Each record contains its own world and captured visible scene.
+JSON lists visible geometry only; vision receives the captured canvas plus the
+control contract. Road fine-tunes are not offered as Mario-trained models.
+
+Our adapter is mario-engine.js; mario-contract.js supplies the questions.
+platformer.js shares the inspector and controller with the small original game.
+
 ## Platformer experiment
 
 Open [the platformer](https://nipunbatra.github.io/pocket-pilot/platformer.html) for

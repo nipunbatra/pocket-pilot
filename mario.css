@@ -1,0 +1,11 @@
+@font-face{font-family:"Mario Pixel";src:url('./vendor/playmario/Fonts/pressstart2p-webfont.woff') format('woff');font-display:swap}
+.mario-lab canvas{aspect-ratio:768/464;image-rendering:pixelated}
+.mario-lab #input-image{image-rendering:pixelated}
+.mario-lab .control-row.second{grid-template-columns:68px minmax(160px,1.1fr) 70px 120px 110px minmax(180px,1.5fr)}
+.mario-lab .prob-row{grid-template-columns:110px 1fr 46px}
+.mario-lab #scene-message{background:linear-gradient(transparent 45%,#122d325e);justify-content:flex-end;color:#fff;text-shadow:0 1px 4px #142328;padding-bottom:22px}
+.mario-lab #scene-message strong{background:#203c37e8;padding:5px 16px;border-radius:4px}
+.mario-lab #scene-message span{background:#203c37e8;padding:3px 9px;border-radius:3px}
+.mario-lab .manual-controls{flex-wrap:wrap}
+@media(max-width:1100px){.mario-lab .control-row.second{grid-template-columns:56px minmax(140px,1fr) 60px 102px 90px minmax(140px,1fr)}}
+@media(max-width:800px){.mario-lab .control-row.second{grid-template-columns:1fr 1fr}.mario-lab .control-row.second .local-actions{grid-column:auto}}

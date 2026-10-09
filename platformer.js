@@ -1,7 +1,7 @@
 /* Browser controller: frozen observations, bounded actions, inspectable provenance. */
 (function(){
   'use strict';
-  const E=Platformer,C=DecisionContract,V=PlatformerView,$=id=>document.getElementById(id);
+  const E=globalThis.MarioEngine||Platformer,C=DecisionContract,V=globalThis.MarioView||PlatformerView,$=id=>document.getElementById(id);
   const LOCAL='LiquidAI/d1-omni-600M',LIMIT=200;
   let state=E.create(),running=false,busy=false,loading=false,pending=null,epoch=0,attempt=1,runCalls=0;
   let runtime=null,loadInfo=null,lastAction='wait',selected=-1,following=true,history=[],keys=new Set(),lastTick=0,accumulator=0,manualRecord=null;
@@ -9,12 +9,13 @@
   const explorer=JsonExplorer.create($('json-explorer'),toast);
   const mode=()=>$('controller').value,frames=()=>Number($('frames').value),isImage=()=>$('input').value==='image';
   const isModel=()=>!['manual','scripted'].includes(mode());
-  const title=a=>({wait:'Wait',left:'Walk left',right:'Walk right',jump:'Jump',left_jump:'Jump left',right_jump:'Jump right'})[a]||a;
+  const title=a=>({wait:'Wait',left:'Walk left',right:'Walk right',jump:'Jump',left_jump:'Jump left',right_jump:'Jump right',left_run:'Run left',right_run:'Run right',left_run_jump:'Run + jump left',right_run_jump:'Run + jump right',run:'Hold run / fire',run_jump:'Jump + fire',down:'Duck / enter pipe'})[a]||a;
   const elapsed=r=>r?.metadata?.local_inference_ms??r?.metadata?.upstream_round_trip_ms??null;
   function toast(msg){$('toast').textContent=msg;$('toast').classList.add('visible');clearTimeout(toastTimer);toastTimer=setTimeout(()=>$('toast').classList.remove('visible'),2500);}
   function message(text){$('game-status').textContent=text;}
-  function audioInit(){if($('sound').checked){soundContext ||= new (window.AudioContext||window.webkitAudioContext)();soundContext.resume().catch(()=>{});}}
+  function audioInit(){if(E.nativeAudio){syncAudio();return;}if($('sound').checked){soundContext ||= new (window.AudioContext||window.webkitAudioContext)();soundContext.resume().catch(()=>{});}}
   function sound(event){
+    if(E.nativeAudio)return;
     if(!soundContext||!$('sound').checked)return;
     const tunes={jump:[300,610,.12],coin:[820,1260,.1],stomp:[150,80,.09],lost:[180,55,.32],won:[500,1100,.4],step:[95,70,.025]};
     const [a,b,d]=tunes[event]||tunes.step,osc=soundContext.createOscillator(),gain=soundContext.createGain(),t=soundContext.currentTime;
@@ -22,9 +23,12 @@
     gain.gain.setValueAtTime(Number($('volume').value)/100*(event==='step'?.025:.12),t);gain.gain.exponentialRampToValueAtTime(.0001,t+d);
     osc.connect(gain).connect(soundContext.destination);osc.start(t);osc.stop(t+d);
   }
+  function syncAudio(){E.setAudio?.({enabled:$('sound').checked,volume:Number($('volume').value)/100,active:state.status==='playing'&&((running&&mode()==='manual')||!!pending)});}
   function ui(){
+    syncAudio();
     const locked=busy||running||!!pending||loading,local=mode()===LOCAL,model=isModel();
     for(const id of ['controller','input','questions','frames','image-size'])$(id).disabled=locked;
+    if($('level'))$('level').disabled=locked;
     $('input').disabled=locked||mode()==='typesafe/jev-1.13'||!model;
     $('questions').disabled=locked||!model;$('image-size').disabled=locked||!model||!isImage();
     $('load-local').hidden=!local;$('load-local').disabled=locked;
@@ -39,12 +43,12 @@
   }
   function modelNote(){
     const m=mode();
-    $('model-note').textContent=m==='manual'?'No API key needed. Arrow keys / A D to move; Space / ↑ to jump.':m==='scripted'?'Hand-written jump rules. This is a reference controller, not AI.':m===LOCAL?(runtime?.ready(isImage())?'Liquid ready · original weights, not platformer-fine-tuned.':'Original Liquid · first load ~406 MB JSON / ~595 MB vision. Requires WebGPU.'):m==='typesafe/jev-1.13'?'Jev receives structured JSON. A connected OpenRouter key is required.':'Uses your OpenRouter key. Clef routes are pinned to Cloudflare; no provider fallback.';
+    $('model-note').textContent=m==='manual'?(E.controlsText||'No API key needed. Arrow keys / A D to move; Space / ↑ to jump.'):m==='scripted'?'Hand-written jump rules. This is a reference controller, not AI.':m===LOCAL?(runtime?.ready(isImage())?'Liquid ready · original weights, not platformer-fine-tuned.':'Original Liquid · first load ~406 MB JSON / ~595 MB vision. Requires WebGPU.'):m==='typesafe/jev-1.13'?'Jev receives structured JSON. A connected OpenRouter key is required.':'Uses your OpenRouter key. Clef routes are pinned to Cloudflare; no provider fallback.';
   }
   function repaint(){
     V.draw($('game'),state);
-    $('progress').textContent=Math.min(100,Math.max(0,Math.round((state.player.x-70)/(E.LEVEL.goal-70)*100)))+'%';
-    $('coins').textContent=state.coins.filter(c=>c.collected).length+' / '+state.coins.length;
+    $('progress').textContent=E.progress?E.progress(state):Math.min(100,Math.max(0,Math.round((state.player.x-70)/(E.LEVEL.goal-70)*100)))+'%';
+    $('coins').textContent=E.coinLabel?E.coinLabel(state):state.coins.filter(c=>c.collected).length+' / '+state.coins.length;
     $('calls').textContent=history.filter(r=>r.source!=='manual').length;
     $('game-time').textContent=(state.frame/E.FPS).toFixed(1)+' s';
     const times=history.filter(r=>!r.error&&r.request?.model===mode()&&r.input_kind===$('input').value&&Object.keys(r.request.questions).length===Number($('questions').value)).map(elapsed).filter(x=>typeof x==='number').sort((a,b)=>a-b),n=times.length;
@@ -52,7 +56,7 @@
   }
   function requestFor(before,screenshot){
     const model=mode(),count=Number($('questions').value),input=isImage();
-    return {model,state:input?[{type:'text',text:C.context+` Last applied buttons: ${lastAction}. Next action lasts ${frames()} frames at 60 fps. This screenshot is a scaled view of a 720 × 405 game viewport; physics distances use those original viewport pixels.`},{type:'image_url',image_url:{url:screenshot}}]:{context:C.context,scene:E.observe(before,frames())},questions:C.questions(count)};
+    return {model,state:input?[{type:'text',text:C.context+` Last applied buttons: ${lastAction}. Next action lasts ${frames()} frames at 60 fps. This screenshot is a scaled view of a ${E.WIDTH||720} × ${E.HEIGHT||405} game viewport; physics distances use those original viewport pixels.`},{type:'image_url',image_url:{url:screenshot}}]:{context:C.context,scene:E.observe(before,frames())},questions:C.questions(count)};
   }
   function createRecord(source){
     const before=E.clone(state),screenshot=V.capture(before,Number($('image-size').value));
@@ -108,7 +112,7 @@
     $('selected-call').textContent=r.id?`#${r.id} · attempt ${r.attempt}`:'Preview';
     $('answer-source').textContent=r.id?({scripted:'Scripted reference · not AI',manual:'Human controller',local:'Local Liquid · original weights',hosted:'Live hosted decision'})[r.source]||r.source:'Preview · not sent';
     $('action').textContent=r.error?'No action applied':r.action?title(r.action):'What happens next?';
-    const ms=elapsed(r);$('answer-time').textContent=r.error||(r.action?`${ms===null?'No inference timing':Math.round(ms)+' ms '+(r.source==='local'?'local inference':'round trip')} · ${r.frames_advanced}/${r.frames_requested} frames applied${r.outcome?' · '+r.outcome:''}`:r.outcome||'Choose a model or the scripted reference to inspect a step.');
+    const ms=elapsed(r);$('answer-time').textContent=r.error||(r.action?`${ms===null?'No inference timing':Math.round(ms)+' ms '+(r.source==='local'?'local inference':'round trip')} · ${r.frames_advanced}/${r.frames_requested} frames applied${r.outcome?' · '+r.outcome:''}`:r.outcome||(E.controlsText?'Choose a model, then try one decision.':'Choose a model or the scripted reference to inspect a step.'));
     $('input-image').src=r.screenshot;
     $('input-caption').textContent=r.image_sent?'Exact screenshot sent to the model. Scene coordinates are not included.':r.source==='manual'?'Screenshot for inspection. You controlled this step.':r.source==='scripted'?'Screenshot for inspection. The reference rules read game state.':'Screenshot for inspection only. The model receives the JSON below.';
     $('input-json').textContent=JSON.stringify(r.image_sent?r.request.state.filter(p=>p.type==='text'):r.request?.state??r.scene,null,2);
@@ -122,7 +126,7 @@
     if(probs){for(const a of E.ACTIONS){const row=document.createElement('div');row.className='prob-row';const label=document.createElement('span'),meter=document.createElement('meter'),value=document.createElement('strong');label.textContent=a;meter.min=0;meter.max=1;meter.value=probs[a];meter.setAttribute('aria-label',a+' probability');value.textContent=(probs[a]*100).toFixed(1)+'%';row.append(label,meter,value);phost.append(row);}}
     else {const p=document.createElement('p');p.textContent=r.response?'This controller supplies an action, without model probabilities.':'No answer yet.';phost.append(p);}
     const a=r.response?.answers;const extras=[];if(a?.action?.confidence!=null)extras.push('Confidence: '+a.action.confidence.toFixed(3));if(a?.jump_needed)extras.push('P(jump needed): '+a.jump_needed.noul.toFixed(3));if(a?.danger)extras.push('Danger score: '+a.danger.score.toFixed(3)+' / 2');$('extra-answers').textContent=extras.join(' · ');
-    explorer.set(r,'platformer-decision-'+(r.id||'preview')+'.json');
+    explorer.set(r,(E.exportName||'platformer')+'-decision-'+(r.id||'preview')+'.json');
   }
   function renderHistory(){
     const list=$('history-list');list.replaceChildren();
@@ -142,7 +146,7 @@
         let action;
         if(pending)action=pending.record.action;
         else if(running&&mode()==='manual'){
-          const dir=keys.has('right')?'right':keys.has('left')?'left':'wait';action=keys.has('jump')?(dir==='wait'?'jump':dir+'_jump'):dir;
+          const dir=keys.has('right')?'right':keys.has('left')?'left':'wait';action=E.manualAction?E.manualAction(keys):keys.has('jump')?(dir==='wait'?'jump':dir+'_jump'):dir;
           if(!manualRecord||manualRecord.action!==action||state.frame-manualRecord.before.frame>=frames()){
             if(manualRecord)finishRecord(manualRecord);
             manualRecord=createRecord('manual');manualRecord.action=action;manualRecord.response={source:'human',action};addRecord(manualRecord);
@@ -166,7 +170,7 @@
   $('run').addEventListener('click',()=>{
     audioInit();if(running||pending){pause();return;}
     if(state.status!=='playing'||runCalls>=LIMIT)restart();running=true;following=true;phase=mode()==='manual'?'Playing':'Starting';$('scene-message').hidden=true;ui();
-    if(mode()==='manual'){message('Arrow keys / A D to move; Space / ↑ to jump.');$('game').focus();}else decide();
+    if(mode()==='manual'){message(E.controlsText||'Arrow keys / A D to move; Space / ↑ to jump.');$('game').focus();}else decide();
   });
   $('step').addEventListener('click',()=>{audioInit();following=true;decide();});$('restart').addEventListener('click',restart);
   $('controller').addEventListener('change',()=>{pause();if(mode()==='typesafe/jev-1.13')$('input').value='structured';modelNote();ui();repaint();preview();});
@@ -181,14 +185,17 @@
   $('latest').addEventListener('click',()=>{following=true;selected=history.length-1;if(selected>=0)inspect(history[selected]);renderHistory();});
   $('timeline').addEventListener('input',e=>select(Number(e.target.value)));$('previous').addEventListener('click',()=>select(selected-1));$('next').addEventListener('click',()=>select(selected+1));
   $('export').addEventListener('click',()=>{
-    const data={format:'pocket-pilot-platformer-v1',exported_at:new Date().toISOString(),level:E.LEVEL,physics:{fps:E.FPS,speed:E.SPEED,gravity:E.GRAVITY,jump:E.JUMP},note:'Local game snapshots are inspection data. Only request.state is sent for model inference. Human and scripted traces are explicitly labelled.',records:history};
-    const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download='pocket-pilot-platformer-run.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
+    const data={format:(E.exportName||'pocket-pilot-platformer')+'-v1',exported_at:new Date().toISOString(),level:E.LEVEL,physics:{fps:E.FPS,speed:E.SPEED,gravity:E.GRAVITY,jump:E.JUMP},note:'Local game snapshots are inspection data. Only request.state is sent for model inference. Human and scripted traces are explicitly labelled.',records:history};
+    const url=URL.createObjectURL(new Blob([JSON.stringify(data,null,2)],{type:'application/json'})),a=document.createElement('a');a.href=url;a.download=(E.exportName||'pocket-pilot-platformer')+'-run.json';a.click();setTimeout(()=>URL.revokeObjectURL(url),1000);
   });
   document.querySelectorAll('[data-tab]').forEach(b=>b.addEventListener('click',()=>{document.querySelectorAll('[data-tab]').forEach(x=>{const active=x===b;x.setAttribute('aria-selected',String(active));$('panel-'+x.dataset.tab).hidden=!active;});}));
-  const keyMap={ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right',ArrowUp:'jump',w:'jump',W:'jump',' ':'jump'};
-  window.addEventListener('keydown',e=>{if(!running||mode()!=='manual'||/INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName))return;const k=keyMap[e.key];if(k){e.preventDefault();keys.add(k);}});
+  const keyMap=E.keyMap||{ArrowLeft:'left',a:'left',A:'left',ArrowRight:'right',d:'right',D:'right',ArrowUp:'jump',w:'jump',W:'jump',' ':'jump'};
+  if($('level'))$('level').addEventListener('change',()=>{E.LEVEL={...E.LEVEL,name:$('level').value};restart();$('level-title').textContent='World '+$('level').value;});
+  for(const id of ['sound','volume'])$(id).addEventListener('input',syncAudio);
+  window.addEventListener('keydown',e=>{if(E.controlsText&&/^[pP]$/.test(e.key)&&!/INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName)){e.preventDefault();if(!e.repeat)$('run').click();return;}if(!running||mode()!=='manual'||/INPUT|SELECT|TEXTAREA|BUTTON/.test(e.target.tagName))return;const k=keyMap[e.key];if(k){e.preventDefault();keys.add(k);}});
   window.addEventListener('keyup',e=>{const k=keyMap[e.key];if(k){keys.delete(k);if(running&&mode()==='manual')e.preventDefault();}});
   document.querySelectorAll('[data-key]').forEach(b=>{b.addEventListener('pointerdown',e=>{if(!running||mode()!=='manual')return;e.preventDefault();b.setPointerCapture(e.pointerId);keys.add(b.dataset.key);});for(const event of ['pointerup','pointercancel','lostpointercapture'])b.addEventListener(event,()=>keys.delete(b.dataset.key));});
+  if(E.controlsText)$('game').addEventListener('contextmenu',e=>{e.preventDefault();$('run').click();});
   window.addEventListener('blur',()=>keys.clear());
   document.addEventListener('visibilitychange',()=>{if(document.hidden&&(running||pending||busy))pause('Paused because this tab was hidden.');});
   window.addEventListener('public-connection-changed',()=>{if(!PublicDecisions.connected&&busy&&mode()!==LOCAL)pause('Disconnected. The pending answer will not move the player.');});
