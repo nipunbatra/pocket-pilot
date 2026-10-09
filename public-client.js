@@ -12,7 +12,9 @@
   async function submit(request){
     if(!key)throw new Error('Connect your OpenRouter key to make live calls.');
     if(active)throw new Error('A decision is already in progress.');
-    if(!root.POCKET_PILOT_PUBLIC.road_models.some(m=>m.id===request.model))throw new Error('Unsupported model.');
+    const info=root.POCKET_PILOT_PUBLIC.road_models.find(m=>m.id===request.model);
+    if(!info)throw new Error('Unsupported model.');
+    if(info.vision===false&&Array.isArray(request.state)&&request.state.some(p=>p.type==='image_url'))throw new Error('This model accepts text / JSON only. Select structured scene input.');
     const chat=root.RoadChat?.isChat(request),endpoint=chat?root.RoadChat.endpoint:decisionsEndpoint;
     const pinnedProvider=['cloudflare/clef','cloudflare/clef-flash'].includes(request.model)?'Cloudflare':null;
     const wire_request=chat?root.RoadChat.build(request):pinnedProvider?{...request,provider:{only:['cloudflare'],allow_fallbacks:false}}:request;

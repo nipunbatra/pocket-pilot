@@ -9,6 +9,7 @@
   const explorer=JsonExplorer.create($('json-explorer'),toast);
   const mode=()=>$('controller').value,frames=()=>Number($('frames').value),isImage=()=>$('input').value==='image';
   const isModel=()=>!['manual','scripted'].includes(mode());
+  const textOnly=()=>['typesafe/jev-1.13','inception/mercury-decide:free'].includes(mode());
   const timing=()=>$('timing')?.value||'classroom';
   const continuous=()=>running&&isModel()&&timing()==='realtime';
   const queueDecision=()=>{if(requestQueued)return;requestQueued=true;queueMicrotask(()=>{requestQueued=false;if(running)decide();});};
@@ -33,7 +34,7 @@
     for(const id of ['controller','input','questions','frames','image-size'])$(id).disabled=locked;
     if($('level'))$('level').disabled=locked;
     if($('timing'))$('timing').disabled=locked||!isModel();
-    $('input').disabled=locked||mode()==='typesafe/jev-1.13'||!model;
+    $('input').disabled=locked||textOnly()||!model;
     $('questions').disabled=locked||!model;$('image-size').disabled=locked||!model||!isImage();
     $('load-local').hidden=!local;$('load-local').disabled=locked;
     $('unload-local').hidden=!runtime;$('unload-local').disabled=locked;
@@ -47,6 +48,7 @@
   }
   function modelNote(){
     const m=mode();
+    if(m==='inception/mercury-decide:free'){$('model-note').textContent='Mercury Decide · structured JSON only. Free, rate-limited OpenRouter endpoint; connect your key.';return;}
     $('model-note').textContent=m==='manual'?(E.controlsText||'No API key needed. Arrow keys / A D to move; Space / ↑ to jump.'):m==='scripted'?'Hand-written jump rules. This is a reference controller, not AI.':m===LOCAL?(runtime?.ready(isImage())?'Liquid ready · original weights, not platformer-fine-tuned.':'Original Liquid · first load ~406 MB JSON / ~595 MB vision. Requires WebGPU.'):m==='typesafe/jev-1.13'?'Jev receives structured JSON. A connected OpenRouter key is required.':'Uses your OpenRouter key. Clef routes are pinned to Cloudflare; no provider fallback.';
   }
   function repaint(){
@@ -191,7 +193,7 @@
     if(mode()==='manual'){message(E.controlsText||'Arrow keys / A D to move; Space / ↑ to jump.');$('game').focus();}else decide();
   });
   $('step').addEventListener('click',()=>{audioInit();following=true;decide();});$('restart').addEventListener('click',restart);
-  $('controller').addEventListener('change',()=>{pause();if(mode()==='typesafe/jev-1.13')$('input').value='structured';modelNote();ui();repaint();preview();});
+  $('controller').addEventListener('change',()=>{pause();if(textOnly())$('input').value='structured';modelNote();ui();repaint();preview();});
   if($('timing'))$('timing').addEventListener('change',()=>{pause();if(timing()==='realtime')$('speed').value='1';message(timing()==='realtime'?'Real time selected at 1×. The game will keep moving while answers are pending.':'Classroom selected. The world freezes while waiting for each answer.');preview();repaint();ui();});
   $('speed').addEventListener('change',repaint);
   for(const id of ['input','questions','frames','image-size'])$(id).addEventListener('change',()=>{modelNote();ui();repaint();preview();});
