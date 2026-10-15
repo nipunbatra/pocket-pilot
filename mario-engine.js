@@ -28,7 +28,8 @@
         }
         api.LEVEL={...api.LEVEL,name:level};
         game.AudioPlayer.clearAll();game.AudioPlayer.setMutedOn();
-        game.ScenePlayer.stopCutscene();
+        // ScenePlayr.stopCutscene pops an argument; an idle call removes the engine.
+        if(game.ScenePlayer.getCutsceneName())game.ScenePlayer.stopCutscene();
         for(const [k,v] of Object.entries({power:1,score:0,coins:0,lives:3}))game.ItemsHolder.setItem(k,v);
         held=new Set();jumpBuffer=0;game.setMap(level,0);game.GamesRunner.pause();lastPlayer=game.player;
         game.PixelDrawer.refillGlobalCanvas(game.AreaSpawner.getArea().background);
@@ -99,7 +100,7 @@
     };
     function thing(t,clip=false){
       const left=clip?Math.max(0,t.left):t.left,top=clip?Math.max(0,t.top):t.top,right=clip?Math.min(WIDTH,t.right):t.right,bottom=clip?Math.min(HEIGHT,t.bottom):t.bottom;
-      return {kind:t.title,x:round(left),y:round(top),width:round(right-left),height:round(bottom-top),vx:round(t.xvel),vy:round(t.yvel),...(t.enemy?{enemy:true}:{}),...(t.used?{used:true}:{}),...(clip&&[left,top,right,bottom].some((v,i)=>v!==[t.left,t.top,t.right,t.bottom][i])?{clipped_to_viewport:true}:{})};
+      return {kind:t.title,x:round(left),y:round(top),width:round(right-left),height:round(bottom-top),vx:round(t.xvel),vy:round(t.yvel),...(t.type==='enemy'||t.deadly||(/Shell$/.test(t.title)&&Math.abs(t.xvel)>0)?{enemy:true,stompable:!t.deadly}:{}),...(t.used?{used:true}:{}),...(clip&&[left,top,right,bottom].some((v,i)=>v!==[t.left,t.top,t.right,t.bottom][i])?{clipped_to_viewport:true}:{})};
     }
     function visible(t){return !t.hidden&&!t.dead&&t.right>0&&t.left<WIDTH&&t.bottom>0&&t.top<HEIGHT;}
     function refresh(state){
@@ -109,6 +110,7 @@
         solids:game.GroupHolder.getGroup('Solid').filter(visible).map(t=>thing(t,true)),
         characters:game.GroupHolder.getGroup('Character').filter(t=>t!==p&&visible(t)).map(t=>thing(t,true)),
         environment:{underwater:!!screen.underwater,setting:game.AreaSpawner.getArea().setting},input_locked:!!screen.nokeys,
+        cutscene:game.ScenePlayer.getCutsceneName()||null,
         hud:Object.fromEntries(['score','coins','time','lives'].map(k=>[k,game.ItemsHolder.getItem(k)]))});
     }
     return api;

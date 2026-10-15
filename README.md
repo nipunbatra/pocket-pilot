@@ -13,8 +13,17 @@ The engine is pinned at 51d9c404db8b6f85104c9dff36e92f940b97cce7.
 See vendor/playmario/NOTICE.md for source and Nintendo attribution.
 Upstream has no root license file; this copy is not claimed to be permissively licensed.
 
-Use arrows or A/D/W/S, Shift or Space to run/fire. The model chooses among 13
-full button combinations. Classroom mode freezes for answers, then applies 4/8/16
+Use arrows or A/D/W/S, Shift or Space to run/fire. The default hosted-model clock
+is **Jev-style · fewer waits · JSON**: seven action macros, observed hazard geometry
+and adaptive observations on landing, apex, hazards or blockage (64-frame maximum).
+The model chooses every action. Two fresh Jev 1.14 runs cleared World 1-1; the UI
+run at 16× took 80 calls, 46.7 s wall time and a 517 ms median round trip.
+**Recorded Jev clear · no API** replays that exact run in about 2.4 s warm at 16×,
+with original answers and timings explicitly labelled recorded. It verifies every
+scene boundary and stops on divergence. [Results and limitations](mario-controller-results.md).
+
+The original thirteen-action image/JSON comparison remains available. Classroom
+mode freezes for answers, then applies 4/8/16
 frames. Real time holds the last command while one answer is pending; start at
 1×. Pause and history inspection freeze both modes. New model jump requests
 can wait six frames for landing and re-arm on the ground; manual key holds keep
@@ -205,7 +214,8 @@ The fixed **Jev 1.14 · images + JSON** option is also available for comparisons
 The response and exported metadata record the exact resolved model; future
 alias updates may change behavior. Both choices use your existing OpenRouter key.
 
-Selection starts with image input; choose JSON for a separate comparison.
+Road selection starts with image input. Mario defaults to event-driven JSON;
+choose its Classroom clock and Image input for the separate vision comparison.
 Images send the screenshot and controller context without hidden scene geometry.
 Jev vision is experimental and requires at least 256px on each side and 78,400
 pixels in total, so unsupported small image settings are disabled automatically.
@@ -214,8 +224,8 @@ All existing pause, real-time, validation, and export controls continue to work.
 
 Measured on 15 October: the road completed two 30-call classroom runs (image
 and JSON), each with 30/30 correct lanes, 14 barriers passed and no collision.
-Browser median round trips were 738 ms image / 520 ms JSON. Mario did not clear
-in five attempts: 8-frame JSON reached x=2,820px; image runs hit the first enemy
+Browser median round trips were 738 ms image / 520 ms JSON. Before the controller
+fix above, Mario did not clear in five fixed-step attempts: 8-frame JSON reached x=2,820px; image runs hit the first enemy
 at both compact and full resolution. These small checks establish working
 integration, not reliable Mario play or a general speed ranking.
 
