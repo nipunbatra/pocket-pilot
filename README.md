@@ -166,8 +166,8 @@ correct lanes on the four checked images. See [routing and local model checks](.
 
 ## Models and controls
 
-Luna, Clef-flash, and Clef can receive a road image. Jev uses explicitly labelled
-structured JSON. Only the lane question steers; the optional second/third
+Luna, Clef-flash, Clef, Jev latest and Jev 1.14 can receive a road image or
+explicitly labelled structured JSON. The retained Jev 1.13 baseline uses JSON. Only the lane question steers; the optional second/third
 questions demonstrate probability and ordered-score outputs. Classroom mode
 freezes game time during API waits. Real time intentionally exposes latency.
 Every run stops after 30 requests, a collision, or an API error.
@@ -196,6 +196,31 @@ only public questions and model IDs. Never commit keys or credential files.
 The included recorded JSON contains artificial game scenes and real responses,
 not authentication headers. Keeping this repository and hosted page trustworthy
 is part of keeping visitors' in-memory keys safe.
+
+## Latest Jev with images and JSON
+
+Choose **Jev latest · images + JSON** in the road or Mario controller. This uses
+OpenRouter's `~typesafe/jev-latest` alias, currently Jev 1.14 (14 October 2026).
+The fixed **Jev 1.14 · images + JSON** option is also available for comparisons.
+The response and exported metadata record the exact resolved model; future
+alias updates may change behavior. Both choices use your existing OpenRouter key.
+
+Selection starts with image input; choose JSON for a separate comparison.
+Images send the screenshot and controller context without hidden scene geometry.
+Jev vision is experimental and requires at least 256px on each side and 78,400
+pixels in total, so unsupported small image settings are disabled automatically.
+Supported compact captures are road 420×480, Mario 512×309, platformer 480×270.
+All existing pause, real-time, validation, and export controls continue to work.
+
+Measured on 15 October: the road completed two 30-call classroom runs (image
+and JSON), each with 30/30 correct lanes, 14 barriers passed and no collision.
+Browser median round trips were 738 ms image / 520 ms JSON. Mario did not clear
+in five attempts: 8-frame JSON reached x=2,820px; image runs hit the first enemy
+at both compact and full resolution. These small checks establish working
+integration, not reliable Mario play or a general speed ranking.
+
+[Release notes](https://typesafe.ai/blog/jev-1-14) ·
+[OpenRouter multimodal contract](https://openrouter.ai/docs/guides/community/multimodal-decisions)
 
 ## Decisions vs standard chat LLM / VLM
 

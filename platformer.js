@@ -30,6 +30,7 @@
   function syncAudio(){E.setAudio?.({enabled:$('sound').checked,volume:Number($('volume').value)/100,active:state.status==='playing'&&((running&&mode()==='manual')||continuous()||!!pending)});}
   function ui(){
     syncAudio();
+    DecisionModels.constrainImageSelect($('image-size'),mode(),(E.HEIGHT||405)/(E.WIDTH||720));
     const locked=busy||running||!!pending||loading,local=mode()===LOCAL,model=isModel();
     for(const id of ['controller','input','questions','frames','image-size'])$(id).disabled=locked;
     if($('level'))$('level').disabled=locked;
@@ -48,6 +49,7 @@
   }
   function modelNote(){
     const m=mode();
+    if(DecisionModels.isVisionJev(m)){$('model-note').textContent=(m===DecisionModels.latest?'Jev latest · follows new releases.':'Jev 1.14 · fixed version.')+' Experimental images + JSON. Exact version is saved in each response. Small images are disabled.';return;}
     if(m==='inception/mercury-decide:free'){$('model-note').textContent='Mercury Decide · structured JSON only. Free, rate-limited OpenRouter endpoint; connect your key.';return;}
     $('model-note').textContent=m==='manual'?(E.controlsText||'No API key needed. Arrow keys / A D to move; Space / ↑ to jump.'):m==='scripted'?'Hand-written jump rules. This is a reference controller, not AI.':m===LOCAL?(runtime?.ready(isImage())?'Liquid ready · original weights, not platformer-fine-tuned.':'Original Liquid · first load ~406 MB JSON / ~595 MB vision. Requires WebGPU.'):m==='typesafe/jev-1.13'?'Jev receives structured JSON. A connected OpenRouter key is required.':'Uses your OpenRouter key. Clef routes are pinned to Cloudflare; no provider fallback.';
   }
@@ -193,7 +195,7 @@
     if(mode()==='manual'){message(E.controlsText||'Arrow keys / A D to move; Space / ↑ to jump.');$('game').focus();}else decide();
   });
   $('step').addEventListener('click',()=>{audioInit();following=true;decide();});$('restart').addEventListener('click',restart);
-  $('controller').addEventListener('change',()=>{pause();if(textOnly())$('input').value='structured';modelNote();ui();repaint();preview();});
+  $('controller').addEventListener('change',()=>{pause();if(textOnly())$('input').value='structured';else if(DecisionModels.isVisionJev(mode()))$('input').value='image';modelNote();ui();repaint();preview();});
   if($('timing'))$('timing').addEventListener('change',()=>{pause();if(timing()==='realtime')$('speed').value='1';message(timing()==='realtime'?'Real time selected at 1×. The game will keep moving while answers are pending.':'Classroom selected. The world freezes while waiting for each answer.');preview();repaint();ui();});
   $('speed').addEventListener('change',repaint);
   for(const id of ['input','questions','frames','image-size'])$(id).addEventListener('change',()=>{modelNote();ui();repaint();preview();});

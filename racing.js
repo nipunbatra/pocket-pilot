@@ -29,6 +29,7 @@ function recentLatency(){
 function syncModelControls(){
   const info=modelInfo(),local=localModel();
   if(info?.input_kind)inputKind=info.input_kind;else if(info&&!info.vision)inputKind='structured';
+  inputCanvas.width=DecisionModels.constrainImageSelect($('image-size'),selectedModel,8/7);inputCanvas.height=Math.round(inputCanvas.width*8/7);
   if($('local-model-controls')){
     $('local-model-controls').hidden=!local;if($('local-results-link')){$('local-results-link').hidden=!local;$('local-results-link').href=info?.results||'./liquid-local.html';}
     if($('remote-key-controls'))$('remote-key-controls').hidden=local;
@@ -41,6 +42,7 @@ function syncModelControls(){
   $('image-size').disabled=inputKind==='structured'||comparing||inFlight;
   $('api-status').textContent=modelAvailable()?`${info.label} ready`:local?LocalDecisions.message:PUBLIC_SITE?'Connect your key · or explore recordings':'OpenRouter key missing';
   $('model-note').textContent=local?LocalDecisions.message+' · '+info.note:!info?.available?'Set OPENROUTER_API_KEY in the local .env to make live calls.':(RoadChat.isChat({model:selectedModel})?'Chat '+(inputKind==='image'?'VLM':'LLM')+' · short JSON answers, no class probabilities. ':(['cloudflare/clef','cloudflare/clef-flash'].includes(selectedModel)?'Decisions API · Cloudflare provider pinned. ':'Decisions API · typed answers and probabilities. '))+(inputKind==='structured'?'Obstacle coordinates sent; no image.':'Road PNG sent; no obstacle coordinates.');
+  if(DecisionModels.isVisionJev(selectedModel))$('model-note').textContent+=(selectedModel===DecisionModels.latest?' Latest follows new releases; the response records the exact version.':' Fixed 1.14 version for comparisons.')+(inputKind==='image'?' Experimental vision · compact or full image required.':'');
 }
 function draw(){
   const f=replay?frames[selected]:null;
@@ -264,7 +266,7 @@ function renderSelection(){
     const criteria=q.type==='choice'?Object.entries(q.criteria):q.type==='score'?q.criteria.map((v,i)=>[i,v]):[];
     return `<article class="race-question"><div class="race-question-head"><div><span class="question-type">${chat?(name==='lane'?'enum':name==='middle_blocked'?'boolean':'level index'):q.type} / ${name}</span><h3>${titles[name]}</h3></div><strong>${esc(value)}</strong></div><p>${esc(q.instructions)}</p>${probs}${answer?`<div class="confidence-line">${chat?'Parsed chat JSON · probabilities and confidence not supplied':q.type==='noul'?'Probability of yes · no separate confidence field':`confidence ${answer.confidence.toFixed(2)}${q.type==='score'?' · score = '+Object.entries(answer.probabilities).map(([k,v])=>`${k}×${v}`).join(' + '):''}`}</div>`:''}${criteria.length?`<details><summary>Allowed ${q.type==='choice'?'choices':'score levels'} (${criteria.length})</summary><ul class="criteria-list">${criteria.map(([k,v])=>`<li><code>${esc(k)}</code> — ${esc(v)}</li>`).join('')}</ul></details>`:''}</article>`;
   }).join('');
-  setJSON('road-request',f?.wire_request||(RoadChat.isChat(request)?RoadChat.build(request):request),!$('expand-image').checked);
+  setJSON('road-request',f?.wire_request||(RoadChat.isChat(request)?RoadChat.build(request):DecisionModels.wireRequest(request)),!$('expand-image').checked);
   $('road-request-title').textContent=f?`ACTUAL REQUEST · ${f.metadata.provider||'OpenRouter'} · ${f.request.model}`:'REQUEST PREVIEW · NOT SENT';
   $('road-response-title').textContent=f?.response?`ACTUAL RESPONSE · ${f.metadata.provider||'OpenRouter'}`:f?.error?'REQUEST ERROR':'RESPONSE · WAITING';
   if(f?.response)setJSON('road-response',f.raw_response||f.response);else if(f?.error)setJSON('road-response',{error:f.error});else{$('road-response').textContent=f?'Request in flight…':'Start a run to receive an actual response.';delete $('road-response').dataset.raw;}
@@ -330,7 +332,7 @@ $('sound-toggle').addEventListener('click',()=>{RoadSound.unlock();RoadSound.set
 $('compare-questions').addEventListener('click',compareQuestions);
 $('compare-chat').addEventListener('click',compareChat);
 $('load-chat-comparison').addEventListener('click',()=>loadRecording('./chat-comparison-run.json'));
-$('model-select').addEventListener('change',()=>{const previousModel=selectedModel;selectedModel=$('model-select').value;if(LocalDecisions.isLocal(previousModel)&&previousModel!==selectedModel)LocalDecisions.unload().catch(e=>toast(e.message));syncModelControls();event('model',{model:selectedModel,input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
+$('model-select').addEventListener('change',()=>{const previousModel=selectedModel;selectedModel=$('model-select').value;if(DecisionModels.isVisionJev(selectedModel))inputKind='image';if(LocalDecisions.isLocal(previousModel)&&previousModel!==selectedModel)LocalDecisions.unload().catch(e=>toast(e.message));syncModelControls();event('model',{model:selectedModel,input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('input-kind').addEventListener('change',()=>{inputKind=$('input-kind').value;syncModelControls();event('input_kind',{input_kind:inputKind});if(!frames.length)renderSelection();updateControls();renderComparison();});
 $('question-count').addEventListener('change',()=>{questionCount=Number($('question-count').value);event('question_count',{count:questionCount});if(!frames.length)renderSelection();updateHud();});
 let loadingRecording=false;
@@ -369,7 +371,7 @@ async function init(){
     if(PUBLIC_SITE)config=PublicDecisions.config;
     else{const r=await fetch('/api/config');if(!r.ok)throw new Error();config=await r.json();}
     for(const model of LocalDecisions.models)if(!config.road_models.some(m=>m.id===model.id))config.road_models.push(model);
-    const aliases={trained:'Nipun/pocket-pilot-json-decisions-0.8b','liquid-json':'Nipun/pocket-pilot-liquid-600m-json','liquid-image':'Nipun/pocket-pilot-liquid-600m-image'};
+    const aliases={jev:DecisionModels.latest,'jev-1.14':DecisionModels.pinned,trained:'Nipun/pocket-pilot-json-decisions-0.8b','liquid-json':'Nipun/pocket-pilot-liquid-600m-json','liquid-image':'Nipun/pocket-pilot-liquid-600m-image'};
     const requestedModel=new URLSearchParams(location.search).get('model');if(aliases[requestedModel])selectedModel=aliases[requestedModel];
     $('model-select').innerHTML=['decisions','chat completions','local decisions'].map(kind=>`<optgroup label="${kind==='decisions'?'Decisions API':kind==='local decisions'?'On your device · no key':'Standard chat · LLM / VLM'}">${config.road_models.filter(m=>(m.api_kind||'decisions')===kind).map(m=>`<option value="${esc(m.id)}">${esc(m.label)}${m.available?'':' · needs setup'}</option>`).join('')}</optgroup>`).join('');
     $('model-select').value=selectedModel;
